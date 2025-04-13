@@ -3,10 +3,6 @@
 /node_modules
 /build
 
-/src/users
-/src/common
-/src/auth
-
 # Logs
 logs
 *.log
