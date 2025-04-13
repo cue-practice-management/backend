@@ -13,7 +13,7 @@
     "paths": {
       "@common/*": ["common/*"],
       "@users/*": ["users/*"],
-      "@auth/*": ["auth/*"],
+      "@auth/*": ["auth/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
@@ -21,6 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true
   }
 }
