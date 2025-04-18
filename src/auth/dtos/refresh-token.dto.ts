@@ -1,8 +1,8 @@
-import { IsString } from 'class-validator';
 
 export class RefreshTokenRequestDto {
-  @IsString()
   refreshToken: string;
+  deviceInfo: string;
+  ip: string;
 }
 
 export class RefreshTokenResponseDto {
