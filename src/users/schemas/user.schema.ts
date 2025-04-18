@@ -42,9 +42,6 @@ export class User {
 
   @Prop({ required: true, enum: Object.values(UserRole) })
   role: UserRole;
-  
-  @Prop({ select: false })
-  refreshToken?: string;
 
   @Prop({ default: true })
   isActive: boolean;
