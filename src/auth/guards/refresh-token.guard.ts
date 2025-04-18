@@ -16,7 +16,9 @@ export class RefreshTokenGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const refreshToken = request.cookies[this.env.jwtRefreshCookieName] || null;
 
-    console.log('Refresh Token:', refreshToken);
+    if (this.env.nodeEnv !== 'production') {
+      console.log('Refresh Token received.');
+    }
 
     if (!refreshToken) {
       throw new InvalidRefreshTokenException();
