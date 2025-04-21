@@ -12,27 +12,54 @@ import { RefreshTokenRequestDto, RefreshTokenResponseDto } from './dtos/refresh-
 import { InvalidCredentialsException } from './exceptions/invalid-credentials.exception';
 import { InvalidRefreshTokenException } from './exceptions/invalid-refresh-token.exception';
 import * as bcrypt from 'bcryptjs';
+import { UserNotFoundException } from './exceptions/user-not-found-exception';
+import { AccountDisabledException } from './exceptions/account-disabled.exception';
+import { UserResponseDto } from '@users/dtos/user-response.dto';
+import { UserMapper } from '@users/mappers/user.mapper';
+import { LogoutRequestDto } from './dtos/logout.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
+        @InjectModel(RefreshToken.name)
+        private readonly refreshTokenModel: Model<RefreshToken>,
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly env: EnvironmentConfigService,
-        @InjectModel(RefreshToken.name)
-        private readonly refreshTokenModel: Model<RefreshToken>
+        private readonly userMapper: UserMapper,
     ) { }
 
 
     async login(loginRequestDto: LoginRequestDto): Promise<LoginResponseDto> {
         const user = await this.userService.findByEmail(loginRequestDto.email);
+
         if (!user) throw new InvalidCredentialsException();
+
+        if (!user.isActive) throw new AccountDisabledException();
 
         const isPasswordValid = await bcrypt.compare(loginRequestDto.password, user.password);
         if (!isPasswordValid) throw new InvalidCredentialsException();
 
         return await this.generateTokens(user, loginRequestDto.deviceInfo, loginRequestDto.ip);
     }
+
+    async logout(logoutRequestDto: LogoutRequestDto): Promise<void> {
+        const tokenDoc = await this.refreshTokenModel.findOneAndDelete({
+            token: logoutRequestDto.refreshToken,
+        });
+
+        if (!tokenDoc) throw new InvalidRefreshTokenException();
+    }
+
+
+    async me(userId: string): Promise<UserResponseDto> {
+        const user = await this.userService.findById(userId);
+
+        if (!user) throw new UserNotFoundException();
+
+        return this.userMapper.toDto(user);
+    }
+
 
     async refreshToken({ refreshToken, deviceInfo, ip }: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
         const tokenDoc = await this.refreshTokenModel.findOneAndDelete({
@@ -44,8 +71,7 @@ export class AuthService {
         if (!tokenDoc) throw new InvalidRefreshTokenException();
 
         const user = tokenDoc.user as unknown as User;
-        const { accessToken } = await this.generateTokens(user, deviceInfo, ip);
-        return { accessToken };
+        return await this.generateTokens(user, deviceInfo, ip);
     }
 
 
