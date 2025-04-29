@@ -27,8 +27,8 @@ export class RefreshCookieInterceptor implements NestInterceptor {
             value: data.refreshToken,
             maxAgeInDays: this.env.jwtRefreshExpirationDays,
             httpOnly: true,
-            secure: false,
-            sameSite: 'none',
+            secure: false, // Set to true in production
+            sameSite: 'lax',
           });
 
           delete data.refreshToken;
