@@ -7,7 +7,7 @@ export class InvalidCredentialsException extends BaseHttpException {
     super(
       EXCEPTION_CODES.INVALID_CREDENTIALS,
       EXCEPTION_MESSAGES.INVALID_CREDENTIALS,
-      HttpStatus.UNAUTHORIZED
+      HttpStatus.BAD_REQUEST
     );
   }
 }

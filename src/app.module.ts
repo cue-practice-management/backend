@@ -8,6 +8,9 @@ import { validationSchema } from './common/config/env-validation.config';
 import { EnvironmentConfigService } from './common/config/environment-config.service';
 import { AppLogger } from '@common/loggers/app.logger';
 import { GlobalExceptionFilter } from '@common/filters/http-exception.filter';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottleConfigService } from '@common/config/throttle-config.service';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -24,6 +27,9 @@ import { GlobalExceptionFilter } from '@common/filters/http-exception.filter';
         dbName: env.mongoDbName,
       }),
     }),
+    ThrottlerModule.forRootAsync({
+      useClass: ThrottleConfigService
+    }),
     UserModule,
     AuthModule,
     CommonModule,
@@ -31,9 +37,13 @@ import { GlobalExceptionFilter } from '@common/filters/http-exception.filter';
   providers:[
     AppLogger,
     {
-      provide: 'APP_FILTER',
+      provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
     },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    }
   ]
 })
 export class AppModule {}

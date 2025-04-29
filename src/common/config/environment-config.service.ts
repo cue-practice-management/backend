@@ -45,4 +45,12 @@ export class EnvironmentConfigService {
   get superAdminDocumentNumber(): string {
     return this.configService.get<string>('SUPER_ADMIN_DOCUMENT_NUMBER', { infer: true })!;
   }
+
+  get throttleTtl(): number {
+    return parseInt(this.configService.get<string>('THROTTLE_TTL', '60'), 10);
+  }
+
+  get throttleLimit(): number {
+    return parseInt(this.configService.get<string>('THROTTLE_LIMIT', '10'), 10);
+  }
 }
