@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { User } from "@users/schemas/user.schema";
 import mongoose, { Document } from "mongoose";
 
 @Schema({
@@ -18,7 +19,7 @@ export class RefreshToken extends Document{
     @Prop({
         required: true,
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: User.name
     })
     user: mongoose.Schema.Types.ObjectId;
 

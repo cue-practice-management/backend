@@ -11,6 +11,7 @@ import { GlobalExceptionFilter } from '@common/filters/http-exception.filter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ThrottleConfigService } from '@common/config/throttle-config.service';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
     UserModule,
     AuthModule,
     CommonModule,
+    OtpModule,
   ],
   providers:[
     AppLogger,
