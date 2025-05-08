@@ -1,4 +1,3 @@
-// src/common/decorators/cookie-token.decorator.ts
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const Cookie = (cookieName: string) =>

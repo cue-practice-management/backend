@@ -13,6 +13,7 @@ export class FacultyController {
     @Post('create')
     @UseGuards(AuthGuard)
     async createFaculty(@Body() createFacultyRequestDto: CreateFacultyRequestDto) {
+        return ''
         return await this.facultyService.createFaculty(createFacultyRequestDto);
     }
 
