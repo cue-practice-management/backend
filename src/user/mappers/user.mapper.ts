@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { UserResponseDto } from "@users/dtos/user-response.dto";
-import { User } from "@users/schemas/user.schema";
+import { UserResponseDto } from "@user/dtos/user-response.dto";
+import { User } from "@user/schemas/user.schema";
 
 @Injectable({})
 export class UserMapper {

@@ -4,8 +4,8 @@ import { UserRole } from "@common/enums/role.enum";
 import { AppLogger } from "@common/loggers/app.logger";
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { CreateUserDto } from "@users/dtos/create-user.dto";
-import { UserService } from "@users/user.service";
+import { CreateUserDto } from "@user/dtos/create-user.dto";
+import { UserService } from "@user/user.service";
 
 @Injectable()
 export class UserSeeder implements OnModuleInit {

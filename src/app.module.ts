@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from '@users/user.module';
+import { UserModule } from '@user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { validationSchema } from './common/config/env-validation.config';
@@ -12,6 +12,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ThrottleConfigService } from '@common/config/throttle-config.service';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { OtpModule } from './otp/otp.module';
+import { FacultyModule } from './faculty/faculty.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { OtpModule } from './otp/otp.module';
     AuthModule,
     CommonModule,
     OtpModule,
+    FacultyModule,
   ],
   providers:[
     AppLogger,

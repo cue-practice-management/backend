@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User } from '@users/schemas/user.schema';
+import { User } from '@user/schemas/user.schema';
 import { Document, Types } from 'mongoose';
 import { OtpPurpose } from 'otp/enums/otp.enums';
 

@@ -1,8 +1,8 @@
 import { Injectable, } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EnvironmentConfigService } from '@common/config/environment-config.service';
-import { User } from '@users/schemas/user.schema';
-import { UserService } from '@users/user.service';
+import { User } from '@user/schemas/user.schema';
+import { UserService } from '@user/user.service';
 import { Model } from 'mongoose';
 import { RefreshToken } from './schemas/refresh-token.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -14,8 +14,8 @@ import { InvalidRefreshTokenException } from './exceptions/invalid-refresh-token
 import * as bcrypt from 'bcryptjs';
 import { UserNotFoundException } from './exceptions/user-not-found-exception';
 import { AccountDisabledException } from './exceptions/account-disabled.exception';
-import { UserResponseDto } from '@users/dtos/user-response.dto';
-import { UserMapper } from '@users/mappers/user.mapper';
+import { UserResponseDto } from '@user/dtos/user-response.dto';
+import { UserMapper } from '@user/mappers/user.mapper';
 import { LogoutRequestDto } from './dtos/logout.dto';
 
 @Injectable()
