@@ -12,7 +12,7 @@
     "baseUrl": "./src",
     "paths": {
       "@common/*": ["common/*"],
-      "@users/*": ["users/*"],
+      "@user/*": ["user/*"],
       "@auth/*": ["auth/*"]
     },
     "incremental": true,
