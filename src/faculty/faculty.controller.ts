@@ -1,20 +1,45 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { FacultyService } from './faculty.service';
 import { CreateFacultyRequestDto } from './dtos/create-faculty-request.dto';
 import { AuthGuard } from '@auth/guards/auth.guard';
+import { RoleGuard } from '@auth/guards/role.guard';
+import { Roles } from '@common/decorators/role.decorator';
+import { UserRole } from '@common/enums/role.enum';
+import { ParseObjectIdPipe } from '@nestjs/mongoose';
+import { FacultyFilterDto } from './dtos/faculty-filter.dto';
 
 @Controller('faculty')
 export class FacultyController {
     constructor(
         private readonly facultyService: FacultyService,
-    ) {}
-
+    ) { }
 
     @Post('create')
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
     async createFaculty(@Body() createFacultyRequestDto: CreateFacultyRequestDto) {
-        return ''
         return await this.facultyService.createFaculty(createFacultyRequestDto);
+    }
+
+    @Get()
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    async getByCriteria(@Query() filter: FacultyFilterDto) {
+        return this.facultyService.getByCriteria(filter);
+    }
+
+    @Get(':facultyId')
+    @UseGuards(AuthGuard)
+    async getFacultyById(@Param('facultyId', ParseObjectIdPipe) facultyId: string) {
+        return await this.facultyService.getFacultyById(facultyId);
+    }
+
+    @Delete('delete/:facultyId')
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    @HttpCode(204)
+    async deleteFaculty(@Param('facultyId', ParseObjectIdPipe) facultyId: string) {
+        await this.facultyService.deleteFaculty(facultyId);
     }
 
 }

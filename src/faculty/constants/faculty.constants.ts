@@ -9,6 +9,10 @@ export const FACULTY_CONSTRAINTS = {
     }
 }
 
+export const FACULTY_EXCEPTION_CODES = {
+    FACULTY_NOT_FOUND: 'FACULTY_NOT_FOUND'
+}
+
 export const FACULTY_EXCEPTION_MESSAGES = {
-    
+    FACULTY_NOT_FOUND: 'Faculty not found',
 }
