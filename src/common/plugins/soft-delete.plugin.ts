@@ -26,16 +26,21 @@ export function softDeletePlugin(schema: Schema) {
 
   schema.post('find', function (docs) {
     docs.forEach((doc) => {
-      if (doc.populate) {
-        const paths = Object.keys(doc.populated());
-        paths.forEach((path) => {
-          if (Array.isArray(doc[path])) {
-            doc[path] = doc[path].filter((item) => !item.deleted);
-          } else if (doc[path]?.deleted) {
-            doc[path] = null;
-          }
-        });
+      if (doc.populate && typeof doc.populated === 'function') {
+        const populatedPaths = doc.populated();
+        if (populatedPaths) {
+          const paths = Object.keys(populatedPaths);
+          paths.forEach((path) => {
+            const related = doc[path];
+            if (Array.isArray(related)) {
+              doc[path] = related.filter((item) => !item.deleted);
+            } else if (related?.deleted) {
+              doc[path] = null;
+            }
+          });
+        }
       }
     });
   });
+
 }
