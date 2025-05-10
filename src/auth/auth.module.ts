@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -9,11 +9,12 @@ import { CommonModule } from '@common/common.module';
 import { EnvironmentConfigService } from '@common/config/environment-config.service';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 @Module({
   imports: [
     JwtModule.registerAsync({
-      imports: [CommonModule], 
+      imports: [CommonModule],
       inject: [EnvironmentConfigService],
       useFactory: (env: EnvironmentConfigService) => ({
         secret: env.jwtAccessSecret,
@@ -31,11 +32,17 @@ import { AuthGuard } from './guards/auth.guard';
     UserModule,
     CommonModule,
   ],
-  providers: [AuthService, RefreshTokenGuard, AuthGuard],
+  providers: [
+    AuthService,
+    RefreshTokenGuard,
+    AuthGuard,
+    RoleGuard,
+  ],
   controllers: [AuthController],
   exports: [
     AuthGuard,
-    JwtModule
+    RoleGuard,
+    JwtModule,
   ]
 })
-export class AuthModule {}
+export class AuthModule { }

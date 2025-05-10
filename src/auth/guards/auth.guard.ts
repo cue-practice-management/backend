@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { EXCEPTION_MESSAGES } from '@auth/constants/auth.constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,15 +17,16 @@ export class AuthGuard implements CanActivate {
     const accessToken = this.extractTokenFromHeader(request);
 
     if (!accessToken) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(EXCEPTION_MESSAGES.INVALID_ACCESS_TOKEN);
     }
 
     try {
       const payload = this.jwtService.verify(accessToken);
 
       request.userId = payload.userId;
+      request.userRole = payload.role;
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(EXCEPTION_MESSAGES.INVALID_ACCESS_TOKEN);
     }
     return true;
   }
