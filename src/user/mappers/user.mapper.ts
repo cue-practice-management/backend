@@ -9,6 +9,7 @@ export class UserMapper {
         return {
             _id: user._id.toString(),
             email: user.email,
+            role: user.role,
             firstName: user.firstName,
             lastName: user.lastName,
             photoUrl: user.photoUrl
