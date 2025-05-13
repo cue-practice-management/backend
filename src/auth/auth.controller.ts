@@ -11,6 +11,7 @@ import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { CookieUtil } from '@common/utils/cookie.util';
+import { LogoutRequestDto } from './dtos/logout.dto';
 
 @UseInterceptors(RefreshCookieInterceptor)
 @Controller('auth')
@@ -27,14 +28,15 @@ export class AuthController {
     }
 
     @Post('logout')
-    @UseGuards(RefreshTokenGuard)
     async logout(@Req() req: Request, @Res() res: Response) {
-        const dto = new RefreshTokenRequestDto();
-        dto.refreshToken = req.cookies[this.env.jwtRefreshCookieName];
+        const refreshToken = req.cookies[this.env.jwtRefreshCookieName];
         
-        await this.authService.logout(dto);
+        if (refreshToken) {
+            const dto = new LogoutRequestDto();
+            dto.refreshToken = refreshToken;
+            await this.authService.logout(dto);
+        }
         CookieUtil.clearCookie(res, this.env.jwtRefreshCookieName);
-
         return res.status(HttpStatus.OK).send();
     }
 
