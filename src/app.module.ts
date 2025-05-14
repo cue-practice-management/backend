@@ -13,6 +13,7 @@ import { ThrottleConfigService } from '@common/config/throttle-config.service';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { OtpModule } from './otp/otp.module';
 import { FacultyModule } from './faculty/faculty.module';
+import { AcademicProgramModule } from './academic-program/academic-program.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { FacultyModule } from './faculty/faculty.module';
     CommonModule,
     OtpModule,
     FacultyModule,
+    AcademicProgramModule,
   ],
   providers:[
     AppLogger,
