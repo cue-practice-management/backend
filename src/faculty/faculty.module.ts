@@ -17,6 +17,7 @@ import { AuthModule } from '@auth/auth.module';
         AuthModule
     ],
     providers: [FacultyService, FacultyMapper],
-    controllers: [FacultyController]
+    controllers: [FacultyController],
+    exports: [FacultyService, FacultyMapper],
 })
 export class FacultyModule { }
