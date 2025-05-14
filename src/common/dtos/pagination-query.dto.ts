@@ -1,6 +1,7 @@
 import { DEFAULT_PAGINATION } from '@common/constants/default-values.constants';
+import { SortOrder } from '@common/types/sort-order';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export class PaginationQueryDto {
     @IsOptional()
@@ -14,4 +15,12 @@ export class PaginationQueryDto {
     @IsInt()
     @Min(DEFAULT_PAGINATION.MIN_LIMIT)
     limit: number = DEFAULT_PAGINATION.LIMIT;
+
+    @IsOptional()
+    @IsString()
+    sortBy?: string;
+
+    @IsOptional()
+    @IsIn(['asc', 'desc'])
+    sortOrder?: SortOrder = 'desc';
 }

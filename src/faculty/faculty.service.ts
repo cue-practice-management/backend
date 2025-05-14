@@ -9,6 +9,9 @@ import { FacultyNotFoundException } from './exceptions/FacultyNotFoundException'
 import { FacultyResponseDto } from './dtos/faculty-response.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { FacultyFilterDto } from './dtos/faculty-filter.dto';
+import { UpdateFacultyRequestDto } from './dtos/update-faculty-request.dto';
+import { DEFAULT_FACULTY_SORT_OPTION, FACULTY_SORT_OPTIONS } from './constants/faculty.constants';
+import { getSortDirection } from '@common/utils/pagination.util';
 
 @Injectable()
 export class FacultyService {
@@ -35,18 +38,35 @@ export class FacultyService {
     }
 
     async getByCriteria(filter: FacultyFilterDto): Promise<PaginatedResult<FacultyResponseDto>> {
-        const { page, limit } = filter;
+        const { page, limit, sortBy, sortOrder } = filter;
 
         const query: Record<string, any> = this.buildFilterQuery(filter);
+
+        const validatedSortBy = FACULTY_SORT_OPTIONS.find(option => option === sortBy) || DEFAULT_FACULTY_SORT_OPTION;
+        const sort = {
+            [validatedSortBy]: getSortDirection(sortOrder),
+        }
 
         const result: PaginateResult<FacultyDocument> = await this.facultyModel.paginate(query, {
             page,
             limit,
-            sort: { createdAt: -1 },
+            sort
         });
 
 
         return this.facultyMapper.toFacultyResponsePaginatedDto(result)
+    }
+
+    async updateFaculty(facultyId: string, updateFacultyDto: UpdateFacultyRequestDto): Promise<FacultyResponseDto> {
+        const faculty = await this.facultyModel.findById(facultyId);
+        if (!faculty) {
+            throw new FacultyNotFoundException();
+        }
+
+        Object.assign(faculty, updateFacultyDto);
+        await faculty.save();
+
+        return this.facultyMapper.toFacultyResponseDto(faculty);
     }
 
     async deleteFaculty(facultyId: string): Promise<void> {
