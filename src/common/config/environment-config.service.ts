@@ -51,6 +51,6 @@ export class EnvironmentConfigService {
   }
 
   get throttleLimit(): number {
-    return parseInt(this.configService.get<string>('THROTTLE_LIMIT', '10'), 10);
+    return parseInt(this.configService.get<string>('THROTTLE_LIMIT', '30'), 10);
   }
 }

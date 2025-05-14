@@ -5,9 +5,10 @@ import { Faculty } from "faculty/schemas/faculty.schema";
 import { SoftDeletableDocument } from "@common/types/soft-deletable-document";
 import { softDeletePlugin } from "@common/plugins/soft-delete.plugin";
 import * as mongoosePaginate from 'mongoose-paginate-v2';
+import { BaseSchema } from "@common/types/base.schema";
 
 @Schema({ timestamps: true })
-export class AcademicProgram {
+export class AcademicProgram extends BaseSchema {
     @Prop({ required: true, maxlength: ACADEMIC_PROGRAM_CONSTRAINTS.NAME.MAX_LENGTH, minlength: ACADEMIC_PROGRAM_CONSTRAINTS.NAME.MIN_LENGTH })
     name: string;
 

@@ -77,6 +77,12 @@ export class FacultyService {
         faculty.softDelete();
     }
 
+    async validateFacultyExists(facultyId: string): Promise<void> {
+        const faculty = await this.facultyModel.exists({ _id: facultyId });
+        if (!faculty) {
+            throw new FacultyNotFoundException();
+        }
+    }
 
     private buildFilterQuery(filter: FacultyFilterDto): Record<string, any> {
         const query: Record<string, any> = {};

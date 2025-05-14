@@ -8,3 +8,7 @@ export const ACADEMIC_PROGRAM_CONSTRAINTS = {
         MIN_LENGTH: 10,
     }
 }
+
+export const ACADEMIC_PROGRAM_POPULATE_OPTIONS = {
+    FACULTY: 'faculty'
+}
