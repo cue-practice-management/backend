@@ -47,8 +47,6 @@ export class AuthService {
         const tokenDoc = await this.refreshTokenModel.findOneAndDelete({
             token: logoutRequestDto.refreshToken,
         });
-
-        if (!tokenDoc) throw new InvalidRefreshTokenException();
     }
 
 

@@ -1,3 +1,3 @@
-export interface LogoutRequestDto {
+export class LogoutRequestDto {
     refreshToken: string;
 }

@@ -9,6 +9,9 @@ export const FACULTY_CONSTRAINTS = {
     }
 }
 
+export const FACULTY_SORT_OPTIONS = ['name', 'description', 'deanName', 'deanEmail', 'createdAt'];
+export const DEFAULT_FACULTY_SORT_OPTION = 'createdAt';
+
 export const FACULTY_EXCEPTION_CODES = {
     FACULTY_NOT_FOUND: 'FACULTY_NOT_FOUND'
 }

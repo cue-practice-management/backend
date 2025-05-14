@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { FacultyService } from './faculty.service';
 import { CreateFacultyRequestDto } from './dtos/create-faculty-request.dto';
 import { AuthGuard } from '@auth/guards/auth.guard';
@@ -7,6 +7,7 @@ import { Roles } from '@common/decorators/role.decorator';
 import { UserRole } from '@common/enums/role.enum';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { FacultyFilterDto } from './dtos/faculty-filter.dto';
+import { UpdateFacultyRequestDto } from './dtos/update-faculty-request.dto';
 
 @Controller('faculty')
 export class FacultyController {
@@ -32,6 +33,13 @@ export class FacultyController {
     @UseGuards(AuthGuard)
     async getFacultyById(@Param('facultyId', ParseObjectIdPipe) facultyId: string) {
         return await this.facultyService.getFacultyById(facultyId);
+    }
+
+    @Put('update/:facultyId')
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    async updateFaculty(@Param('facultyId', ParseObjectIdPipe) facultyId: string, @Body() updateFacultyRequestDto: UpdateFacultyRequestDto,) {
+        return await this.facultyService.updateFaculty(facultyId, updateFacultyRequestDto);
     }
 
     @Delete('delete/:facultyId')
