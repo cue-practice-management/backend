@@ -12,3 +12,14 @@ export const ACADEMIC_PROGRAM_CONSTRAINTS = {
 export const ACADEMIC_PROGRAM_POPULATE_OPTIONS = {
     FACULTY: 'faculty'
 }
+
+export const ACADEMIC_PROGRAM_SORT_OPTIONS = [
+    'name',
+    'description',
+    'durationInSemesters',
+    'faculty',
+    'coordinatorName',
+    'coordinatorEmail'
+];
+
+export const DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION = 'name';

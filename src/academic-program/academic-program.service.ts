@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { AcademicProgram, AcademicProgramDocument } from './schemas/academic-program.schema';
-import { PaginateModel } from 'mongoose';
+import { PaginateModel, PaginateResult } from 'mongoose';
 import { AcademicProgramMapper } from './mappers/academic-program.mapper';
 import { CreateAcademicProgramRequestDto } from './dtos/create-academic-program-request.dto';
 import { AcademicProgramResponseDto } from './dtos/academic-program-response.dto';
-import { ACADEMIC_PROGRAM_POPULATE_OPTIONS } from './constants/academic-program.constants';
+import { ACADEMIC_PROGRAM_POPULATE_OPTIONS, ACADEMIC_PROGRAM_SORT_OPTIONS, DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION } from './constants/academic-program.constants';
 import { FacultyService } from 'faculty/faculty.service';
+import { PaginatedResult } from '@common/types/paginated-result';
+import { AcademicProgramFilterDto } from './dtos/academic-program-filter.dto';
+import { getSortDirection } from '@common/utils/pagination.util';
 
 @Injectable()
 export class AcademicProgramService {
@@ -25,5 +28,41 @@ export class AcademicProgramService {
         await academicProgram.save();
         await academicProgram.populate(ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY);
         return this.academicProgramMapper.toAcademicProgramResponseDto(academicProgram);
+    }
+
+    async getAcademicProgramsByCriteria(filter: AcademicProgramFilterDto): Promise<PaginatedResult<AcademicProgramResponseDto>> {
+        const { page, limit, sortBy, sortOrder } = filter;
+
+        const query: Record<string, any> = this.buildFilterQuery(filter);
+
+        const validatedSortBy = ACADEMIC_PROGRAM_SORT_OPTIONS.find(option => option === sortBy) || DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION;
+
+        const sort = {
+            [validatedSortBy]: getSortDirection(sortOrder),
+        }
+
+        const result: PaginateResult<AcademicProgramDocument> = await this.academicProgramModel.paginate(query, {
+            page,
+            limit,
+            populate: ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY,
+            sort
+        });
+
+        return this.academicProgramMapper.toAcademicProgramResponsePaginatedDto(result);
+    }
+
+    private buildFilterQuery(filter: AcademicProgramFilterDto): Record<string, any> {
+        const query: Record<string, any> = {};
+
+        if (filter.name) {
+            query.name = { $regex: filter.name, $options: 'i' };
+        }
+
+        if (filter.faculty) {
+            query.faculty = filter.faculty;
+        }
+
+        return query;
+
     }
 }
