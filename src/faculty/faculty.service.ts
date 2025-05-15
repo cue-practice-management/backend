@@ -12,6 +12,7 @@ import { FacultyFilterDto } from './dtos/faculty-filter.dto';
 import { UpdateFacultyRequestDto } from './dtos/update-faculty-request.dto';
 import { DEFAULT_FACULTY_SORT_OPTION, FACULTY_SORT_OPTIONS } from './constants/faculty.constants';
 import { getSortDirection } from '@common/utils/pagination.util';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Injectable()
 export class FacultyService {
@@ -82,6 +83,14 @@ export class FacultyService {
         if (!faculty) {
             throw new FacultyNotFoundException();
         }
+    }
+
+    async getFacultyTypeahead(query: string): Promise<TypeaheadItem[]> {
+        const faculties = await this.facultyModel.find({
+            name: { $regex: `^${query}`, $options: 'i' }
+        }).limit(10);
+
+        return faculties.map(faculty => this.facultyMapper.toFacultyTypeaheadItem(faculty));
     }
 
     private buildFilterQuery(filter: FacultyFilterDto): Record<string, any> {

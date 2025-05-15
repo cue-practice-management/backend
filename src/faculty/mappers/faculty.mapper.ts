@@ -1,3 +1,4 @@
+import { TypeaheadItem } from "@common/dtos/typeahead-item.dto";
 import { PaginatedResult } from "@common/types/paginated-result";
 import { Injectable } from "@nestjs/common";
 import { FacultyCreatedResponseDto } from "faculty/dtos/faculty-created-response.dto";
@@ -38,6 +39,13 @@ export class FacultyMapper {
             totalPages: paginatedResult.totalPages,
             page: paginatedResult.page,
             limit: paginatedResult.limit
+        };
+    }
+
+    toFacultyTypeaheadItem(faculty: Faculty): TypeaheadItem {
+        return {
+            value: faculty._id.toString(),
+            label: faculty.name,
         };
     }
 }

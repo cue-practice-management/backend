@@ -29,6 +29,13 @@ export class FacultyController {
         return this.facultyService.getByCriteria(filter);
     }
 
+    @Get('typeahead')
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    async getFacultyTypeahead(@Query('query') query: string) {
+        return await this.facultyService.getFacultyTypeahead(query);
+    }
+    
     @Get(':facultyId')
     @UseGuards(AuthGuard)
     async getFacultyById(@Param('facultyId', ParseObjectIdPipe) facultyId: string) {
