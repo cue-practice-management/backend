@@ -10,6 +10,7 @@ import { FacultyService } from 'faculty/faculty.service';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { AcademicProgramFilterDto } from './dtos/academic-program-filter.dto';
 import { getSortDirection } from '@common/utils/pagination.util';
+import { AcademicProgramNotFoundException } from './exceptions/academic-program-not-found.exception';
 
 @Injectable()
 export class AcademicProgramService {
@@ -49,6 +50,32 @@ export class AcademicProgramService {
         });
 
         return this.academicProgramMapper.toAcademicProgramResponsePaginatedDto(result);
+    }
+
+    async updateAcademicProgram(id: string, updateAcademicProgramDto: CreateAcademicProgramRequestDto): Promise<AcademicProgramResponseDto> {
+        const academicProgram = await this.academicProgramModel.findById(id);
+
+        if (!academicProgram) {
+            throw new AcademicProgramNotFoundException();
+        }
+
+        await this.facultyService.validateFacultyExists(updateAcademicProgramDto.faculty);
+
+        Object.assign(academicProgram, updateAcademicProgramDto);
+        await academicProgram.save();
+        await academicProgram.populate(ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY);
+        return this.academicProgramMapper.toAcademicProgramResponseDto(academicProgram);
+
+    }
+
+    async deleteAcademicProgram(id: string): Promise<void> {
+        const academicProgram = await this.academicProgramModel.findById(id);
+
+        if (!academicProgram) {
+            throw new AcademicProgramNotFoundException();
+        }
+
+        await academicProgram.softDelete();
     }
 
     private buildFilterQuery(filter: AcademicProgramFilterDto): Record<string, any> {
