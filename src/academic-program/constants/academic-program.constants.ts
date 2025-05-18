@@ -9,6 +9,14 @@ export const ACADEMIC_PROGRAM_CONSTRAINTS = {
     }
 }
 
+export const ACADEMIC_PROGRAM_EXCEPTION_MESSAGES = {
+    NOT_FOUND: 'Academic program not found',
+}
+
+export const ACADEMIC_PROGRAM_EXCEPTION_CODES = {
+    NOT_FOUND: 'ACADEMIC_PROGRAM_NOT_FOUND',
+}
+
 export const ACADEMIC_PROGRAM_POPULATE_OPTIONS = {
     FACULTY: 'faculty'
 }
