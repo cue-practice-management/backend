@@ -14,6 +14,9 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { OtpModule } from './otp/otp.module';
 import { FacultyModule } from './faculty/faculty.module';
 import { AcademicProgramModule } from './academic-program/academic-program.module';
+import { CompanyModule } from './company/company.module';
+import { CountryModule } from './country/country.module';
+import { CityModule } from './city/city.module';
 
 @Module({
   imports: [
@@ -31,7 +34,7 @@ import { AcademicProgramModule } from './academic-program/academic-program.modul
       }),
     }),
     ThrottlerModule.forRootAsync({
-      useClass: ThrottleConfigService
+      useClass: ThrottleConfigService,
     }),
     UserModule,
     AuthModule,
@@ -39,8 +42,11 @@ import { AcademicProgramModule } from './academic-program/academic-program.modul
     OtpModule,
     FacultyModule,
     AcademicProgramModule,
+    CompanyModule,
+    CountryModule,
+    CityModule,
   ],
-  providers:[
+  providers: [
     AppLogger,
     {
       provide: APP_FILTER,
@@ -49,7 +55,7 @@ import { AcademicProgramModule } from './academic-program/academic-program.modul
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
-    }
-  ]
+    },
+  ],
 })
 export class AppModule {}

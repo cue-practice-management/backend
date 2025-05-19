@@ -10,7 +10,7 @@ import { AppLogger } from '@common/loggers/app.logger';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: AppLogger) { }
+  constructor(private readonly logger: AppLogger) {}
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -42,11 +42,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
           'GlobalExceptionFilter',
         );
       } else {
-        this.logger.error(
-          String(exception),
-          '',
-          'GlobalExceptionFilter',
-        );
+        this.logger.error(String(exception), '', 'GlobalExceptionFilter');
       }
     }
   }

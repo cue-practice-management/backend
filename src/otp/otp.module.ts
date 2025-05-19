@@ -9,9 +9,9 @@ import { Otp, OtpSchema } from './schemas/otp.schema';
       {
         name: Otp.name,
         schema: OtpSchema,
-      }
-    ])
+      },
+    ]),
   ],
-  providers: [OtpService]
+  providers: [OtpService],
 })
-export class OtpModule { }
+export class OtpModule {}

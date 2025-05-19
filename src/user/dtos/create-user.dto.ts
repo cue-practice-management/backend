@@ -1,15 +1,19 @@
 import {
-  IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, IsDateString,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsDateString,
 } from 'class-validator';
 
-import { IsValidDocumentNumber } from '@common/validators/document.validator'; 
+import { IsValidDocumentNumber } from '@common/validators/document.validator';
 import { VALIDATION_MESSAGES } from '@common/constants/validation.messages';
 import { IsColombianPhone } from '@common/validators/colombian-phone.validator';
 import { Gender } from '@common/enums/gender.enum';
 import { IsStrongPassword } from '@common/validators/password.validator';
 import { UserRole } from '@common/enums/role.enum';
 import { DocumentType } from '@common/enums/document-type.enum';
-
 
 export class CreateUserDto {
   @IsString({ message: VALIDATION_MESSAGES.REQUIRED })
@@ -25,7 +29,9 @@ export class CreateUserDto {
 
   @IsString({ message: VALIDATION_MESSAGES.REQUIRED })
   @IsNotEmpty({ message: VALIDATION_MESSAGES.REQUIRED })
-  @IsValidDocumentNumber({ message: VALIDATION_MESSAGES.INVALID_DOCUMENT_FORMAT })
+  @IsValidDocumentNumber({
+    message: VALIDATION_MESSAGES.INVALID_DOCUMENT_FORMAT,
+  })
   documentNumber: string;
 
   @IsOptional()

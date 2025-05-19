@@ -1,4 +1,3 @@
-
 export class RefreshTokenRequestDto {
   refreshToken: string;
   deviceInfo: string;

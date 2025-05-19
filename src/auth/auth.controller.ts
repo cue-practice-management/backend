@@ -1,5 +1,16 @@
 import { Request, Response } from 'express';
-import { Body, Controller, Get, HttpStatus, Ip, Post, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Ip,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginRequestDto } from './dtos/login.dto';
 import { RefreshTokenRequestDto } from './dtos/refresh-token.dto';
@@ -16,45 +27,57 @@ import { LogoutRequestDto } from './dtos/logout.dto';
 @UseInterceptors(RefreshCookieInterceptor)
 @Controller('auth')
 export class AuthController {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly env: EnvironmentConfigService,
+  ) {}
 
-    constructor(private readonly authService: AuthService, private readonly env: EnvironmentConfigService) { }
+  @Post('login')
+  async login(
+    @Body() dto: LoginRequestDto,
+    @Req() req: Request,
+    @Ip() ip: string,
+  ) {
+    dto.deviceInfo = HeaderUtil.getHeaderStringValue(
+      req.headers[HEADERS.USER_AGENT],
+      DEFAULTS.UNKNOWN_DEVICE,
+    );
+    dto.ip = ip || DEFAULTS.UNKNOWN_IP;
 
-    @Post('login')
-    async login(@Body() dto: LoginRequestDto, @Req() req: Request, @Ip() ip: string) {
-        dto.deviceInfo = HeaderUtil.getHeaderStringValue(req.headers[HEADERS.USER_AGENT], DEFAULTS.UNKNOWN_DEVICE);
-        dto.ip = ip || DEFAULTS.UNKNOWN_IP;
+    return await this.authService.login(dto);
+  }
 
-        return await this.authService.login(dto);
+  @Post('logout')
+  async logout(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies[this.env.jwtRefreshCookieName];
+
+    if (refreshToken) {
+      const dto = new LogoutRequestDto();
+      dto.refreshToken = refreshToken;
+      await this.authService.logout(dto);
     }
+    CookieUtil.clearCookie(res, this.env.jwtRefreshCookieName);
+    return res.status(HttpStatus.OK).send();
+  }
 
-    @Post('logout')
-    async logout(@Req() req: Request, @Res() res: Response) {
-        const refreshToken = req.cookies[this.env.jwtRefreshCookieName];
-        
-        if (refreshToken) {
-            const dto = new LogoutRequestDto();
-            dto.refreshToken = refreshToken;
-            await this.authService.logout(dto);
-        }
-        CookieUtil.clearCookie(res, this.env.jwtRefreshCookieName);
-        return res.status(HttpStatus.OK).send();
-    }
+  @Post('refresh')
+  @UseGuards(RefreshTokenGuard)
+  async refresh(@Req() req: Request, @Ip() ip: string) {
+    const dto = new RefreshTokenRequestDto();
 
-    @Post('refresh')
-    @UseGuards(RefreshTokenGuard)
-    async refresh(@Req() req: Request, @Ip() ip: string) {
-        const dto = new RefreshTokenRequestDto();
+    dto.refreshToken = req.cookies[this.env.jwtRefreshCookieName];
+    dto.deviceInfo = HeaderUtil.getHeaderStringValue(
+      req.headers[HEADERS.USER_AGENT],
+      DEFAULTS.UNKNOWN_DEVICE,
+    );
+    dto.ip = ip || DEFAULTS.UNKNOWN_IP;
 
-        dto.refreshToken = req.cookies[this.env.jwtRefreshCookieName];
-        dto.deviceInfo = HeaderUtil.getHeaderStringValue(req.headers[HEADERS.USER_AGENT], DEFAULTS.UNKNOWN_DEVICE);
-        dto.ip = ip || DEFAULTS.UNKNOWN_IP;
+    return await this.authService.refreshToken(dto);
+  }
 
-        return await this.authService.refreshToken(dto);
-    }
-
-    @Get('me')
-    @UseGuards(AuthGuard)
-    async me(@CurrentUser() userId: string) {
-        return await this.authService.me(userId);
-    }
+  @Get('me')
+  @UseGuards(AuthGuard)
+  async me(@CurrentUser() userId: string) {
+    return await this.authService.me(userId);
+  }
 }

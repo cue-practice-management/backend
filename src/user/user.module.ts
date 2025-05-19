@@ -6,7 +6,7 @@ import { UserSeeder } from './seeders/user.seeder';
 import { UserMapper } from './mappers/user.mapper';
 
 @Module({
-  imports:[
+  imports: [
     MongooseModule.forFeatureAsync([
       {
         name: User.name,
@@ -20,7 +20,6 @@ import { UserMapper } from './mappers/user.mapper';
         },
       },
     ]),
-
   ],
   providers: [UserService, UserSeeder, UserMapper],
   exports: [UserService, UserMapper],
