@@ -92,6 +92,13 @@ export class CountryService {
     );
   }
 
+  async validateCountryExists(countryId: string): Promise<void> {
+    const country = await this.countryModel.findById(countryId);
+    if (!country) {
+      throw new CountryNotFoundException();
+    }
+  }
+
   private buildFilterQuery(filter: CountryFilter): Record<string, any> {
     const query: Record<string, any> = {};
 

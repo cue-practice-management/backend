@@ -19,5 +19,6 @@ import { CountrySeeder } from './seeders/country.seeder';
   ],
   providers: [CountryService, CountryMapper, CountrySeeder],
   controllers: [CountryController],
+  exports: [CountryService, CountryMapper],
 })
 export class CountryModule {}
