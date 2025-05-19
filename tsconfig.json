@@ -13,7 +13,11 @@
     "paths": {
       "@common/*": ["common/*"],
       "@user/*": ["user/*"],
-      "@auth/*": ["auth/*"]
+      "@auth/*": ["auth/*"],
+      "@faculty/*": ["faculty/*"],
+      "@academic-program/*": ["academic-program/*"],
+      "@city/*": ["city/*"],
+      "@country/*": ["country/*"],
     },
     "incremental": true,
     "skipLibCheck": true,

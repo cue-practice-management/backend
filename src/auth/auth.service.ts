@@ -30,7 +30,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly env: EnvironmentConfigService,
     private readonly userMapper: UserMapper,
-  ) { }
+  ) {}
 
   async login(loginRequestDto: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.userService.findByEmail(loginRequestDto.email);

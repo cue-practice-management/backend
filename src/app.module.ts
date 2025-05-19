@@ -15,6 +15,8 @@ import { OtpModule } from './otp/otp.module';
 import { FacultyModule } from './faculty/faculty.module';
 import { AcademicProgramModule } from './academic-program/academic-program.module';
 import { CompanyModule } from './company/company.module';
+import { CountryModule } from './country/country.module';
+import { CityModule } from './city/city.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { CompanyModule } from './company/company.module';
     FacultyModule,
     AcademicProgramModule,
     CompanyModule,
+    CountryModule,
+    CityModule,
   ],
   providers: [
     AppLogger,
