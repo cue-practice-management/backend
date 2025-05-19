@@ -14,8 +14,9 @@ import {
   DEFAULT_FACULTY_SORT_OPTION,
   FACULTY_SORT_OPTIONS,
 } from './constants/faculty.constants';
-import { getSortDirection } from '@common/utils/pagination.util';
+import { getSort, getSortDirection } from '@common/utils/pagination.util';
 import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
+import { MAX_TYPEAHEAD_ITEMS } from '@common/constants/constaint.constants';
 
 @Injectable()
 export class FacultyService {
@@ -48,14 +49,12 @@ export class FacultyService {
     const { page, limit, sortBy, sortOrder } = filter;
 
     const query: Record<string, any> = this.buildFilterQuery(filter);
-
-    const validatedSortBy =
-      FACULTY_SORT_OPTIONS.find((option) => option === sortBy) ||
-      DEFAULT_FACULTY_SORT_OPTION;
-    const sort = {
-      [validatedSortBy]: getSortDirection(sortOrder),
-    };
-
+    const sort = getSort(
+      FACULTY_SORT_OPTIONS,
+      DEFAULT_FACULTY_SORT_OPTION,
+      sortBy,
+      sortOrder,
+    );
     const result: PaginateResult<FacultyDocument> =
       await this.facultyModel.paginate(query, {
         page,
@@ -101,7 +100,7 @@ export class FacultyService {
       .find({
         name: { $regex: `^${query}`, $options: 'i' },
       })
-      .limit(10);
+      .limit(MAX_TYPEAHEAD_ITEMS);
 
     return faculties.map((faculty) =>
       this.facultyMapper.toFacultyTypeaheadItem(faculty),

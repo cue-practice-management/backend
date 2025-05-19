@@ -16,7 +16,7 @@ import {
 import { FacultyService } from 'faculty/faculty.service';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { AcademicProgramFilterDto } from './dtos/academic-program-filter.dto';
-import { getSortDirection } from '@common/utils/pagination.util';
+import { getSort, getSortDirection } from '@common/utils/pagination.util';
 import { AcademicProgramNotFoundException } from './exceptions/academic-program-not-found.exception';
 
 @Injectable()
@@ -53,13 +53,12 @@ export class AcademicProgramService {
 
     const query: Record<string, any> = this.buildFilterQuery(filter);
 
-    const validatedSortBy =
-      ACADEMIC_PROGRAM_SORT_OPTIONS.find((option) => option === sortBy) ||
-      DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION;
-
-    const sort = {
-      [validatedSortBy]: getSortDirection(sortOrder),
-    };
+    const sort = getSort(
+      ACADEMIC_PROGRAM_SORT_OPTIONS,
+      DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION,
+      sortBy,
+      sortOrder,
+    );
 
     const result: PaginateResult<AcademicProgramDocument> =
       await this.academicProgramModel.paginate(query, {

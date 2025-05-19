@@ -1,4 +1,5 @@
 import { softDeletePlugin } from '@common/plugins/soft-delete.plugin';
+import { BaseSchema } from '@common/types/base.schema';
 import { SoftDeletableDocument } from '@common/types/soft-deletable-document';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Country } from 'country/schemas/country.schema';
@@ -6,7 +7,7 @@ import * as mongoose from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
 
 @Schema({ timestamps: true })
-export class City {
+export class City extends BaseSchema {
   @Prop({ required: true })
   name: string;
 
