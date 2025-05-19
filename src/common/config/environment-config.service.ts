@@ -15,35 +15,51 @@ export class EnvironmentConfigService {
   }
 
   get jwtAccessSecret(): string {
-    return this.configService.get<string>('JWT_ACCESS_SECRET', { infer: true })!;
+    return this.configService.get<string>('JWT_ACCESS_SECRET', {
+      infer: true,
+    })!;
   }
 
   get jwtAccessExpiresIn(): string {
-    return this.configService.get<string>('JWT_ACCESS_EXPIRES_IN', { infer: true })!;
+    return this.configService.get<string>('JWT_ACCESS_EXPIRES_IN', {
+      infer: true,
+    })!;
   }
 
   get jwtRefreshExpirationDays(): number {
-    return this.configService.get<number>('JWT_REFRESH_EXPIRATION_DAYS', { infer: true })!;
+    return this.configService.get<number>('JWT_REFRESH_EXPIRATION_DAYS', {
+      infer: true,
+    })!;
   }
 
   get jwtRefreshCookieName(): string {
-    return this.configService.get<string>('JWT_REFRESH_COOKIE_NAME', { infer: true })!;
+    return this.configService.get<string>('JWT_REFRESH_COOKIE_NAME', {
+      infer: true,
+    })!;
   }
 
   get superAdminEmail(): string {
-    return this.configService.get<string>('SUPER_ADMIN_EMAIL', { infer: true })!;
+    return this.configService.get<string>('SUPER_ADMIN_EMAIL', {
+      infer: true,
+    })!;
   }
 
   get superAdminPassword(): string {
-    return this.configService.get<string>('SUPER_ADMIN_PASSWORD', { infer: true })!;
+    return this.configService.get<string>('SUPER_ADMIN_PASSWORD', {
+      infer: true,
+    })!;
   }
 
   get superAdminPhone(): string {
-    return this.configService.get<string>('SUPER_ADMIN_PHONE', { infer: true })!;
+    return this.configService.get<string>('SUPER_ADMIN_PHONE', {
+      infer: true,
+    })!;
   }
 
   get superAdminDocumentNumber(): string {
-    return this.configService.get<string>('SUPER_ADMIN_DOCUMENT_NUMBER', { infer: true })!;
+    return this.configService.get<string>('SUPER_ADMIN_DOCUMENT_NUMBER', {
+      infer: true,
+    })!;
   }
 
   get throttleTtl(): number {

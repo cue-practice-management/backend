@@ -11,6 +11,8 @@ export const validationSchema = Joi.object({
 
   SUPER_ADMIN_EMAIL: Joi.string().email().required(),
   SUPER_ADMIN_PASSWORD: Joi.string().min(8).required(),
-  SUPER_ADMIN_PHONE: Joi.string().pattern(/^\d{10}$/).required(), 
+  SUPER_ADMIN_PHONE: Joi.string()
+    .pattern(/^\d{10}$/)
+    .required(),
   SUPER_ADMIN_DOCUMENT_NUMBER: Joi.string().alphanum().required(),
 });

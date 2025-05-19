@@ -17,11 +17,11 @@ export const EXCEPTION_MESSAGES = {
 
 export const HEADERS = {
   USER_AGENT: 'user-agent',
-}
+};
 
 export const DEFAULTS = {
   UNKNOWN_DEVICE: 'unknown-device',
   UNKNOWN_IP: 'unknown-ip',
-}
+};
 
 export const REFRESH_TOKEN_COOKIE = 'refreshToken';

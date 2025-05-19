@@ -1,6 +1,6 @@
-import { OtpPurpose } from "otp/enums/otp.enums";
+import { OtpPurpose } from 'otp/enums/otp.enums';
 
 export class CreateOtpRequestDto {
-    userId: string;
-    purpose: OtpPurpose;
+  userId: string;
+  purpose: OtpPurpose;
 }

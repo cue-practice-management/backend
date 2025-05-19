@@ -7,17 +7,17 @@ import { FacultyController } from './faculty.controller';
 import { AuthModule } from '@auth/auth.module';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            {
-                name: Faculty.name,
-                schema: FacultySchema,
-            }
-        ]),
-        AuthModule
-    ],
-    providers: [FacultyService, FacultyMapper],
-    controllers: [FacultyController],
-    exports: [FacultyService, FacultyMapper],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Faculty.name,
+        schema: FacultySchema,
+      },
+    ]),
+    AuthModule,
+  ],
+  providers: [FacultyService, FacultyMapper],
+  controllers: [FacultyController],
+  exports: [FacultyService, FacultyMapper],
 })
-export class FacultyModule { }
+export class FacultyModule {}

@@ -3,7 +3,10 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RefreshToken, RefreshTokenSchema } from './schemas/refresh-token.schema';
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from './schemas/refresh-token.schema';
 import { UserModule } from '@user/user.module';
 import { CommonModule } from '@common/common.module';
 import { EnvironmentConfigService } from '@common/config/environment-config.service';
@@ -27,22 +30,13 @@ import { RoleGuard } from './guards/role.guard';
       {
         name: RefreshToken.name,
         schema: RefreshTokenSchema,
-      }
+      },
     ]),
     UserModule,
     CommonModule,
   ],
-  providers: [
-    AuthService,
-    RefreshTokenGuard,
-    AuthGuard,
-    RoleGuard,
-  ],
+  providers: [AuthService, RefreshTokenGuard, AuthGuard, RoleGuard],
   controllers: [AuthController],
-  exports: [
-    AuthGuard,
-    RoleGuard,
-    JwtModule,
-  ]
+  exports: [AuthGuard, RoleGuard, JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}

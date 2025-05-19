@@ -9,7 +9,9 @@ describe('AcademicProgramController', () => {
       controllers: [AcademicProgramController],
     }).compile();
 
-    controller = module.get<AcademicProgramController>(AcademicProgramController);
+    controller = module.get<AcademicProgramController>(
+      AcademicProgramController,
+    );
   });
 
   it('should be defined', () => {

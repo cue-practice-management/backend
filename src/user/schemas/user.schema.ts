@@ -28,7 +28,7 @@ export class User {
   @Prop()
   birthDate?: Date;
 
-  @Prop({ required:true, enum: Object.values(Gender) })
+  @Prop({ required: true, enum: Object.values(Gender) })
   gender: Gender;
 
   @Prop()

@@ -5,8 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 
 @Global()
 @Module({
-    imports: [ConfigModule],
-    providers:[AppLogger, EnvironmentConfigService],
-    exports:[AppLogger, EnvironmentConfigService],
+  imports: [ConfigModule],
+  providers: [AppLogger, EnvironmentConfigService],
+  exports: [AppLogger, EnvironmentConfigService],
 })
 export class CommonModule {}

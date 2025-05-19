@@ -1,14 +1,21 @@
-import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
 
 @ValidatorConstraint({ async: false })
-export class IsColombianPhoneConstraint implements ValidatorConstraintInterface {
+export class IsColombianPhoneConstraint
+  implements ValidatorConstraintInterface
+{
   validate(phone: string): boolean {
     return /^3\d{9}$/.test(phone);
   }
 }
 
 export function IsColombianPhone(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isColombianPhone',
       target: object.constructor,

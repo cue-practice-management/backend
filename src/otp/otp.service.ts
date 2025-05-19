@@ -3,7 +3,12 @@ import { CreateOtpRequestDto } from './dtos/create-otp.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Otp } from './schemas/otp.schema';
 import { Model } from 'mongoose';
-import { OTP_CODE_EXPIRATION_MINUTES, OTP_CODE_LENGTH, OTP_MAX_ATTEMPTS, OTP_RESEND_INTERVAL_MS } from './constants/otp.constants';
+import {
+  OTP_CODE_EXPIRATION_MINUTES,
+  OTP_CODE_LENGTH,
+  OTP_MAX_ATTEMPTS,
+  OTP_RESEND_INTERVAL_MS,
+} from './constants/otp.constants';
 import { OtpCreateTooSoonException } from './exceptions/OtpCreateTooSoonException';
 import { CommonUtil } from '@common/utils/common.util';
 import { ValidateOtpRequestDto } from './dtos/validate-otp.dto';
@@ -13,66 +18,82 @@ import { OtpExpiredException } from './exceptions/OtpExpiredException';
 
 @Injectable()
 export class OtpService {
-    constructor(
-        @InjectModel(Otp.name)
-        private readonly otpModel: Model<Otp>,
-    ) { }
+  constructor(
+    @InjectModel(Otp.name)
+    private readonly otpModel: Model<Otp>,
+  ) {}
 
-    async generateOtp({ userId, purpose }: CreateOtpRequestDto) {
-        const lastOtp = await this.otpModel.findOne({ user: userId, purpose, used: false }).sort({ createdAt: -1 });
+  async generateOtp({ userId, purpose }: CreateOtpRequestDto) {
+    const lastOtp = await this.otpModel
+      .findOne({ user: userId, purpose, used: false })
+      .sort({ createdAt: -1 });
 
-        if (lastOtp && Date.now() - lastOtp.createdAt.getTime() < OTP_RESEND_INTERVAL_MS) {
-            throw new OtpCreateTooSoonException();
-        }
-
-        const code = this.generateNumericCode(OTP_CODE_LENGTH);
-        const expiresAt = new Date(Date.now() + CommonUtil.fromMinutesToMilliseconds(OTP_CODE_EXPIRATION_MINUTES));
-
-        await this.otpModel.create({
-            user: userId,
-            code,
-            purpose,
-            expiresAt,
-        });
-
-        return code;
+    if (
+      lastOtp &&
+      Date.now() - lastOtp.createdAt.getTime() < OTP_RESEND_INTERVAL_MS
+    ) {
+      throw new OtpCreateTooSoonException();
     }
 
-    async validate({ userId, purpose, code }: ValidateOtpRequestDto): Promise<boolean> {
-        const lastUserOtp = await this.otpModel.findOne({ user: userId, purpose, used: false }).sort({ createdAt: -1 });
+    const code = this.generateNumericCode(OTP_CODE_LENGTH);
+    const expiresAt = new Date(
+      Date.now() +
+        CommonUtil.fromMinutesToMilliseconds(OTP_CODE_EXPIRATION_MINUTES),
+    );
 
-        if (!lastUserOtp) {
-            throw new OtpInvalidException();
-        }
+    await this.otpModel.create({
+      user: userId,
+      code,
+      purpose,
+      expiresAt,
+    });
 
-        const isValidCode = lastUserOtp.code === code;
+    return code;
+  }
 
-        if (!isValidCode) {
-            lastUserOtp.attempts++;
-            await lastUserOtp.save();
+  async validate({
+    userId,
+    purpose,
+    code,
+  }: ValidateOtpRequestDto): Promise<boolean> {
+    const lastUserOtp = await this.otpModel
+      .findOne({ user: userId, purpose, used: false })
+      .sort({ createdAt: -1 });
 
-            if (lastUserOtp.attempts >= OTP_MAX_ATTEMPTS) {
-                throw new OtpAttemptsExceededException();
-            }
-            
-            throw new OtpInvalidException();
-        }
-
-        if (lastUserOtp.expiresAt < new Date()) {
-            throw new OtpExpiredException();
-        }
-
-        if (lastUserOtp.attempts >= OTP_MAX_ATTEMPTS) {
-            throw new OtpAttemptsExceededException();
-        }
-
-        lastUserOtp.used = true;
-        await lastUserOtp.save();
-
-        return true;
+    if (!lastUserOtp) {
+      throw new OtpInvalidException();
     }
 
-    private generateNumericCode(length: number): string {
-        return Array.from({ length }, () => Math.floor(Math.random() * 10)).join('');
+    const isValidCode = lastUserOtp.code === code;
+
+    if (!isValidCode) {
+      lastUserOtp.attempts++;
+      await lastUserOtp.save();
+
+      if (lastUserOtp.attempts >= OTP_MAX_ATTEMPTS) {
+        throw new OtpAttemptsExceededException();
+      }
+
+      throw new OtpInvalidException();
     }
+
+    if (lastUserOtp.expiresAt < new Date()) {
+      throw new OtpExpiredException();
+    }
+
+    if (lastUserOtp.attempts >= OTP_MAX_ATTEMPTS) {
+      throw new OtpAttemptsExceededException();
+    }
+
+    lastUserOtp.used = true;
+    await lastUserOtp.save();
+
+    return true;
+  }
+
+  private generateNumericCode(length: number): string {
+    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join(
+      '',
+    );
+  }
 }

@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { AcademicProgram, AcademicProgramDocument } from './schemas/academic-program.schema';
+import {
+  AcademicProgram,
+  AcademicProgramDocument,
+} from './schemas/academic-program.schema';
 import { PaginateModel, PaginateResult } from 'mongoose';
 import { AcademicProgramMapper } from './mappers/academic-program.mapper';
 import { CreateAcademicProgramRequestDto } from './dtos/create-academic-program-request.dto';
 import { AcademicProgramResponseDto } from './dtos/academic-program-response.dto';
-import { ACADEMIC_PROGRAM_POPULATE_OPTIONS, ACADEMIC_PROGRAM_SORT_OPTIONS, DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION } from './constants/academic-program.constants';
+import {
+  ACADEMIC_PROGRAM_POPULATE_OPTIONS,
+  ACADEMIC_PROGRAM_SORT_OPTIONS,
+  DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION,
+} from './constants/academic-program.constants';
 import { FacultyService } from 'faculty/faculty.service';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { AcademicProgramFilterDto } from './dtos/academic-program-filter.dto';
@@ -14,82 +21,104 @@ import { AcademicProgramNotFoundException } from './exceptions/academic-program-
 
 @Injectable()
 export class AcademicProgramService {
-    constructor(
-        private readonly facultyService: FacultyService,
-        @InjectModel(AcademicProgram.name)
-        private readonly academicProgramModel: PaginateModel<AcademicProgramDocument>,
-        private readonly academicProgramMapper: AcademicProgramMapper,
-    ) { }
+  constructor(
+    private readonly facultyService: FacultyService,
+    @InjectModel(AcademicProgram.name)
+    private readonly academicProgramModel: PaginateModel<AcademicProgramDocument>,
+    private readonly academicProgramMapper: AcademicProgramMapper,
+  ) {}
 
-    async createAcademicProgram(createAcademicProgramDto: CreateAcademicProgramRequestDto): Promise<AcademicProgramResponseDto> {
-        const academicProgram = new this.academicProgramModel(createAcademicProgramDto);
+  async createAcademicProgram(
+    createAcademicProgramDto: CreateAcademicProgramRequestDto,
+  ): Promise<AcademicProgramResponseDto> {
+    const academicProgram = new this.academicProgramModel(
+      createAcademicProgramDto,
+    );
 
-        await this.facultyService.validateFacultyExists(createAcademicProgramDto.faculty);
+    await this.facultyService.validateFacultyExists(
+      createAcademicProgramDto.faculty,
+    );
 
-        await academicProgram.save();
-        await academicProgram.populate(ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY);
-        return this.academicProgramMapper.toAcademicProgramResponseDto(academicProgram);
+    await academicProgram.save();
+    await academicProgram.populate(ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY);
+    return this.academicProgramMapper.toAcademicProgramResponseDto(
+      academicProgram,
+    );
+  }
+
+  async getAcademicProgramsByCriteria(
+    filter: AcademicProgramFilterDto,
+  ): Promise<PaginatedResult<AcademicProgramResponseDto>> {
+    const { page, limit, sortBy, sortOrder } = filter;
+
+    const query: Record<string, any> = this.buildFilterQuery(filter);
+
+    const validatedSortBy =
+      ACADEMIC_PROGRAM_SORT_OPTIONS.find((option) => option === sortBy) ||
+      DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION;
+
+    const sort = {
+      [validatedSortBy]: getSortDirection(sortOrder),
+    };
+
+    const result: PaginateResult<AcademicProgramDocument> =
+      await this.academicProgramModel.paginate(query, {
+        page,
+        limit,
+        populate: ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY,
+        sort,
+      });
+
+    return this.academicProgramMapper.toAcademicProgramResponsePaginatedDto(
+      result,
+    );
+  }
+
+  async updateAcademicProgram(
+    id: string,
+    updateAcademicProgramDto: CreateAcademicProgramRequestDto,
+  ): Promise<AcademicProgramResponseDto> {
+    const academicProgram = await this.academicProgramModel.findById(id);
+
+    if (!academicProgram) {
+      throw new AcademicProgramNotFoundException();
     }
 
-    async getAcademicProgramsByCriteria(filter: AcademicProgramFilterDto): Promise<PaginatedResult<AcademicProgramResponseDto>> {
-        const { page, limit, sortBy, sortOrder } = filter;
+    await this.facultyService.validateFacultyExists(
+      updateAcademicProgramDto.faculty,
+    );
 
-        const query: Record<string, any> = this.buildFilterQuery(filter);
+    Object.assign(academicProgram, updateAcademicProgramDto);
+    await academicProgram.save();
+    await academicProgram.populate(ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY);
+    return this.academicProgramMapper.toAcademicProgramResponseDto(
+      academicProgram,
+    );
+  }
 
-        const validatedSortBy = ACADEMIC_PROGRAM_SORT_OPTIONS.find(option => option === sortBy) || DEFAULT_ACADEMIC_PROGRAM_SORT_OPTION;
+  async deleteAcademicProgram(id: string): Promise<void> {
+    const academicProgram = await this.academicProgramModel.findById(id);
 
-        const sort = {
-            [validatedSortBy]: getSortDirection(sortOrder),
-        }
-
-        const result: PaginateResult<AcademicProgramDocument> = await this.academicProgramModel.paginate(query, {
-            page,
-            limit,
-            populate: ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY,
-            sort
-        });
-
-        return this.academicProgramMapper.toAcademicProgramResponsePaginatedDto(result);
+    if (!academicProgram) {
+      throw new AcademicProgramNotFoundException();
     }
 
-    async updateAcademicProgram(id: string, updateAcademicProgramDto: CreateAcademicProgramRequestDto): Promise<AcademicProgramResponseDto> {
-        const academicProgram = await this.academicProgramModel.findById(id);
+    await academicProgram.softDelete();
+  }
 
-        if (!academicProgram) {
-            throw new AcademicProgramNotFoundException();
-        }
+  private buildFilterQuery(
+    filter: AcademicProgramFilterDto,
+  ): Record<string, any> {
+    const query: Record<string, any> = {};
 
-        await this.facultyService.validateFacultyExists(updateAcademicProgramDto.faculty);
-
-        Object.assign(academicProgram, updateAcademicProgramDto);
-        await academicProgram.save();
-        await academicProgram.populate(ACADEMIC_PROGRAM_POPULATE_OPTIONS.FACULTY);
-        return this.academicProgramMapper.toAcademicProgramResponseDto(academicProgram);
-
+    if (filter.name) {
+      query.name = { $regex: filter.name, $options: 'i' };
     }
 
-    async deleteAcademicProgram(id: string): Promise<void> {
-        const academicProgram = await this.academicProgramModel.findById(id);
-
-        if (!academicProgram) {
-            throw new AcademicProgramNotFoundException();
-        }
-
-        await academicProgram.softDelete();
+    if (filter.faculty) {
+      query.faculty = filter.faculty;
     }
 
-    private buildFilterQuery(filter: AcademicProgramFilterDto): Record<string, any> {
-        const query: Record<string, any> = {};
-
-        if (filter.name) {
-            query.name = { $regex: filter.name, $options: 'i' };
-        }
-
-        if (filter.faculty) {
-            query.faculty = filter.faculty;
-        }
-
-        return query;
-
-    }
+    return query;
+  }
 }
