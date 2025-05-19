@@ -4,7 +4,7 @@ import { Logger, Injectable } from '@nestjs/common';
 @Injectable()
 export class AppLogger extends Logger {
   log(message: string, context?: string) {
-    super.log(message, context || this.context);
+    super.log(message);
   }
 
   warn(message: string, context?: string) {
