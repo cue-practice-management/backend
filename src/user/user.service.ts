@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { EmailAlreadyExistsException } from './exceptions/email-already-exists.exception';
 import { PhoneNumberAlreadyExistsException } from './exceptions/phone-number-already-exists.exception';
 import { DocumentNumberAlreadyExistsException } from './exceptions/document-number-already-exists.exception';
+import { UpdateUserRequestDto } from './dtos/update-user-request.dto';
 
 @Injectable()
 export class UserService {
@@ -36,7 +37,9 @@ export class UserService {
     return this.userModel.findOne({ email }).select('+password').exec();
   }
 
-  async validateUniqueFields(createUserDto: CreateUserDto): Promise<void> {
+  async validateUniqueFields(
+    createUserDto: CreateUserDto | UpdateUserRequestDto,
+  ): Promise<void> {
     const { email, documentNumber, phoneNumber } = createUserDto;
 
     const existingUser = await this.userModel.findOne({
