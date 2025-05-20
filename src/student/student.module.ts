@@ -9,18 +9,13 @@ import { AcademicProgramModule } from '@academic-program/academic-program.module
 import { CompanyModule } from 'company/company.module';
 import { StudentMapper } from './mapper/student.mapper';
 
-
 @Module({
   imports: [
-    MongooseModule.forFeature(
-      [
-        { name: Student.name, schema: StudentSchema }
-      ]
-    ),
+    MongooseModule.forFeature([{ name: Student.name, schema: StudentSchema }]),
     AuthModule,
     UserModule,
     AcademicProgramModule,
-    CompanyModule
+    CompanyModule,
   ],
   providers: [StudentService, StudentMapper],
   exports: [StudentService],

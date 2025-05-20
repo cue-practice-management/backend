@@ -11,7 +11,13 @@ export class City extends BaseSchema {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: Country.name, required: true })
+  @Prop({
+    type: mongoose.Types.ObjectId,
+    ref: Country.name,
+    required: true,
+    set: (v: any) =>
+      typeof v === 'string' ? new mongoose.Types.ObjectId(v) : v,
+  })
   country: mongoose.Types.ObjectId;
 }
 

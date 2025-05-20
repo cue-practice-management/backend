@@ -9,15 +9,14 @@ import { StudentResponseDto } from './dtos/student.response.dto';
 
 @Controller('student')
 export class StudentController {
+  constructor(private readonly studentService: StudentService) {}
 
-    constructor(
-        private readonly studentService: StudentService,
-    ) { }
-
-    @Post('create')
-    @UseGuards(AuthGuard, RoleGuard)
-    @Roles(UserRole.ADMIN)
-    async createStudent(@Body() createStudentDto: CreateStudentRequestDto): Promise<StudentResponseDto> {
-        return await this.studentService.createStudent(createStudentDto);
-    }
+  @Post('create')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRole.ADMIN)
+  async createStudent(
+    @Body() createStudentDto: CreateStudentRequestDto,
+  ): Promise<StudentResponseDto> {
+    return await this.studentService.createStudent(createStudentDto);
+  }
 }

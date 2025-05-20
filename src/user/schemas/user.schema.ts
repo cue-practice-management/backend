@@ -46,7 +46,6 @@ export class User extends BaseSchema {
 
   @Prop({ required: true, enum: Object.values(UserRole) })
   role: UserRole;
-
 }
 export type UserDocument = SoftDeletableDocument<User>;
 export const UserSchema = SchemaFactory.createForClass(User);

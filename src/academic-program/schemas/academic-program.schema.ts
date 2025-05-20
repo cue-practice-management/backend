@@ -23,7 +23,13 @@ export class AcademicProgram extends BaseSchema {
   })
   description: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: Faculty.name, required: true })
+  @Prop({
+    type: mongoose.Types.ObjectId,
+    ref: Faculty.name,
+    required: true,
+    set: (v: any) =>
+      typeof v === 'string' ? new mongoose.Types.ObjectId(v) : v,
+  })
   faculty: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
