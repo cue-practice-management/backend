@@ -36,7 +36,7 @@ export class UserService {
     return this.userModel.findOne({ email }).select('+password').exec();
   }
 
-  private async validateUniqueFields(
+  async validateUniqueFields(
     createUserDto: CreateUserDto,
   ): Promise<void> {
     const { email, documentNumber, phoneNumber } = createUserDto;

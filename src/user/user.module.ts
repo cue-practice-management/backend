@@ -4,6 +4,8 @@ import { User, UserSchema } from './schemas/user.schema';
 import { UserService } from './user.service';
 import { UserSeeder } from './seeders/user.seeder';
 import { UserMapper } from './mappers/user.mapper';
+import { UserRole } from '@common/enums/role.enum';
+import { StudentSchema } from 'student/schemas/student.schema';
 
 @Module({
   imports: [
@@ -12,16 +14,13 @@ import { UserMapper } from './mappers/user.mapper';
         name: User.name,
         useFactory: () => {
           const schema = UserSchema;
-          // ⬇ Aquí es donde más adelante se agregan los discriminadores
-          // Por ahora, dejamos solo el esquema base
-          // schema.discriminator('student', StudentSchema); (se hará en StudentsModule)
-
+          schema.discriminator(UserRole.STUDENT, StudentSchema);
           return schema;
         },
       },
     ]),
   ],
   providers: [UserService, UserSeeder, UserMapper],
-  exports: [UserService, UserMapper],
+  exports: [UserService, UserMapper, MongooseModule],
 })
 export class UserModule {}

@@ -23,5 +23,6 @@ import { FacultyModule } from 'faculty/faculty.module';
   ],
   providers: [AcademicProgramService, AcademicProgramMapper],
   controllers: [AcademicProgramController],
+  exports: [AcademicProgramService, AcademicProgramMapper],
 })
 export class AcademicProgramModule {}

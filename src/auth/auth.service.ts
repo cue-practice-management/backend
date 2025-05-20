@@ -37,7 +37,7 @@ export class AuthService {
 
     if (!user) throw new InvalidCredentialsException();
 
-    if (!user.isActive) throw new AccountDisabledException();
+    if (user.deleted) throw new AccountDisabledException();
 
     const isPasswordValid = await bcrypt.compare(
       loginRequestDto.password,

@@ -105,6 +105,13 @@ export class AcademicProgramService {
     await academicProgram.softDelete();
   }
 
+  async validateAcademicProgramExists(id: string): Promise<void> {
+    const academicProgram = await this.academicProgramModel.findById(id);
+    if (!academicProgram) {
+      throw new AcademicProgramNotFoundException();
+    }
+  }
+
   private buildFilterQuery(
     filter: AcademicProgramFilterDto,
   ): Record<string, any> {
