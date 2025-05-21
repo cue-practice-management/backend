@@ -43,6 +43,15 @@ export class AcademicProgramController {
     );
   }
 
+  @Get('typeahead')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRole.ADMIN)
+  async getAcademicProgramTypeahead(@Query('query') query: string) {
+    return await this.academicProgramService.getTypeaheadAcademicPrograms(
+      query,
+    );
+  }
+
   @Put('/update/:academicProgramId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)

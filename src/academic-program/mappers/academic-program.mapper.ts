@@ -1,3 +1,4 @@
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { Injectable } from '@nestjs/common';
 import { AcademicProgramResponseDto } from 'academic-program/dtos/academic-program-response.dto';
@@ -38,6 +39,13 @@ export class AcademicProgramMapper {
       docs: academicPrograms.docs.map((academicProgram) =>
         this.toAcademicProgramResponseDto(academicProgram),
       ),
+    };
+  }
+
+  toTypeaheadItem(academicProgram: AcademicProgram): TypeaheadItem {
+    return {
+      value: academicProgram._id.toString(),
+      label: academicProgram.name,
     };
   }
 }

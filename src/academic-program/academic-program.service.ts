@@ -16,8 +16,10 @@ import {
 import { FacultyService } from 'faculty/faculty.service';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { AcademicProgramFilterDto } from './dtos/academic-program-filter.dto';
-import { getSort, getSortDirection } from '@common/utils/pagination.util';
+import { getSort } from '@common/utils/pagination.util';
 import { AcademicProgramNotFoundException } from './exceptions/academic-program-not-found.exception';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
+import { MAX_TYPEAHEAD_ITEMS } from '@common/constants/constaint.constants';
 
 @Injectable()
 export class AcademicProgramService {
@@ -26,7 +28,7 @@ export class AcademicProgramService {
     @InjectModel(AcademicProgram.name)
     private readonly academicProgramModel: PaginateModel<AcademicProgramDocument>,
     private readonly academicProgramMapper: AcademicProgramMapper,
-  ) {}
+  ) { }
 
   async createAcademicProgram(
     createAcademicProgramDto: CreateAcademicProgramRequestDto,
@@ -70,6 +72,18 @@ export class AcademicProgramService {
 
     return this.academicProgramMapper.toAcademicProgramResponsePaginatedDto(
       result,
+    );
+  }
+
+  async getTypeaheadAcademicPrograms(query: string): Promise<TypeaheadItem[]> {
+    const academicPrograms = await this.academicProgramModel
+      .find({
+        name: { $regex: `^${query}`, $options: 'i' },
+      })
+      .limit(MAX_TYPEAHEAD_ITEMS);
+
+    return academicPrograms.map((academicProgram) =>
+      this.academicProgramMapper.toTypeaheadItem(academicProgram),
     );
   }
 
