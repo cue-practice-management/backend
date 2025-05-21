@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { StudentDocument } from './schemas/student.schema';
-import { Model, PaginateModel } from 'mongoose';
+import { PaginateModel } from 'mongoose';
 import { UserService } from '@user/user.service';
 import { CreateStudentRequestDto } from './dtos/create-student-request.dto';
 import { StudentResponseDto } from './dtos/student-response.dto';
@@ -19,6 +19,7 @@ import { PaginatedResult } from '@common/types/paginated-result';
 import { getSort } from '@common/utils/pagination.util';
 import { StudentNotFoundException } from './exceptions/student-not-found-exception';
 import { UpdateStudentRequestDto } from './dtos/update-student-request.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class StudentService {
@@ -38,7 +39,11 @@ export class StudentService {
   async createStudent(
     createStudentDto: CreateStudentRequestDto,
   ): Promise<StudentResponseDto> {
-    const student = new this.studentModel(createStudentDto);
+    const student = new this.studentModel({
+      role: UserRole.STUDENT,
+      password: this.generateStudentPassword(createStudentDto.documentNumber),
+      ...createStudentDto,
+    });
 
     await this.userService.validateUniqueFields(createStudentDto);
     await this.academicProgramService.validateAcademicProgramExists(
@@ -145,5 +150,10 @@ export class StudentService {
     }
 
     return filterObject;
+  }
+
+  private generateStudentPassword(nid: string): string {
+    const hash = bcrypt.hashSync(nid, 10);
+    return hash;
   }
 }

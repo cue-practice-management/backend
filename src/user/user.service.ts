@@ -8,6 +8,7 @@ import { EmailAlreadyExistsException } from './exceptions/email-already-exists.e
 import { PhoneNumberAlreadyExistsException } from './exceptions/phone-number-already-exists.exception';
 import { DocumentNumberAlreadyExistsException } from './exceptions/document-number-already-exists.exception';
 import { UpdateUserRequestDto } from './dtos/update-user-request.dto';
+import { CreateBaseUserDto } from './dtos/create-base-user.dto';
 
 @Injectable()
 export class UserService {
@@ -38,7 +39,7 @@ export class UserService {
   }
 
   async validateUniqueFields(
-    createUserDto: CreateUserDto | UpdateUserRequestDto,
+    createUserDto: CreateUserDto | CreateBaseUserDto | UpdateUserRequestDto,
   ): Promise<void> {
     const { email, documentNumber, phoneNumber } = createUserDto;
 
