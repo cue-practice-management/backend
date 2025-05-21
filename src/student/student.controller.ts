@@ -21,7 +21,7 @@ import { StudentFilterDto } from './dtos/student-filter.dto';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { UpdateStudentRequestDto } from './dtos/update-student-request.dto';
 
-@Controller('student')
+@Controller('students')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
