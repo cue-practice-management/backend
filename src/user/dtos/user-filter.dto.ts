@@ -15,8 +15,6 @@ export class UserFilterDto extends PaginationQueryDto {
   email?: string;
 
   @IsOptional()
-  @IsValidDocumentNumber()
-  @Type(() => String)
   documentNumber?: string;
 
   @IsEnum(Gender)
