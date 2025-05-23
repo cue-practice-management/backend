@@ -9,6 +9,7 @@ import { PhoneNumberAlreadyExistsException } from './exceptions/phone-number-alr
 import { DocumentNumberAlreadyExistsException } from './exceptions/document-number-already-exists.exception';
 import { UpdateUserRequestDto } from './dtos/update-user-request.dto';
 import { CreateBaseUserDto } from './dtos/create-base-user.dto';
+import { UserFilterDto } from './dtos/user-filter.dto';
 
 @Injectable()
 export class UserService {
@@ -60,5 +61,30 @@ export class UserService {
         throw new PhoneNumberAlreadyExistsException();
       }
     }
+  }
+
+  buildFilter(filter: UserFilterDto): Record<string, any> {
+    const { fullName, email, documentNumber, gender } = filter;
+    const filterObject: Record<string, any> = {};
+
+    if (fullName) {
+      filterObject.$or = [
+        { firstName: { $regex: fullName, $options: 'i' } },
+        { lastName: { $regex: fullName, $options: 'i' } },
+      ];
+    }
+
+    if (email) {
+      filterObject.email = { $regex: email, $options: 'i' };
+    }
+    if (documentNumber) {
+      filterObject.documentNumber = { $regex: documentNumber, $options: 'i' };
+    }
+
+    if (gender) {
+      filterObject.gender = gender;
+    }
+
+    return filterObject;
   }
 }

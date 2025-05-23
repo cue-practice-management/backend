@@ -18,6 +18,7 @@ import { CompanyModule } from './company/company.module';
 import { CountryModule } from './country/country.module';
 import { CityModule } from './city/city.module';
 import { StudentModule } from './student/student.module';
+import { ProfessorModule } from './professor/professor.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { StudentModule } from './student/student.module';
     CountryModule,
     CityModule,
     StudentModule,
+    ProfessorModule,
   ],
   providers: [
     AppLogger,
