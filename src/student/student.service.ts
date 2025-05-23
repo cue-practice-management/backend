@@ -63,19 +63,17 @@ export class StudentService {
     studentFilter: StudentFilterDto,
   ): Promise<PaginatedResult<StudentResponseDto>> {
     const { page, limit, sortBy, sortOrder } = studentFilter;
-
     const filter = this.buildFilter(studentFilter);
-    const sort = getSort(
-      STUDENT_SORT_OPTIONS,
-      DEFAULT_STUDENT_SORT_OPTION,
-      sortBy,
-      sortOrder,
-    );
 
     const students = await this.studentModel.paginate(filter, {
       page,
       limit,
-      sort,
+      sort: getSort(
+        STUDENT_SORT_OPTIONS,
+        DEFAULT_STUDENT_SORT_OPTION,
+        sortBy,
+        sortOrder,
+      ),
       populate: [STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM],
     });
 
@@ -117,29 +115,8 @@ export class StudentService {
   }
 
   private buildFilter(filter: StudentFilterDto): Record<string, any> {
-    const filterObject: Record<string, any> = {};
-
-    if (filter.fullName) {
-      filterObject.$or = [
-        { firstName: { $regex: filter.fullName, $options: 'i' } },
-        { lastName: { $regex: filter.fullName, $options: 'i' } },
-      ];
-    }
-
-    if (filter.documentNumber) {
-      filterObject.documentNumber = {
-        $regex: filter.documentNumber,
-        $options: 'i',
-      };
-    }
-
-    if (filter.email) {
-      filterObject.email = { $regex: filter.email, $options: 'i' };
-    }
-
-    if (filter.gender) {
-      filterObject.gender = filter.gender;
-    }
+    const filterObject: Record<string, any> =
+      this.userService.buildFilter(filter);
 
     if (filter.academicProgram) {
       filterObject.academicProgram = filter.academicProgram;

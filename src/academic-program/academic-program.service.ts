@@ -28,7 +28,7 @@ export class AcademicProgramService {
     @InjectModel(AcademicProgram.name)
     private readonly academicProgramModel: PaginateModel<AcademicProgramDocument>,
     private readonly academicProgramMapper: AcademicProgramMapper,
-  ) { }
+  ) {}
 
   async createAcademicProgram(
     createAcademicProgramDto: CreateAcademicProgramRequestDto,
