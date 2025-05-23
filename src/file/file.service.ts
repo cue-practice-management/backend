@@ -44,8 +44,7 @@ export class FileService {
         Bucket: bucket,
         Key: key,
         Body: file.buffer,
-        ContentType: file.mimetype,
-        ACL: isPublic ? 'public-read' : 'private',
+        ContentType: file.mimetype
       }),
     );
 
