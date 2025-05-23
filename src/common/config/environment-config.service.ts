@@ -1,4 +1,3 @@
-// src/config/environment-config.service.ts
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -68,5 +67,35 @@ export class EnvironmentConfigService {
 
   get throttleLimit(): number {
     return parseInt(this.configService.get<string>('THROTTLE_LIMIT', '30'), 10);
+  }
+
+  get awsRegion(): string {
+    return this.configService.get<string>('AWS_REGION', {
+      infer: true,
+    })!;
+  }
+
+  get awsAccessKeyId(): string {
+    return this.configService.get<string>('AWS_ACCESS_KEY_ID', {
+      infer: true,
+    })!;
+  }
+
+  get awsSecretAccessKey(): string {
+    return this.configService.get<string>('AWS_SECRET_ACCESS_KEY', {
+      infer: true,
+    })!;
+  }
+
+  get awsPublicBucket(): string {
+    return this.configService.get<string>('AWS_PUBLIC_BUCKET', {
+      infer: true,
+    })!;
+  }
+
+  get awsPrivateBucket(): string {
+    return this.configService.get<string>('AWS_PRIVATE_BUCKET', {
+      infer: true,
+    })!;
   }
 }
