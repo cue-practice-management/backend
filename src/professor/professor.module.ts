@@ -10,12 +10,14 @@ import { ProfessorMapper } from './mappers/professor.mapper';
 
 @Module({
   imports: [
-        MongooseModule.forFeature([{ name: Professor.name, schema: ProfessorSchema }]),
-        AuthModule,
-        UserModule,
-        AcademicProgramModule,
+    MongooseModule.forFeature([
+      { name: Professor.name, schema: ProfessorSchema },
+    ]),
+    AuthModule,
+    UserModule,
+    AcademicProgramModule,
   ],
   providers: [ProfessorService, ProfessorMapper],
-  controllers: [ProfessorController]
+  controllers: [ProfessorController],
 })
 export class ProfessorModule {}
