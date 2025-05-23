@@ -19,6 +19,7 @@ import { CountryModule } from './country/country.module';
 import { CityModule } from './city/city.module';
 import { StudentModule } from './student/student.module';
 import { ProfessorModule } from './professor/professor.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ProfessorModule } from './professor/professor.module';
     CityModule,
     StudentModule,
     ProfessorModule,
+    FileModule,
   ],
   providers: [
     AppLogger,

@@ -15,4 +15,9 @@ export const validationSchema = Joi.object({
     .pattern(/^\d{10}$/)
     .required(),
   SUPER_ADMIN_DOCUMENT_NUMBER: Joi.string().alphanum().required(),
+  AWS_REGION: Joi.string().required(),
+  AWS_ACCESS_KEY_ID: Joi.string().required(),
+  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+  AWS_PUBLIC_BUCKET: Joi.string().required(),
+  AWS_PRIVATE_BUCKET: Joi.string().required(),
 });
