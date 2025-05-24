@@ -13,5 +13,6 @@ import { Otp, OtpSchema } from './schemas/otp.schema';
     ]),
   ],
   providers: [OtpService],
+  exports: [OtpService],
 })
 export class OtpModule {}
