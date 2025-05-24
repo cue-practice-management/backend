@@ -15,15 +15,16 @@ import { ValidateOtpRequestDto } from './dtos/validate-otp.dto';
 import { OtpAttemptsExceededException } from './exceptions/OtpAttemptsExceededException';
 import { OtpInvalidException } from './exceptions/OtpInvalidException';
 import { OtpExpiredException } from './exceptions/OtpExpiredException';
+import { OtpResponseDto } from './dtos/otp-response.dto';
 
 @Injectable()
 export class OtpService {
   constructor(
     @InjectModel(Otp.name)
     private readonly otpModel: Model<Otp>,
-  ) {}
+  ) { }
 
-  async generateOtp({ userId, purpose }: CreateOtpRequestDto) {
+  async generateOtp({ userId, purpose }: CreateOtpRequestDto): Promise<OtpResponseDto> {
     const lastOtp = await this.otpModel
       .findOne({ user: userId, purpose, used: false })
       .sort({ createdAt: -1 });
@@ -38,7 +39,7 @@ export class OtpService {
     const code = this.generateNumericCode(OTP_CODE_LENGTH);
     const expiresAt = new Date(
       Date.now() +
-        CommonUtil.fromMinutesToMilliseconds(OTP_CODE_EXPIRATION_MINUTES),
+      CommonUtil.fromMinutesToMilliseconds(OTP_CODE_EXPIRATION_MINUTES),
     );
 
     await this.otpModel.create({
@@ -48,7 +49,9 @@ export class OtpService {
       expiresAt,
     });
 
-    return code;
+    return {
+      otp: code
+    }
   }
 
   async validate({

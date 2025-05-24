@@ -23,6 +23,9 @@ import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from '@common/decorators/current-user.decorator';
 import { CookieUtil } from '@common/utils/cookie.util';
 import { LogoutRequestDto } from './dtos/logout.dto';
+import { RecoverPasswordRequestDto } from './dtos/recover-password-request.dto';
+import { RecoverPasswordValidateRequestDto } from './dtos/recover-password-validate-reques.dto';
+import { RecoverResetPasswordRequestDto } from './dtos/recover-reset-password-request.dto';
 
 @UseInterceptors(RefreshCookieInterceptor)
 @Controller('auth')
@@ -30,7 +33,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly env: EnvironmentConfigService,
-  ) {}
+  ) { }
 
   @Post('login')
   async login(
@@ -73,6 +76,21 @@ export class AuthController {
     dto.ip = ip || DEFAULTS.UNKNOWN_IP;
 
     return await this.authService.refreshToken(dto);
+  }
+
+  @Post('recover-password')
+  async recoverPassword(@Body() recoverPasswordRequestDto: RecoverPasswordRequestDto) {
+    return await this.authService.recoverPassword(recoverPasswordRequestDto);
+  }
+
+  @Post('recover-password/validate')
+  async validateRecoverPassword(@Body() recoverPasswordValidateRequestDto: RecoverPasswordValidateRequestDto) {
+    return await this.authService.recoverPasswordValidate(recoverPasswordValidateRequestDto);
+  }
+
+  @Post('recover-password/reset')
+  async resetRecoverPassword(@Body() resetPasswordRequestDto: RecoverResetPasswordRequestDto) {
+    return await this.authService.recoverResetPassword(resetPasswordRequestDto);
   }
 
   @Get('me')

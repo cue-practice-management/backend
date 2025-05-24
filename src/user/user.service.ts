@@ -10,13 +10,14 @@ import { DocumentNumberAlreadyExistsException } from './exceptions/document-numb
 import { UpdateUserRequestDto } from './dtos/update-user-request.dto';
 import { CreateBaseUserDto } from './dtos/create-base-user.dto';
 import { UserFilterDto } from './dtos/user-filter.dto';
+import { UserNotFoundException } from '@auth/exceptions/user-not-found-exception';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
-  ) {}
+  ) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     this.validateUniqueFields(createUserDto);
@@ -61,6 +62,21 @@ export class UserService {
         throw new PhoneNumberAlreadyExistsException();
       }
     }
+  }
+
+  async updatePassword(
+    userId: string,
+    newPassword: string,
+  ): Promise<User> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    return user.save();
   }
 
   buildFilter(filter: UserFilterDto): Record<string, any> {

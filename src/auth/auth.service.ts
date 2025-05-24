@@ -20,6 +20,15 @@ import { AccountDisabledException } from './exceptions/account-disabled.exceptio
 import { UserResponseDto } from '@user/dtos/user-response.dto';
 import { UserMapper } from '@user/mappers/user.mapper';
 import { LogoutRequestDto } from './dtos/logout.dto';
+import { OtpService } from 'otp/otp.service';
+import { OtpPurpose } from 'otp/enums/otp.enums';
+import { RecoverPasswordRequestDto } from './dtos/recover-password-request.dto';
+import { EmailService } from 'email/email.service';
+import { EMAIL_TEMPLATE_IDS } from 'email/email.config';
+import { RecoverPasswordValidateRequestDto } from './dtos/recover-password-validate-reques.dto';
+import { RecoverPasswordValidateResponseDto } from './dtos/recover-password-validate-response.dto';
+import { RecoverResetPasswordRequestDto } from './dtos/recover-reset-password-request.dto';
+import { InvalidResetPasswordTokenException } from './exceptions/invalid-reset-password-token';
 
 @Injectable()
 export class AuthService {
@@ -28,9 +37,11 @@ export class AuthService {
     private readonly refreshTokenModel: Model<RefreshToken>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly otpService: OtpService,
+    private readonly emailService: EmailService,
     private readonly env: EnvironmentConfigService,
     private readonly userMapper: UserMapper,
-  ) {}
+  ) { }
 
   async login(loginRequestDto: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.userService.findByEmail(loginRequestDto.email);
@@ -85,6 +96,69 @@ export class AuthService {
     return await this.generateTokens(user, deviceInfo, ip);
   }
 
+  async recoverPassword(recoverPasswordRequestDto: RecoverPasswordRequestDto): Promise<void> {
+    const user = await this.userService.findByEmail(
+      recoverPasswordRequestDto.email,
+    );
+
+    if (!user) throw new UserNotFoundException();
+
+    const otp = await this.otpService.generateOtp({
+      userId: user._id.toString(),
+      purpose: OtpPurpose.RECOVER_PASSWORD,
+    });
+
+    const variables = {
+      otp: otp.otp,
+      email: user.email,
+    };
+
+    await this.emailService.sendEmail({
+      to: user.email,
+      subject: 'Password Recovery',
+      templateId: EMAIL_TEMPLATE_IDS.FORGOT_PASSWORD,
+      variables: variables,
+    })
+  }
+
+  async recoverPasswordValidate(dto: RecoverPasswordValidateRequestDto): Promise<RecoverPasswordValidateResponseDto> {
+    console.log('Validating OTP for password recovery:', dto);
+    const user = await this.userService.findByEmail(dto.email);
+    if (!user) throw new UserNotFoundException();
+
+    await this.otpService.validate({
+      userId: user._id.toString(),
+      purpose: OtpPurpose.RECOVER_PASSWORD,
+      code: dto.otp,
+    });
+
+    const token = this.jwtService.sign(
+      {
+        sub: user._id,
+        purpose: OtpPurpose.RECOVER_PASSWORD,
+      },
+      { expiresIn: '10m' }
+    );
+
+    return { token };
+  }
+
+  async recoverResetPassword(resetPasswordRequestDto: RecoverResetPasswordRequestDto): Promise<void> {
+    const { token, newPassword } = resetPasswordRequestDto;
+
+    const payload = this.jwtService.verify(token);
+    if (!payload || payload.purpose !== OtpPurpose.RECOVER_PASSWORD) {
+      throw new InvalidResetPasswordTokenException();
+    }
+
+    const user = await this.userService.findById(payload.sub);
+    if (!user) throw new UserNotFoundException();
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await this.userService.updatePassword(user._id.toString(), newPassword);
+    await this.logoutAllDevices(user._id.toString());
+  }
+
   private async generateTokens(
     user: User,
     deviceInfo: string,
@@ -127,5 +201,9 @@ export class AuthService {
       },
       { upsert: true },
     );
+  }
+
+  private async logoutAllDevices(userId: string): Promise<void> {
+    await this.refreshTokenModel.deleteMany({ user: userId });
   }
 }
