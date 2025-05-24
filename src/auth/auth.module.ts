@@ -13,6 +13,8 @@ import { EnvironmentConfigService } from '@common/config/environment-config.serv
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
+import { OtpModule } from 'otp/otp.module';
+import { EmailModule } from 'email/email.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { RoleGuard } from './guards/role.guard';
     ]),
     UserModule,
     CommonModule,
+    OtpModule,
+    EmailModule
   ],
   providers: [AuthService, RefreshTokenGuard, AuthGuard, RoleGuard],
   controllers: [AuthController],

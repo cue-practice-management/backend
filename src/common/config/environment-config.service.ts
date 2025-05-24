@@ -98,4 +98,22 @@ export class EnvironmentConfigService {
       infer: true,
     })!;
   }
+
+  get mailersendApiKey(): string {
+    return this.configService.get<string>('MAILERSEND_API_KEY', {
+      infer: true,
+    })!;
+  }
+
+  get mailersendSenderName(): string {
+    return this.configService.get<string>('MAILERSEND_SENDER_NAME', {
+      infer: true,
+    })!;
+  }
+
+  get mailersendSenderEmail(): string {
+    return this.configService.get<string>('MAILERSEND_SENDER_EMAIL', {
+      infer: true,
+    })!;
+  }
 }
