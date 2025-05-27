@@ -37,7 +37,7 @@ import { EmailModule } from 'email/email.module';
     UserModule,
     CommonModule,
     OtpModule,
-    EmailModule
+    EmailModule,
   ],
   providers: [AuthService, RefreshTokenGuard, AuthGuard, RoleGuard],
   controllers: [AuthController],

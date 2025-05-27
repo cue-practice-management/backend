@@ -1,3 +1,3 @@
 export class OtpResponseDto {
-    otp: string;
+  otp: string;
 }

@@ -17,7 +17,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
-  ) { }
+  ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     this.validateUniqueFields(createUserDto);
@@ -64,10 +64,7 @@ export class UserService {
     }
   }
 
-  async updatePassword(
-    userId: string,
-    newPassword: string,
-  ): Promise<User> {
+  async updatePassword(userId: string, newPassword: string): Promise<User> {
     const user = await this.userModel.findById(userId);
 
     if (!user) {

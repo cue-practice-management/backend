@@ -5,7 +5,7 @@ import { Request } from 'express';
 
 export const multerOptions: MulterOptions = {
   limits: {
-    fileSize: FILE_MAX_SIZE, 
+    fileSize: FILE_MAX_SIZE,
   },
 };
 
@@ -14,12 +14,8 @@ export const multerFileFilter = (
   file: Express.Multer.File,
   cb: (error: Error | null, acceptFile: boolean) => void,
 ) => {
-
   if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-    return cb(
-      new FileFormatNotValidException(),
-      false,
-    );
+    return cb(new FileFormatNotValidException(), false);
   }
 
   cb(null, true);

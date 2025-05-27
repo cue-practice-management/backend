@@ -33,7 +33,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly env: EnvironmentConfigService,
-  ) { }
+  ) {}
 
   @Post('login')
   async login(
@@ -79,17 +79,26 @@ export class AuthController {
   }
 
   @Post('recover-password')
-  async recoverPassword(@Body() recoverPasswordRequestDto: RecoverPasswordRequestDto) {
+  async recoverPassword(
+    @Body() recoverPasswordRequestDto: RecoverPasswordRequestDto,
+  ) {
     return await this.authService.recoverPassword(recoverPasswordRequestDto);
   }
 
   @Post('recover-password/validate')
-  async validateRecoverPassword(@Body() recoverPasswordValidateRequestDto: RecoverPasswordValidateRequestDto) {
-    return await this.authService.recoverPasswordValidate(recoverPasswordValidateRequestDto);
+  async validateRecoverPassword(
+    @Body()
+    recoverPasswordValidateRequestDto: RecoverPasswordValidateRequestDto,
+  ) {
+    return await this.authService.recoverPasswordValidate(
+      recoverPasswordValidateRequestDto,
+    );
   }
 
   @Post('recover-password/reset')
-  async resetRecoverPassword(@Body() resetPasswordRequestDto: RecoverResetPasswordRequestDto) {
+  async resetRecoverPassword(
+    @Body() resetPasswordRequestDto: RecoverResetPasswordRequestDto,
+  ) {
     return await this.authService.recoverResetPassword(resetPasswordRequestDto);
   }
 

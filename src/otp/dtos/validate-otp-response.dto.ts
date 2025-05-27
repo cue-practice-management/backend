@@ -1,3 +1,3 @@
 export class ValidateOtpResponseDto {
-    token: string;
+  token: string;
 }

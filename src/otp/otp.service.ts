@@ -22,9 +22,12 @@ export class OtpService {
   constructor(
     @InjectModel(Otp.name)
     private readonly otpModel: Model<Otp>,
-  ) { }
+  ) {}
 
-  async generateOtp({ userId, purpose }: CreateOtpRequestDto): Promise<OtpResponseDto> {
+  async generateOtp({
+    userId,
+    purpose,
+  }: CreateOtpRequestDto): Promise<OtpResponseDto> {
     const lastOtp = await this.otpModel
       .findOne({ user: userId, purpose, used: false })
       .sort({ createdAt: -1 });
@@ -39,7 +42,7 @@ export class OtpService {
     const code = this.generateNumericCode(OTP_CODE_LENGTH);
     const expiresAt = new Date(
       Date.now() +
-      CommonUtil.fromMinutesToMilliseconds(OTP_CODE_EXPIRATION_MINUTES),
+        CommonUtil.fromMinutesToMilliseconds(OTP_CODE_EXPIRATION_MINUTES),
     );
 
     await this.otpModel.create({
@@ -50,8 +53,8 @@ export class OtpService {
     });
 
     return {
-      otp: code
-    }
+      otp: code,
+    };
   }
 
   async validate({

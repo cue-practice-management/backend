@@ -1,3 +1,3 @@
 export enum CompanyContractType {
-    MARCO = 'marco',
+  MARCO = 'marco',
 }
