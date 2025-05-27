@@ -110,7 +110,7 @@ export class CityService {
     if (!exists) {
       throw new CityNotFoundException();
     }
-  } 
+  }
 
   private buildFilterQuery(filter: CityFilterDto): Record<string, any> {
     const query: Record<string, any> = {};

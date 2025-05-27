@@ -48,7 +48,13 @@ export type CompanyDocument = SoftDeletableDocument<Company>;
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
 
+CompanySchema.virtual('contracts', {
+  ref: 'CompanyContract',
+  localField: '_id',
+  foreignField: 'company',
+});
+CompanySchema.set('toObject', { virtuals: true });
+CompanySchema.set('toJSON', { virtuals: true });
 CompanySchema.plugin(mongoosePaginate);
 CompanySchema.plugin(softDeletePlugin);
-
 CompanySchema.index({ name: 1, corporateName: 1, nit: 1 }, { unique: true });

@@ -1,3 +1,3 @@
 export class RecoverPasswordValidateResponseDto {
-    token: string;
+  token: string;
 }

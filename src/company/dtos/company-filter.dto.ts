@@ -1,4 +1,4 @@
-import { PaginationQueryDto } from "@common/dtos/pagination-query.dto";
+import { PaginationQueryDto } from '@common/dtos/pagination-query.dto';
 
 export class CompanyFilterDto extends PaginationQueryDto {
   name?: string;

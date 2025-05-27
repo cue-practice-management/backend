@@ -41,7 +41,7 @@ export class AuthService {
     private readonly emailService: EmailService,
     private readonly env: EnvironmentConfigService,
     private readonly userMapper: UserMapper,
-  ) { }
+  ) {}
 
   async login(loginRequestDto: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.userService.findByEmail(loginRequestDto.email);
@@ -96,7 +96,9 @@ export class AuthService {
     return await this.generateTokens(user, deviceInfo, ip);
   }
 
-  async recoverPassword(recoverPasswordRequestDto: RecoverPasswordRequestDto): Promise<void> {
+  async recoverPassword(
+    recoverPasswordRequestDto: RecoverPasswordRequestDto,
+  ): Promise<void> {
     const user = await this.userService.findByEmail(
       recoverPasswordRequestDto.email,
     );
@@ -118,10 +120,12 @@ export class AuthService {
       subject: 'Password Recovery',
       templateId: EMAIL_TEMPLATE_IDS.FORGOT_PASSWORD,
       variables: variables,
-    })
+    });
   }
 
-  async recoverPasswordValidate(dto: RecoverPasswordValidateRequestDto): Promise<RecoverPasswordValidateResponseDto> {
+  async recoverPasswordValidate(
+    dto: RecoverPasswordValidateRequestDto,
+  ): Promise<RecoverPasswordValidateResponseDto> {
     console.log('Validating OTP for password recovery:', dto);
     const user = await this.userService.findByEmail(dto.email);
     if (!user) throw new UserNotFoundException();
@@ -137,13 +141,15 @@ export class AuthService {
         sub: user._id,
         purpose: OtpPurpose.RECOVER_PASSWORD,
       },
-      { expiresIn: '10m' }
+      { expiresIn: '10m' },
     );
 
     return { token };
   }
 
-  async recoverResetPassword(resetPasswordRequestDto: RecoverResetPasswordRequestDto): Promise<void> {
+  async recoverResetPassword(
+    resetPasswordRequestDto: RecoverResetPasswordRequestDto,
+  ): Promise<void> {
     const { token, newPassword } = resetPasswordRequestDto;
 
     const payload = this.jwtService.verify(token);

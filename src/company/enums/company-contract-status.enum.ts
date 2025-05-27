@@ -1,5 +1,5 @@
 export enum CompanyContractStatus {
-    ACTIVE = 'active',
-    TERMINATED = 'terminated',
-    EXPIRED = 'expired',
+  ACTIVE = 'active',
+  TERMINATED = 'terminated',
+  EXPIRED = 'expired',
 }
