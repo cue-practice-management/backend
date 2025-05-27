@@ -10,6 +10,9 @@ import { Country } from '@country/schemas/country.schema';
 import { AcademicProgram } from '@academic-program/schemas/academic-program.schema';
 import { CityMapper } from '@city/mapper/city-mapper';
 import { City } from '@city/schemas/city.schema';
+import { CompanyDetailResponseDto } from 'company/dtos/company-detail-response.dto';
+import { CompanyContractMapper } from './company-contract.mapper';
+import { CompanyContract } from 'company/schemas/company-contract.schema';
 
 @Injectable()
 export class CompanyMapper {
@@ -17,7 +20,8 @@ export class CompanyMapper {
     private readonly academicProgramMapper: AcademicProgramMapper,
     private readonly cityMapper: CityMapper,
     private readonly countryMapper: CountryMapper,
-  ) { }
+    private readonly companyContractMapper: CompanyContractMapper,
+  ) {}
 
   toCompanyResponseDto(company: Company): CompanyResponseDto {
     return {
@@ -30,14 +34,41 @@ export class CompanyMapper {
       websiteUrl: company.websiteUrl,
       address: company.address,
       city: this.cityMapper.toCityResponseDto(company.city as unknown as City),
-      country: this.countryMapper.toCountryResponseDto(company.country as unknown as Country),
-      associatedAcademicPrograms: Array.isArray(company.associatedAcademicPrograms)
+      country: this.countryMapper.toCountryResponseDto(
+        company.country as unknown as Country,
+      ),
+      associatedAcademicPrograms: Array.isArray(
+        company.associatedAcademicPrograms,
+      )
         ? company.associatedAcademicPrograms.map((program) =>
-          this.academicProgramMapper.toAcademicProgramResponseDto(program as unknown as AcademicProgram),
-        )
+            this.academicProgramMapper.toAcademicProgramResponseDto(
+              program as unknown as AcademicProgram,
+            ),
+          )
         : [],
       createdAt: company.createdAt,
       updatedAt: company.updatedAt,
+    };
+  }
+
+  async toCompanyDetailResponseDto(
+    company: Company,
+  ): Promise<CompanyDetailResponseDto> {
+    const base = this.toCompanyResponseDto(company);
+
+    const contracts = Array.isArray((company as any).contracts)
+      ? await Promise.all(
+          (company as any).contracts.map((contract) =>
+            this.companyContractMapper.toCompanyResponseDto(
+              contract as CompanyContract,
+            ),
+          ),
+        )
+      : [];
+
+    return {
+      ...(await base),
+      contracts,
     };
   }
 
