@@ -64,6 +64,6 @@ import { EmailModule } from './email/email.module';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-  ],
+  ]
 })
 export class AppModule {}
