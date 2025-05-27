@@ -52,4 +52,7 @@ export const COMPANY_POPULATION_OPTIONS = {
       path: 'faculty',
     },
   },
+  CONTRACTS: {
+    path: 'contracts',
+  },
 };
