@@ -28,7 +28,7 @@ export class AcademicProgramService {
     @InjectModel(AcademicProgram.name)
     private readonly academicProgramModel: PaginateModel<AcademicProgramDocument>,
     private readonly academicProgramMapper: AcademicProgramMapper,
-  ) {}
+  ) { }
 
   async createAcademicProgram(
     createAcademicProgramDto: CreateAcademicProgramRequestDto,
@@ -122,6 +122,21 @@ export class AcademicProgramService {
   async validateAcademicProgramExists(id: string): Promise<void> {
     const academicProgram = await this.academicProgramModel.findById(id);
     if (!academicProgram) {
+      throw new AcademicProgramNotFoundException();
+    }
+  }
+
+  async validateManyAcademicProgramsExist(
+    academicProgramIds: string[],
+  ): Promise<void> {
+    const academicPrograms = await this.academicProgramModel
+      .find({ _id: { $in: academicProgramIds } })
+      .select('_id');
+    const existingIds = academicPrograms.map((program) => program._id.toString());
+    const notFoundIds = academicProgramIds.filter(
+      (id) => !existingIds.includes(id),
+    );
+    if (notFoundIds.length > 0) {
       throw new AcademicProgramNotFoundException();
     }
   }
