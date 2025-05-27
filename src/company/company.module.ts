@@ -7,30 +7,40 @@ import { CityModule } from '@city/city.module';
 import { AcademicProgramModule } from '@academic-program/academic-program.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Company, CompanySchema } from './schemas/company.schema';
-import { CompanyContract, CompanyContractSchema } from './schemas/company-contract.schema';
+import {
+  CompanyContract,
+  CompanyContractSchema,
+} from './schemas/company-contract.schema';
 import { AuthModule } from '@auth/auth.module';
 import { FileModule } from 'file/file.module';
+import { CompanyContractService } from './company-contract.service';
+import { CompanyContractMapper } from './mappers/company-contract.mapper';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       {
         name: Company.name,
-        schema: CompanySchema
+        schema: CompanySchema,
       },
       {
         name: CompanyContract.name,
-        schema: CompanyContractSchema
-      }
+        schema: CompanyContractSchema,
+      },
     ]),
     CountryModule,
     CityModule,
     AcademicProgramModule,
     AuthModule,
-    FileModule
+    FileModule,
   ],
-  providers: [CompanyService, CompanyMapper],
+  providers: [
+    CompanyService,
+    CompanyContractService,
+    CompanyMapper,
+    CompanyContractMapper,
+  ],
   controllers: [CompanyController],
-  exports: [CompanyService, CompanyMapper]
+  exports: [CompanyService, CompanyMapper],
 })
-export class CompanyModule { }
+export class CompanyModule {}
