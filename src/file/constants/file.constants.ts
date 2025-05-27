@@ -13,3 +13,7 @@ export const ALLOWED_MIME_TYPES = [
     'image/webp',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // DOCX
 ]
+
+export const FILE_FOLDERS = {
+    COMPANY_LOGOS: 'company-logos',
+}
