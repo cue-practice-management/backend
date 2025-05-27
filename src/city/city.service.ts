@@ -105,6 +105,13 @@ export class CityService {
     await city.softDelete();
   }
 
+  async validateCityExists(cityId: string): Promise<void> {
+    const exists = await this.cityModel.exists({ _id: cityId });
+    if (!exists) {
+      throw new CityNotFoundException();
+    }
+  } 
+
   private buildFilterQuery(filter: CityFilterDto): Record<string, any> {
     const query: Record<string, any> = {};
 

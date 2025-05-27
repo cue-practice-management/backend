@@ -81,4 +81,10 @@ export class FileService {
       }),
     );
   }
+
+  getFileKeyFromUrl(fileUrl: string): string {
+    const url = new URL(fileUrl);
+    const pathParts = url.pathname.split('/');
+    return pathParts[pathParts.length - 1];
+  }
 }

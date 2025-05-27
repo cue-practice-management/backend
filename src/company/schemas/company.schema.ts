@@ -1,3 +1,4 @@
+import { AcademicProgram } from '@academic-program/schemas/academic-program.schema';
 import { softDeletePlugin } from '@common/plugins/soft-delete.plugin';
 import { BaseSchema } from '@common/types/base.schema';
 import { SoftDeletableDocument } from '@common/types/soft-deletable-document';
@@ -21,20 +22,26 @@ export class Company extends BaseSchema {
   @Prop({ required: true, unique: true })
   phone: string;
 
+  @Prop({ unique: false })
+  logoUrl?: string;
+
   @Prop({ required: true })
   websiteUrl: string;
 
-  @Prop({ required: true })
-  address: string;
-
   @Prop({ default: true })
   openJobPositions: boolean;
+
+  @Prop({ type: [mongoose.Types.ObjectId], ref: AcademicProgram.name })
+  associatedAcademicPrograms: mongoose.Types.ObjectId[];
 
   @Prop({ type: mongoose.Types.ObjectId, ref: Country.name, required: true })
   country: mongoose.Types.ObjectId;
 
   @Prop({ type: mongoose.Types.ObjectId, ref: City.name, required: true })
   city: mongoose.Types.ObjectId;
+
+  @Prop({ required: true })
+  address: string;
 }
 
 export type CompanyDocument = SoftDeletableDocument<Company>;

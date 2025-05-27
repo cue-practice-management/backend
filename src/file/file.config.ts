@@ -1,4 +1,3 @@
-import { BadRequestException } from '@nestjs/common';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { ALLOWED_MIME_TYPES, FILE_MAX_SIZE } from './constants/file.constants';
 import { FileFormatNotValidException } from './exceptions/file-format-not-valid.exception';

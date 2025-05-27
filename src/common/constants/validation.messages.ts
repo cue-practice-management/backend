@@ -11,4 +11,5 @@ export const VALIDATION_MESSAGES = {
     '$property is not valid for document type "$constraint1"',
   INVALID_MONGO_ID: '$property is not a valid MongoDB ObjectId',
   INVALID_NUMBER: '$property must be a number',
+  INVALID_URL: '$property must be a valid URL',
 };
