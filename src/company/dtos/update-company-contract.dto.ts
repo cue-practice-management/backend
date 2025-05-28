@@ -1,6 +1,5 @@
 import {
   IsEnum,
-  IsMongoId,
   IsOptional,
   IsString,
   IsDateString,

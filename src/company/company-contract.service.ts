@@ -11,8 +11,8 @@ import { CompanyContractResponseDto } from './dtos/company-contract-response.dto
 import { InjectModel } from '@nestjs/mongoose';
 import { FileService } from 'file/file.service';
 import { FILE_FOLDERS } from 'file/constants/file.constants';
-import { UpdateCompanyContractDto } from './dtos/upload-company-contract.dto';
 import { CompanyContractNotFoundException } from './exceptions/company-contract-not-found.exception';
+import { UpdateCompanyContractDto } from './dtos/update-company-contract.dto';
 
 @Injectable()
 export class CompanyContractService {
