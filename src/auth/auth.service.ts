@@ -29,6 +29,7 @@ import { RecoverPasswordValidateRequestDto } from './dtos/recover-password-valid
 import { RecoverPasswordValidateResponseDto } from './dtos/recover-password-validate-response.dto';
 import { RecoverResetPasswordRequestDto } from './dtos/recover-reset-password-request.dto';
 import { InvalidResetPasswordTokenException } from './exceptions/invalid-reset-password-token';
+import { SesTemplates } from 'email/templates/templates.enums';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
     private readonly emailService: EmailService,
     private readonly env: EnvironmentConfigService,
     private readonly userMapper: UserMapper,
-  ) {}
+  ) { }
 
   async login(loginRequestDto: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.userService.findByEmail(loginRequestDto.email);
@@ -110,16 +111,10 @@ export class AuthService {
       purpose: OtpPurpose.RECOVER_PASSWORD,
     });
 
-    const variables = {
-      otp: otp.otp,
-      email: user.email,
-    };
-
     await this.emailService.sendEmail({
       to: user.email,
-      subject: 'Password Recovery',
-      templateId: EMAIL_TEMPLATE_IDS.FORGOT_PASSWORD,
-      variables: variables,
+      templateId: SesTemplates.OTP_RECOVERY,
+      data: { name: user.firstName, otp: otp.otp },
     });
   }
 
@@ -163,6 +158,11 @@ export class AuthService {
     user.password = await bcrypt.hash(newPassword, 10);
     await this.userService.updatePassword(user._id.toString(), newPassword);
     await this.logoutAllDevices(user._id.toString());
+    await this.emailService.sendEmail({
+      to: user.email,
+      templateId: SesTemplates.PASSWORD_UPDATED,
+      data: { name: user.firstName },
+    });
   }
 
   private async generateTokens(

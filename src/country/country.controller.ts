@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -63,7 +64,7 @@ export class CountryController {
   @Delete('delete/:countryId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteCountry(
     @Param('countryId', ParseObjectIdPipe) countryId: string,
   ) {

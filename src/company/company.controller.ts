@@ -10,7 +10,6 @@ import {
   Query,
   UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyRequestDto } from './dtos/create-company-request.dto';
@@ -24,13 +23,11 @@ import { RoleGuard } from '@auth/guards/role.guard';
 import { UserRole } from '@common/enums/role.enum';
 import { Roles } from '@common/decorators/role.decorator';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { multerFileFilter, multerOptions } from 'file/file.config';
 import { CompanyContractService } from './company-contract.service';
 import { GetFile } from '@common/interceptors/file.interceptor';
-import { UpdateCompanyContractDto } from './dtos/upload-company-contract.dto';
 import { CreateCompanyContractDto } from './dtos/create-company-contract-request.dto';
 import { CompanyContractResponseDto } from './dtos/company-contract-response.dto';
+import { UpdateCompanyContractDto } from './dtos/update-company-contract.dto';
 
 @Controller('companies')
 export class CompanyController {

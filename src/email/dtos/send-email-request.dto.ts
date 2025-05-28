@@ -1,6 +1,8 @@
-export class SendEmailRequestDto {
+import { TemplatePayloadMap } from "email/templates/template-payload.type";
+import { SesTemplates } from "email/templates/templates.enums";
+
+export type SendEmailRequestDto<T extends SesTemplates = SesTemplates> = {
   to: string;
-  subject: string;
-  templateId: string;
-  variables: Record<string, any>;
-}
+  templateId: T;
+  data: TemplatePayloadMap[T];
+};
