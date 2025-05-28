@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.816.0",
+    "@aws-sdk/client-ses": "^3.817.0",
     "@aws-sdk/s3-request-presigner": "^3.816.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -35,7 +36,6 @@
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.7",
     "joi": "^17.13.3",
-    "mailersend": "^2.6.0",
     "mongoose": "^8.13.2",
     "mongoose-paginate-v2": "^1.9.0",
     "reflect-metadata": "^0.2.2",
