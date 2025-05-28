@@ -1,44 +1,44 @@
-import { EnvironmentConfigService } from '@common/config/environment-config.service';
-import { Injectable } from '@nestjs/common';
-import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
+import { Injectable, Logger } from '@nestjs/common';
+import { SESClient, SendTemplatedEmailCommand } from '@aws-sdk/client-ses';
 import { SendEmailRequestDto } from './dtos/send-email-request.dto';
-import { Personalization } from 'mailersend/lib/modules/Email.module';
+import { SesTemplates } from './templates/templates.enums';
+import { EnvironmentConfigService } from '@common/config/environment-config.service';
 
 @Injectable()
 export class EmailService {
-  private readonly mailerSend: MailerSend;
-  private readonly sentFrom: Sender;
+  private readonly ses: SESClient;
+  private readonly logger = new Logger(EmailService.name);
+  private readonly sourceEmail: string;
 
   constructor(private readonly env: EnvironmentConfigService) {
-    this.mailerSend = new MailerSend({
-      apiKey: this.env.mailersendApiKey,
+    this.ses = new SESClient({
+      region: env.awsRegion,
+      credentials: {
+        accessKeyId: env.awsAccessKeyId,
+        secretAccessKey: env.awsSecretAccessKey,
+      },
     });
-    this.sentFrom = new Sender(
-      this.env.mailersendSenderName,
-      this.env.mailersendSenderEmail,
-    );
+    this.sourceEmail = env.sourceEmail;
   }
 
-  async sendEmail(sendEmailRequestDto: SendEmailRequestDto): Promise<void> {
-    const { to, subject, templateId, variables } = sendEmailRequestDto;
+  async sendEmail<T extends SesTemplates>(dto: SendEmailRequestDto<T>): Promise<void> {
+    const { to, templateId, data } = dto;
 
-    const recipients: Recipient[] = [new Recipient(to)];
-    const personalization: Personalization[] = [
-      {
-        email: to,
-        data: variables,
+    const command = new SendTemplatedEmailCommand({
+      Source: `CUE Practicas Universitarias <${this.sourceEmail}>`,
+      Destination: {
+        ToAddresses: [to],
       },
-    ];
+      Template: templateId,
+      TemplateData: JSON.stringify(data),
+    });
 
-    const emailParams: EmailParams = new EmailParams()
-      .setFrom(this.sentFrom)
-      .setTo(recipients)
-      .setSubject(subject)
-      .setTemplateId(templateId)
-      .setPersonalization(personalization);
-
-    console.log('Sending email with params:', emailParams);
-
-    await this.mailerSend.email.send(emailParams);
+    try {
+      const response = await this.ses.send(command);
+      this.logger.log(`📧 Email (${templateId}) sent to ${to}: ${response.MessageId}`);
+    } catch (err) {
+      this.logger.error(`❌ Error sending email (${templateId}) to ${to}`, err);
+      throw err;
+    }
   }
 }
