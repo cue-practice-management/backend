@@ -32,6 +32,7 @@ export class CompanyMapper {
       nit: company.nit,
       phone: company.phone,
       websiteUrl: company.websiteUrl,
+      size: company.size,
       address: company.address,
       city: this.cityMapper.toCityResponseDto(company.city as unknown as City),
       country: this.countryMapper.toCountryResponseDto(
