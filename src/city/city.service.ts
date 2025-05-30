@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { City, CityDocument } from './schemas/city.schema';
-import { PaginateModel } from 'mongoose';
+import mongoose, { PaginateModel } from 'mongoose';
 import { CityMapper } from './mapper/city-mapper';
 import { CountryService } from '@country/country.service';
 import { CreateCityRequestDto } from './dtos/create-city-request.dto';
@@ -26,7 +26,7 @@ export class CityService {
     private readonly cityModel: PaginateModel<CityDocument>,
     private readonly cityMapper: CityMapper,
     private readonly countryService: CountryService,
-  ) {}
+  ) { }
 
   async createCity(
     createCityDto: CreateCityRequestDto,
@@ -65,11 +65,19 @@ export class CityService {
     return this.cityMapper.toPaginatedCityResponseDto(paginatedResult);
   }
 
-  async getCityTypeahead(query: string): Promise<TypeaheadItem[]> {
+  async getCityTypeahead(query: string, country?: string): Promise<TypeaheadItem[]> {
+    const filter: { name: { $regex: string; $options: string }, country?: mongoose.Types.ObjectId } = {
+      name: { $regex: query, $options: 'i' },
+    };
+
+    if (country && mongoose.Types.ObjectId.isValid(country)) {
+      filter.country = new mongoose.Types.ObjectId(country);
+    }
+
     const cities = await this.cityModel
-      .find({
-        name: { $regex: query, $options: 'i' },
-      })
+      .find(
+        filter,
+      )
       .limit(MAX_TYPEAHEAD_ITEMS);
 
     return cities.map((city) => this.cityMapper.toTypeaheadItem(city));
