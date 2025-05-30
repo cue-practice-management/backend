@@ -28,13 +28,14 @@ import { GetFile } from '@common/interceptors/file.interceptor';
 import { CreateCompanyContractDto } from './dtos/create-company-contract-request.dto';
 import { CompanyContractResponseDto } from './dtos/company-contract-response.dto';
 import { UpdateCompanyContractDto } from './dtos/update-company-contract.dto';
+import { CompanyContractFilterDto } from './dtos/company-contract-filter.dto';
 
 @Controller('companies')
 export class CompanyController {
   constructor(
     private readonly companyService: CompanyService,
     private readonly companyContractService: CompanyContractService,
-  ) {}
+  ) { }
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -110,6 +111,19 @@ export class CompanyController {
       dto,
       companyId,
       file,
+    );
+  }
+
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRole.ADMIN)
+  @Get(':companyId/contracts')
+  async getCompanyContracts(
+    @Param('companyId', ParseObjectIdPipe) companyId: string,
+    @Query() filter: CompanyContractFilterDto,
+  ): Promise<PaginatedResult<CompanyContractResponseDto>> {
+    return this.companyContractService.getCompanyContractsByCriteria(
+      companyId,
+      filter,
     );
   }
 

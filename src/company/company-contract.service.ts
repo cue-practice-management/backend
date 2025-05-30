@@ -13,6 +13,8 @@ import { FileService } from 'file/file.service';
 import { FILE_FOLDERS } from 'file/constants/file.constants';
 import { CompanyContractNotFoundException } from './exceptions/company-contract-not-found.exception';
 import { UpdateCompanyContractDto } from './dtos/update-company-contract.dto';
+import { PaginatedResult } from '@common/types/paginated-result';
+import { CompanyContractFilterDto } from './dtos/company-contract-filter.dto';
 
 @Injectable()
 export class CompanyContractService {
@@ -22,7 +24,7 @@ export class CompanyContractService {
     private readonly companyService: CompanyService,
     private readonly fileService: FileService,
     private readonly companyContractMapper: CompanyContractMapper,
-  ) {}
+  ) { }
 
   async createCompanyContract(
     dto: CreateCompanyContractDto,
@@ -41,6 +43,22 @@ export class CompanyContractService {
 
     await contract.save();
     return this.companyContractMapper.toCompanyResponseDto(contract);
+  }
+
+  async getCompanyContractsByCriteria(companyId: string, filter: CompanyContractFilterDto): Promise<PaginatedResult<CompanyContractResponseDto>> {
+    await this.companyService.validateCompanyExists(companyId);
+    const query = this.buildFilterQuery(filter);
+
+    const contracts = await this.companyContractModel.paginate(
+      { company: companyId, ...query },
+      {
+        page: filter.page,
+        limit: filter.limit,
+        sort: { createdAt: -1 },
+      }
+    );
+
+    return this.companyContractMapper.toPaginatedResponseDto(contracts);
   }
 
   async updateCompanyContract(
@@ -93,5 +111,19 @@ export class CompanyContractService {
       folder: FILE_FOLDERS.COMPANY_CONTRACTS,
     });
     return fileKey;
+  }
+
+  private buildFilterQuery(filter: CompanyContractFilterDto): Record<string, any> {
+    const query: Record<string, any> = {};
+
+    if (filter.status) {
+      query.status = filter.status;
+    }
+
+    if (filter.type) {
+      query.type = filter.type;
+    }
+
+    return query;
   }
 }
