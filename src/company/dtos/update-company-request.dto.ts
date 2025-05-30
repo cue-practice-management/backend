@@ -1,5 +1,6 @@
 import { VALIDATION_MESSAGES } from '@common/constants/validation.messages';
 import {
+  IsEnum,
   IsMongoId,
   IsOptional,
   IsString,
@@ -9,6 +10,7 @@ import {
 } from 'class-validator';
 import { COMPANY_CONSTRAINTS } from '../constants/company.constants';
 import { IsColombianPhone } from '@common/validators/colombian-phone.validator';
+import { CompanySize } from 'company/enums/company-size.enum';
 
 export class UpdateCompanyRequestDto {
   @IsOptional()
@@ -41,6 +43,10 @@ export class UpdateCompanyRequestDto {
   @MinLength(COMPANY_CONSTRAINTS.ADDRESS.MIN_LENGTH)
   @MaxLength(COMPANY_CONSTRAINTS.ADDRESS.MAX_LENGTH)
   address?: string;
+
+  @IsOptional()
+  @IsEnum(CompanySize)
+  size?: CompanySize;
 
   @IsOptional()
   @IsMongoId({ message: VALIDATION_MESSAGES.INVALID_MONGO_ID })
