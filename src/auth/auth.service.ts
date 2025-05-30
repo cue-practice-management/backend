@@ -24,7 +24,6 @@ import { OtpService } from 'otp/otp.service';
 import { OtpPurpose } from 'otp/enums/otp.enums';
 import { RecoverPasswordRequestDto } from './dtos/recover-password-request.dto';
 import { EmailService } from 'email/email.service';
-import { EMAIL_TEMPLATE_IDS } from 'email/email.config';
 import { RecoverPasswordValidateRequestDto } from './dtos/recover-password-validate-reques.dto';
 import { RecoverPasswordValidateResponseDto } from './dtos/recover-password-validate-response.dto';
 import { RecoverResetPasswordRequestDto } from './dtos/recover-reset-password-request.dto';
@@ -197,7 +196,7 @@ export class AuthService {
     expiresAt.setDate(expiresAt.getDate() + expirationDays);
 
     await this.refreshTokenModel.updateOne(
-      { user: userId, ip: ip },
+      { user: userId, ip: ip, deviceInfo: deviceInfo },
       {
         $set: {
           token: refreshToken,
