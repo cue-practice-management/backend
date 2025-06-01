@@ -21,6 +21,7 @@ import { StudentModule } from './student/student.module';
 import { ProfessorModule } from './professor/professor.module';
 import { FileModule } from './file/file.module';
 import { EmailModule } from './email/email.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { EmailModule } from './email/email.module';
     ProfessorModule,
     FileModule,
     EmailModule,
+    NewsModule,
   ],
   providers: [
     AppLogger,
