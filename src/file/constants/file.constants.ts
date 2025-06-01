@@ -17,4 +17,5 @@ export const ALLOWED_MIME_TYPES = [
 export const FILE_FOLDERS = {
   COMPANY_LOGOS: 'company-logos',
   COMPANY_CONTRACTS: 'company-contracts',
+  NEWS: 'news',
 };
