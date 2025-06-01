@@ -15,11 +15,11 @@ export function getSortDirection(sort?: SortOrder): 1 | -1 {
 export function getSort(
   sortOptions: string[],
   defaultSortOption: string,
-  option?: string,
+  sortBy?: string,
   sortOrder?: SortOrder,
 ): Record<string, 1 | -1> {
   const validatedSortBy =
-    sortOptions.find((option) => option === option) || defaultSortOption;
+    sortOptions.find((option) => option === sortBy) || defaultSortOption;
   const sort = {
     [validatedSortBy]: getSortDirection(sortOrder),
   };
