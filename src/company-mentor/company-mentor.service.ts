@@ -3,7 +3,7 @@ import { PaginateModel } from 'mongoose';
 import { CompanyMentor, CompanyMentorDocument } from './schemas/company-mentor.schema';
 import { UserService } from '@user/user.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserDocument } from '@user/schemas/user.schema';
+import { User, UserDocument } from '@user/schemas/user.schema';
 import { CompanyMentorMapper } from './mappers/company-mentor.mapper';
 import { CompanyService } from 'company/company.service';
 import { UserRole } from '@common/enums/role.enum';
@@ -25,7 +25,7 @@ export class CompanyMentorService {
     private readonly companyMentorModel: PaginateModel<CompanyMentorDocument>;
 
     constructor(
-        @InjectModel(CompanyMentor.name)
+        @InjectModel(User.name)
         private readonly userModel: PaginateModel<UserDocument>,
         private readonly userService: UserService,
         private readonly companyService: CompanyService,
@@ -98,7 +98,7 @@ export class CompanyMentorService {
         const companyMentor = await this.companyMentorModel.findById(companyMentorId);
         if (!companyMentor) {
             throw new CompanyMentorNotFoundException();
-        }
+        }     
         await companyMentor.softDelete();
     }
 
