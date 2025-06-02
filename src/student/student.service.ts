@@ -114,6 +114,15 @@ export class StudentService {
     await student.softDelete();
   }
 
+  async validateStudentExists(
+    studentId: string,
+  ): Promise<void> {
+    const student = await this.studentModel.findById(studentId);
+    if (!student) {
+      throw new StudentNotFoundException();
+    }
+  }
+
   private buildFilter(filter: StudentFilterDto): Record<string, any> {
     const filterObject: Record<string, any> =
       this.userService.buildFilter(filter);

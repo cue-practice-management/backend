@@ -23,6 +23,7 @@ import { FileModule } from './file/file.module';
 import { EmailModule } from './email/email.module';
 import { NewsModule } from './news/news.module';
 import { CompanyMentorModule } from './company-mentor/company-mentor.module';
+import { StudentCompanyLinkingProcessModule } from './student-company-linking-process/student-company-linking-process.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { CompanyMentorModule } from './company-mentor/company-mentor.module';
     EmailModule,
     NewsModule,
     CompanyMentorModule,
+    StudentCompanyLinkingProcessModule,
   ],
   providers: [
     AppLogger,
