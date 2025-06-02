@@ -18,7 +18,7 @@ import { StudentMapper } from './mapper/student.mapper';
     CompanyModule,
   ],
   providers: [StudentService, StudentMapper],
-  exports: [StudentService],
+  exports: [StudentService, StudentMapper],
   controllers: [StudentController],
 })
 export class StudentModule {}
