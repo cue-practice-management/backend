@@ -46,6 +46,13 @@ export class CompanyController {
     return this.companyService.createCompany(dto);
   }
 
+  @Get('/typeahead')
+  @UseGuards(AuthGuard)
+  async getTypeahead(@Query('query') query: string): Promise<TypeaheadItem[]> {
+    return this.companyService.getCompanyTypeahead(query);
+  }
+
+
   @Get(':companyId')
   async getCompanyById(
     @Param('companyId', ParseObjectIdPipe) companyId: string,
@@ -92,11 +99,6 @@ export class CompanyController {
     return this.companyService.getByCriteria(filter);
   }
 
-  @Get('/typeahead')
-  @UseGuards(AuthGuard)
-  async getTypeahead(@Query('query') query: string): Promise<TypeaheadItem[]> {
-    return this.companyService.getCompanyTypeahead(query);
-  }
 
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
