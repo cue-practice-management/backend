@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CompanyMapper } from 'company/mappers/company.mapper';
 import { PaginateResult } from 'mongoose';
 import { CompanyMentorResponseDto } from '../dtos/company-mentor-response.dto';
-import { CompanyMentor } from '../company-mentor.schema';
 import { Company } from 'company/schemas/company.schema';
 import { PaginatedResult } from '@common/types/paginated-result';
+import { CompanyMentor } from 'company-mentor/schemas/company-mentor.schema';
 
 
 @Injectable()
