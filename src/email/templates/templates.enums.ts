@@ -3,4 +3,5 @@ export enum SesTemplates {
   PASSWORD_UPDATED = 'PasswordUpdated',
   WELCOME = 'WelcomeTemplate',
   STUDENT_COMPANY_LINKING_PROCESS_CREATED = 'StudentCompanyLinkingProcessCreated',
+  STUDENT_COMPANY_LINKING_PROCESS_ACCEPTED = 'StudentCompanyLinkingProcessAccepted',
 }
