@@ -9,6 +9,7 @@ import { StudentCompanyLinkingProcessMapper } from './mappers/student-company-li
 import { AuthModule } from '@auth/auth.module';
 import { StudentCompanyLinkingProcessListener } from './listeners/student-company-linking-process.listener';
 import { EmailModule } from 'email/email.module';
+import { StudentCompanyContractModule } from 'student-company-contract/student-company-contract.module';
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -19,6 +20,7 @@ import { EmailModule } from 'email/email.module';
         AuthModule,
         CompanyModule,
         StudentModule,
+        StudentCompanyContractModule,
         EmailModule
     ],
     providers: [StudentCompanyLinkingProcessService, StudentCompanyLinkingProcessMapper, StudentCompanyLinkingProcessListener],
