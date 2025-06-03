@@ -76,10 +76,28 @@ export class StudentService {
         sortBy,
         sortOrder,
       ),
-      populate: [STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM],
+      populate: [
+        STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM, 
+        STUDENT_POPULATION_OPTIONS.COMPANY,
+      ],
     });
 
     return this.studentMapper.toStudentPaginatedResponseDto(students);
+  }
+
+  async getStudentById(studentId: string): Promise<StudentResponseDto> {
+    const student = await this.studentModel
+      .findById(studentId)
+      .populate([
+        STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM,
+        STUDENT_POPULATION_OPTIONS.COMPANY,
+      ]);
+
+    if (!student) {
+      throw new StudentNotFoundException();
+    }
+
+    return this.studentMapper.toStudentResponseDto(student);
   }
 
   async getStudentsTypeahead(query: string): Promise<TypeaheadItem[]> {
@@ -91,7 +109,7 @@ export class StudentService {
           { documentNumber: { $regex: `^${query}`, $options: 'i' } },
         ],
       })
-      .populate(STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM)
+      .populate([STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM, STUDENT_POPULATION_OPTIONS.COMPANY])
       .limit(MAX_TYPEAHEAD_ITEMS);
 
     return students.map((student) =>
