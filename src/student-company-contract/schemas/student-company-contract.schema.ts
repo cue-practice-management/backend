@@ -35,7 +35,7 @@ export class StudentCompanyContract extends BaseSchema {
     @Prop({ default: false })
     isPaid: boolean;
 
-    @Prop({ required: true, enum: StudentCompanyContractStatus })
+    @Prop({ required: true, enum: StudentCompanyContractStatus, default: StudentCompanyContractStatus.PENDING_SIGNATURE })
     status: StudentCompanyContractStatus;
 
     @Prop({ required: false })

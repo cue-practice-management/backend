@@ -1,3 +1,5 @@
+import { COMPANY_POPULATION_OPTIONS } from "company/constants/company.constants";
+
 export const STUDENT_EXCEPTIONS = {
   STUDENT_NOT_FOUND: {
     message: 'Student not found',
@@ -11,7 +13,15 @@ export const STUDENT_POPULATION_OPTIONS = {
       path: 'faculty',
     },
   },
-  COMPANY: 'currentCompany',
+  COMPANY: {
+    path: 'currentCompany',
+    populate: [
+      COMPANY_POPULATION_OPTIONS.CITY,
+      COMPANY_POPULATION_OPTIONS.COUNTRY,
+      COMPANY_POPULATION_OPTIONS.ASSOCIATED_ACADEMIC_PROGRAMS,
+      COMPANY_POPULATION_OPTIONS.CONTRACTS,
+    ],
+  },
 };
 
 export const STUDENT_SORT_OPTIONS = [

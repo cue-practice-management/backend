@@ -49,6 +49,16 @@ export class StudentController {
     return this.studentService.getStudentsTypeahead(query);
   }
 
+  @Get(':studentId')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRole.ADMIN)
+  async getStudentById(
+    @Param('studentId', ParseObjectIdPipe) studentId: string,
+  ): Promise<StudentResponseDto> {
+    return await this.studentService.getStudentById(studentId);
+  }
+
+
 
   @Put('update/:studentId')
   @UseGuards(AuthGuard, RoleGuard)

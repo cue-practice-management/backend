@@ -26,13 +26,12 @@ export class StudentCompanyLinkingProcessListener {
     @OnEvent(STUDENT_COMPANY_LINKING_PROCESS_EVENT.STUDENT_COMPANY_LINKING_PROCESS_ACCEPTED)
     async handleStudentCompanyLinkingProcessAcceptedEvent(event: StudentCompanyLinkingProcessAcceptedEvent): Promise<void> {
         const { student, company } = event.studentCompanyLinkingProcess;
-        /* TODO: Send email to admin and student, create the company contract.
+
         await this.emailService.sendEmail({
             to: student.email,
             templateId: SesTemplates.STUDENT_COMPANY_LINKING_PROCESS_ACCEPTED,
             data: { studentName: `${student.firstName} ${student.lastName}`, companyName: company.corporateName },
         });
-        */
     }
 
 }

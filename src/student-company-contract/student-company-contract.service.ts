@@ -17,7 +17,7 @@ export class StudentCompanyContractService {
     ) { }
 
     async createStudentCompanyContractFromLinkingProcess(dto: CreateStudentCompanyContractFromLinkingProcessDto): Promise<StudentCompanyContractResponseDto> {
-        this.validateStudentHasActiveContract(dto.student);
+        this.validateStudentHasNoActiveOrPendingContract(dto.student);
 
         const studentCompanyContract = new this.studentCompanyContractModel(dto);
         const savedContract = await studentCompanyContract.save();
@@ -25,7 +25,7 @@ export class StudentCompanyContractService {
         return this.studentCompanyContractMapper.toStudentCompanyContractResponseDto(savedContract);
     }
 
-    private async validateStudentHasActiveContract(studentId: string): Promise<void> {
+    async validateStudentHasNoActiveOrPendingContract(studentId: string): Promise<void> {
         const activeContract = await this.studentCompanyContractModel.findOne({
             student: studentId,
             status: { $in: [StudentCompanyContractStatus.ACTIVE, StudentCompanyContractStatus.PENDING_SIGNATURE] },

@@ -2,6 +2,7 @@ import { AcademicProgramResponseDto } from '@academic-program/dtos/academic-prog
 import { DocumentType } from '@common/enums/document-type.enum';
 import { Gender } from '@common/enums/gender.enum';
 import { UserResponseDto } from '@user/dtos/user-response.dto';
+import { CompanyResponseDto } from 'company/dtos/company-response.dto';
 
 export class StudentResponseDto extends UserResponseDto {
   academicProgram: AcademicProgramResponseDto;
@@ -10,7 +11,7 @@ export class StudentResponseDto extends UserResponseDto {
   gender: Gender;
   documentNumber?: string;
   currentSemester: number;
-  currentCompany?: string;
+  currentCompany?: CompanyResponseDto;
   curriculumUrl?: string;
   epsCertificationUrl?: string;
   createdAt: Date;
