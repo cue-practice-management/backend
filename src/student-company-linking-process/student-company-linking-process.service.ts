@@ -15,6 +15,8 @@ import { StudentCompanyLinkingProcessStatus } from './enums/student-company-link
 import { StudentCompanyLinkingProcessApprovedStatusChangedException } from './exceptions/student-company-linking-process-approved-status-changed.exception';
 import { CompanyService } from 'company/company.service';
 import { StudentService } from 'student/student.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { STUDENT_COMPANY_LINKING_PROCESS_EVENT } from './constants/student-company-linking-process-event.constants';
 
 @Injectable()
 export class StudentCompanyLinkingProcessService {
@@ -24,6 +26,7 @@ export class StudentCompanyLinkingProcessService {
         private readonly studentCompanyLinkingProcessMapper: StudentCompanyLinkingProcessMapper,
         private readonly companyService: CompanyService,
         private readonly studentService: StudentService,
+        private readonly eventEmitter: EventEmitter2,
     ) { }
 
     async createStudentCompanyLinkingProcess(
@@ -38,8 +41,13 @@ export class StudentCompanyLinkingProcessService {
             STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY
         ]);
 
+        const studentCompanyLinkingProcessResponse = this.studentCompanyLinkingProcessMapper.toResponseDto(newProcess);
 
-        return this.studentCompanyLinkingProcessMapper.toResponseDto(newProcess);
+        this.eventEmitter.emit(
+            STUDENT_COMPANY_LINKING_PROCESS_EVENT.STUDENT_COMPANY_LINKING_PROCESS_CREATED,
+            { studentCompanyLinkingProcess: studentCompanyLinkingProcessResponse }
+        );
+        return studentCompanyLinkingProcessResponse;
     }
 
     async getStudentCompanyLinkingProcessByCriteria(
