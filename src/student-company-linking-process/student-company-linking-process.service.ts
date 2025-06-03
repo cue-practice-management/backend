@@ -17,6 +17,7 @@ import { CompanyService } from 'company/company.service';
 import { StudentService } from 'student/student.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { STUDENT_COMPANY_LINKING_PROCESS_EVENT } from './constants/student-company-linking-process-event.constants';
+import { StudentCompanyContractService } from 'student-company-contract/student-company-contract.service';
 
 @Injectable()
 export class StudentCompanyLinkingProcessService {
@@ -26,30 +27,33 @@ export class StudentCompanyLinkingProcessService {
         private readonly studentCompanyLinkingProcessMapper: StudentCompanyLinkingProcessMapper,
         private readonly companyService: CompanyService,
         private readonly studentService: StudentService,
+        private readonly studentCompanyContractService: StudentCompanyContractService,
         private readonly eventEmitter: EventEmitter2,
     ) { }
 
     async createStudentCompanyLinkingProcess(
-        studentCompanyLinkingProcess: CreateStudentCompanyLinkingProcessRequestDto,
+        dto: CreateStudentCompanyLinkingProcessRequestDto,
     ): Promise<StudentCompanyLinkingProcessResponseDto> {
-        await this.validateRelatedEntitiesExist(studentCompanyLinkingProcess.student, studentCompanyLinkingProcess.company);
+        await this.validateRelatedEntitiesExist(dto.student, dto.company);
+        await this.studentCompanyContractService.validateStudentHasNoActiveOrPendingContract(dto.student);
 
-        const newProcess = new this.studentCompanyLinkingProcessModel(studentCompanyLinkingProcess);
+        const newProcess = new this.studentCompanyLinkingProcessModel(dto);
         await newProcess.save();
+
         await newProcess.populate([
             STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.STUDENT,
-            STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY
+            STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY,
         ]);
 
-        const studentCompanyLinkingProcessResponse = this.studentCompanyLinkingProcessMapper.toResponseDto(newProcess);
+        const response = this.studentCompanyLinkingProcessMapper.toResponseDto(newProcess);
 
         this.eventEmitter.emit(
             STUDENT_COMPANY_LINKING_PROCESS_EVENT.STUDENT_COMPANY_LINKING_PROCESS_CREATED,
-            { studentCompanyLinkingProcess: studentCompanyLinkingProcessResponse }
+            { studentCompanyLinkingProcess: response }
         );
-        return studentCompanyLinkingProcessResponse;
-    }
 
+        return response;
+    }
     async getStudentCompanyLinkingProcessByCriteria(
         filter: StudentCompanyLinkingProcessFilterDto
     ): Promise<PaginatedResult<StudentCompanyLinkingProcessResponseDto>> {
@@ -78,34 +82,40 @@ export class StudentCompanyLinkingProcessService {
 
     async updateStudentCompanyLinkingProcessStatus(
         processId: string,
-        studentCompanyLinkingProcessUpdate: UpdateStudentCompanyLinkingProcessStatusRequestDto,
-    ) {
+        updateDto: UpdateStudentCompanyLinkingProcessStatusRequestDto,
+    ): Promise<StudentCompanyLinkingProcessResponseDto> {
         const process = await this.studentCompanyLinkingProcessModel.findById(processId);
+
         if (!process) {
             throw new StudentCompanyLinkingProcessNotFoundException();
         }
 
-        if (process.status === StudentCompanyLinkingProcessStatus.ACCEPTED) {
+        const isAlreadyApproved = process.status === StudentCompanyLinkingProcessStatus.ACCEPTED;
+        if (isAlreadyApproved) {
             throw new StudentCompanyLinkingProcessApprovedStatusChangedException();
         }
 
-        process.status = studentCompanyLinkingProcessUpdate.status;
-        process.observations = studentCompanyLinkingProcessUpdate.observations;
 
+        process.status = updateDto.status;
+        process.observations = updateDto.observations;
         await process.save();
+
         await process.populate([
             STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.STUDENT,
-            STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY
+            STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY,
         ]);
 
-        const studentCompanyLinkingProcessResponse = this.studentCompanyLinkingProcessMapper.toResponseDto(process);
+        const responseDto = this.studentCompanyLinkingProcessMapper.toResponseDto(process);
 
-        this.eventEmitter.emit(
-            STUDENT_COMPANY_LINKING_PROCESS_EVENT.STUDENT_COMPANY_LINKING_PROCESS_ACCEPTED,
-            { studentCompanyLinkingProcess: studentCompanyLinkingProcessResponse  }
-        );
-        
-        return studentCompanyLinkingProcessResponse;
+        const isApproving = updateDto.status === StudentCompanyLinkingProcessStatus.ACCEPTED;
+        if (isApproving) {
+            this.eventEmitter.emit(
+                STUDENT_COMPANY_LINKING_PROCESS_EVENT.STUDENT_COMPANY_LINKING_PROCESS_ACCEPTED,
+                { studentCompanyLinkingProcess: responseDto }
+            );
+        }
+
+        return responseDto;
     }
 
     async deleteStudentCompanyLinkingProcess(
