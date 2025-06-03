@@ -7,6 +7,8 @@ import { CompanyModule } from 'company/company.module';
 import { StudentModule } from 'student/student.module';
 import { StudentCompanyLinkingProcessMapper } from './mappers/student-company-linking-process.mapper';
 import { AuthModule } from '@auth/auth.module';
+import { StudentCompanyLinkingProcessListener } from './listeners/student-company-linking-process.listener';
+import { EmailModule } from 'email/email.module';
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -16,9 +18,10 @@ import { AuthModule } from '@auth/auth.module';
         },]),
         AuthModule,
         CompanyModule,
-        StudentModule
+        StudentModule,
+        EmailModule
     ],
-    providers: [StudentCompanyLinkingProcessService, StudentCompanyLinkingProcessMapper],
+    providers: [StudentCompanyLinkingProcessService, StudentCompanyLinkingProcessMapper, StudentCompanyLinkingProcessListener],
     controllers: [StudentCompanyLinkingProcessController],
     exports: [StudentCompanyLinkingProcessService, StudentCompanyLinkingProcessMapper]
 })

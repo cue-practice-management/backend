@@ -24,6 +24,7 @@ import { EmailModule } from './email/email.module';
 import { NewsModule } from './news/news.module';
 import { CompanyMentorModule } from './company-mentor/company-mentor.module';
 import { StudentCompanyLinkingProcessModule } from './student-company-linking-process/student-company-linking-process.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { StudentCompanyLinkingProcessModule } from './student-company-linking-pr
     ThrottlerModule.forRootAsync({
       useClass: ThrottleConfigService,
     }),
+    EventEmitterModule.forRoot(),
     UserModule,
     AuthModule,
     CommonModule,
