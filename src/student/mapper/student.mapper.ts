@@ -1,5 +1,6 @@
 import { AcademicProgramMapper } from '@academic-program/mappers/academic-program.mapper';
 import { AcademicProgram } from '@academic-program/schemas/academic-program.schema';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { Injectable } from '@nestjs/common';
 import { PaginateResult } from 'mongoose';
@@ -45,6 +46,13 @@ export class StudentMapper {
       docs: paginatedStudents.docs.map((student) =>
         this.toStudentResponseDto(student),
       ),
+    };
+  }
+
+  toTypeaheadItem(student: Student): TypeaheadItem {
+    return {
+      label: `${student.firstName} ${student.lastName} - ${(student.academicProgram as unknown as AcademicProgram).name}`,
+      value: student._id.toString(),
     };
   }
 }

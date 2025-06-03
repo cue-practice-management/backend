@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -20,10 +21,11 @@ import { StudentResponseDto } from './dtos/student-response.dto';
 import { StudentFilterDto } from './dtos/student-filter.dto';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { UpdateStudentRequestDto } from './dtos/update-student-request.dto';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Controller('students')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) {}
+  constructor(private readonly studentService: StudentService) { }
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -41,6 +43,13 @@ export class StudentController {
     return await this.studentService.getStudentsByCriteria(filter);
   }
 
+  @Get('/typeahead')
+  @UseGuards(AuthGuard)
+  async getTypeahead(@Query('query') query: string): Promise<TypeaheadItem[]> {
+    return this.studentService.getStudentsTypeahead(query);
+  }
+
+
   @Put('update/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
@@ -54,7 +63,7 @@ export class StudentController {
   @Delete('delete/:studentId')
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteStudent(
     @Param('studentId', ParseObjectIdPipe) studentId: string,
   ) {
