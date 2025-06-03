@@ -20,6 +20,8 @@ import { getSort } from '@common/utils/pagination.util';
 import { StudentNotFoundException } from './exceptions/student-not-found-exception';
 import { UpdateStudentRequestDto } from './dtos/update-student-request.dto';
 import * as bcrypt from 'bcryptjs';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
+import { MAX_TYPEAHEAD_ITEMS } from '@common/constants/constaint.constants';
 
 @Injectable()
 export class StudentService {
@@ -78,6 +80,23 @@ export class StudentService {
     });
 
     return this.studentMapper.toStudentPaginatedResponseDto(students);
+  }
+
+  async getStudentsTypeahead(query: string): Promise<TypeaheadItem[]> {
+    const students = await this.studentModel
+      .find({
+        $or: [
+          { firstName: { $regex: `^${query}`, $options: 'i' } },
+          { lastName: { $regex: `^${query}`, $options: 'i' } },
+          { documentNumber: { $regex: `^${query}`, $options: 'i' } },
+        ],
+      })
+      .populate(STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM)
+      .limit(MAX_TYPEAHEAD_ITEMS);
+
+    return students.map((student) =>
+      this.studentMapper.toTypeaheadItem(student),
+    );
   }
 
   async updateStudent(
