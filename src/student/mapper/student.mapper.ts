@@ -3,13 +3,15 @@ import { AcademicProgram } from '@academic-program/schemas/academic-program.sche
 import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { Injectable } from '@nestjs/common';
+import { CompanyMapper } from 'company/mappers/company.mapper';
+import { Company } from 'company/schemas/company.schema';
 import { PaginateResult } from 'mongoose';
 import { StudentResponseDto } from 'student/dtos/student-response.dto';
 import { Student } from 'student/schemas/student.schema';
 
 @Injectable()
 export class StudentMapper {
-  constructor(private readonly academicProgramMapper: AcademicProgramMapper) {}
+  constructor(private readonly academicProgramMapper: AcademicProgramMapper, private readonly companyMapper: CompanyMapper) {}
 
   toStudentResponseDto(student: Student): StudentResponseDto {
     return {
@@ -27,7 +29,7 @@ export class StudentMapper {
         student.academicProgram as unknown as AcademicProgram,
       ),
       currentSemester: student.currentSemester,
-      currentCompany: student.currentCompany?.toString(),
+      currentCompany: student.currentCompany ? this.companyMapper.toCompanyResponseDto(student.currentCompany as unknown as Company) : undefined,
       curriculumUrl: student.curriculumUrl,
       epsCertificationUrl: student.epsCertificationUrl,
       createdAt: student.createdAt,
