@@ -98,7 +98,14 @@ export class StudentCompanyLinkingProcessService {
             STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY
         ]);
 
-        return this.studentCompanyLinkingProcessMapper.toResponseDto(process);
+        const studentCompanyLinkingProcessResponse = this.studentCompanyLinkingProcessMapper.toResponseDto(process);
+
+        this.eventEmitter.emit(
+            STUDENT_COMPANY_LINKING_PROCESS_EVENT.STUDENT_COMPANY_LINKING_PROCESS_ACCEPTED,
+            { studentCompanyLinkingProcess: studentCompanyLinkingProcessResponse  }
+        );
+        
+        return studentCompanyLinkingProcessResponse;
     }
 
     async deleteStudentCompanyLinkingProcess(

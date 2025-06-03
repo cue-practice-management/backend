@@ -1,11 +1,14 @@
 import { BaseSchema } from "@common/types/base.schema";
-import { Prop, Schema } from "@nestjs/mongoose";
+import { SoftDeletableDocument } from "@common/types/soft-deletable-document";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Company } from "company/schemas/company.schema";
 import mongoose from "mongoose";
-import { StudentCompanyContractCancelledBy } from "student-company-contract/enums/student-company-contract-cancelled-by.enum";
 import { StudentCompanyContractStatus } from "student-company-contract/enums/student-company-contract-status.enum";
 import { StudentCompanyLinkingProcess } from "student-company-linking-process/schemas/student-company-linking-process.schema";
 import { Student } from "student/schemas/student.schema";
+import { StudentCompanyContractCancelledBy } from "student-company-contract/enums/student-company-contract-cancelled-by.enum";
+import * as mongoosePaginate from 'mongoose-paginate-v2';
+import { softDeletePlugin } from "@common/plugins/soft-delete.plugin";
 
 @Schema({ timestamps: true })
 export class StudentCompanyContract extends BaseSchema {
@@ -55,3 +58,11 @@ export class StudentCompanyContract extends BaseSchema {
     })
     linkingProcess?: mongoose.Types.ObjectId;
 }
+export type StudentCompanyContractDocument = SoftDeletableDocument<StudentCompanyContract>;
+
+export const StudentCompanyContractSchema = SchemaFactory.createForClass(StudentCompanyContract);
+StudentCompanyContractSchema.index({ student: 1, company: 1 } );
+StudentCompanyContractSchema.plugin(softDeletePlugin);
+StudentCompanyContractSchema.plugin(mongoosePaginate);
+
+
