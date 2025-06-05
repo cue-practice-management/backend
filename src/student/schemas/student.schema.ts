@@ -21,7 +21,10 @@ export class Student extends User {
   @Prop({ required: true })
   currentSemester: number;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: Company.name })
+  @Prop({
+    type: mongoose.Types.ObjectId, ref: Company.name, set: (v: any) =>
+      typeof v === 'string' ? new mongoose.Types.ObjectId(v) : v,
+  })
   currentCompany?: mongoose.Types.ObjectId;
 
   @Prop()
