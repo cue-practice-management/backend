@@ -23,11 +23,13 @@ export class CreateStudentCompanyContractRequestDto {
     @IsEnum(StudentCompanyContractStatus)
     status: StudentCompanyContractStatus;
 
+    @ValidateIf(o => o.status === StudentCompanyContractStatus.ACTIVE)
     @IsOptional()
     @Type(() => Date)
     @IsDate()
     startDate?: Date;
 
+    @ValidateIf(o => o.status === StudentCompanyContractStatus.ACTIVE)
     @IsOptional()
     @Type(() => Date)
     @IsDate()
