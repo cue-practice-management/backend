@@ -6,12 +6,13 @@ import { Injectable } from '@nestjs/common';
 import { CompanyMapper } from 'company/mappers/company.mapper';
 import { Company } from 'company/schemas/company.schema';
 import { PaginateResult } from 'mongoose';
+import { StudentBasicInfoResponseDto } from 'student/dtos/student-basic-info-response.dto';
 import { StudentResponseDto } from 'student/dtos/student-response.dto';
 import { Student } from 'student/schemas/student.schema';
 
 @Injectable()
 export class StudentMapper {
-  constructor(private readonly academicProgramMapper: AcademicProgramMapper, private readonly companyMapper: CompanyMapper) {}
+  constructor(private readonly academicProgramMapper: AcademicProgramMapper, private readonly companyMapper: CompanyMapper) { }
 
   toStudentResponseDto(student: Student): StudentResponseDto {
     return {
@@ -48,6 +49,20 @@ export class StudentMapper {
       docs: paginatedStudents.docs.map((student) =>
         this.toStudentResponseDto(student),
       ),
+    };
+  }
+
+  toStudentBasicInfoResponseDto(student: Student): StudentBasicInfoResponseDto {
+    return {
+      _id: student._id.toString(),
+      firstName: student.firstName,
+      lastName: student.lastName,
+      email: student.email,
+      photoUrl: student.photoUrl,
+      typeOfDocument: student.typeOfDocument,
+      gender: student.gender,
+      phoneNumber: student.phoneNumber,
+      documentNumber: student.documentNumber,
     };
   }
 

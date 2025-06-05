@@ -199,10 +199,8 @@ export class CompanyService {
   private async validateReferencedFields(
     dto: UpdateCompanyRequestDto | CreateCompanyRequestDto,
   ): Promise<void> {
-    console.log('Validating referenced fields:', dto);
     if (dto.city) await this.cityService.validateCityExists(dto.city);
-    if (dto.country)
-      await this.countryService.validateCountryExists(dto.country);
+    if (dto.country) await this.countryService.validateCountryExists(dto.country);
     if (dto.associatedAcademicPrograms) {
       await this.academicProgramService.validateManyAcademicProgramsExist(
         dto.associatedAcademicPrograms,
