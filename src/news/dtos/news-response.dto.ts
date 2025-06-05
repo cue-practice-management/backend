@@ -1,5 +1,5 @@
 export class NewsResponseDto {
-  id: string;
+  _id: string;
   title: string;
   summary: string;
   content: string;
