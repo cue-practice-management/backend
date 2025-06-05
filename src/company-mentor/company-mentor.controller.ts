@@ -38,9 +38,7 @@ export class CompanyMentorController {
   @Get()
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  async getCompanyMentorsByCriteria(
-    @Query() filter: CompanyMentorFilterDto,
-  ) {
+  async getCompanyMentorsByCriteria(@Query() filter: CompanyMentorFilterDto) {
     return await this.companyMentorService.getCompanyMentorsByCriteria(filter);
   }
 
@@ -51,10 +49,7 @@ export class CompanyMentorController {
     @Param('mentorId', ParseObjectIdPipe) mentorId: string,
     @Body() dto: UpdateCompanyMentorRequestDto,
   ): Promise<CompanyMentorResponseDto> {
-    return await this.companyMentorService.updateCompanyMentor(
-      mentorId,
-      dto,
-    );
+    return await this.companyMentorService.updateCompanyMentor(mentorId, dto);
   }
 
   @Delete('delete/:mentorId')

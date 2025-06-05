@@ -21,7 +21,9 @@ export class EmailService {
     this.sourceEmail = env.sourceEmail;
   }
 
-  async sendEmail<T extends SesTemplates>(dto: SendEmailRequestDto<T>): Promise<void> {
+  async sendEmail<T extends SesTemplates>(
+    dto: SendEmailRequestDto<T>,
+  ): Promise<void> {
     const { to, templateId, data } = dto;
 
     const command = new SendTemplatedEmailCommand({
@@ -35,7 +37,9 @@ export class EmailService {
 
     try {
       const response = await this.ses.send(command);
-      this.logger.log(`📧 Email (${templateId}) sent to ${to}: ${response.MessageId}`);
+      this.logger.log(
+        `📧 Email (${templateId}) sent to ${to}: ${response.MessageId}`,
+      );
     } catch (err) {
       this.logger.error(`❌ Error sending email (${templateId}) to ${to}`, err);
       throw err;

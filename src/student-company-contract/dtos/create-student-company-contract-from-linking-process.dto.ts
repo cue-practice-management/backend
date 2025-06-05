@@ -1,5 +1,5 @@
 export class CreateStudentCompanyContractFromLinkingProcessDto {
-    company: string;
-    student: string;
-    linkingProcess: string;
+  company: string;
+  student: string;
+  linkingProcess: string;
 }

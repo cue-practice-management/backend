@@ -25,7 +25,7 @@ import { GetFile } from '@common/interceptors/file.interceptor';
 
 @Controller('news')
 export class NewsController {
-  constructor(private readonly newsService: NewsService) { }
+  constructor(private readonly newsService: NewsService) {}
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -46,9 +46,7 @@ export class NewsController {
 
   @Get(':newsId')
   @UseGuards(AuthGuard)
-  async getNewsById(
-    @Param('newsId', ParseObjectIdPipe) newsId: string,
-  ) {
+  async getNewsById(@Param('newsId', ParseObjectIdPipe) newsId: string) {
     return await this.newsService.getNewsById(newsId);
   }
 
@@ -68,9 +66,7 @@ export class NewsController {
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteNews(
-    @Param('newsId', ParseObjectIdPipe) newsId: string,
-  ) {
+  async deleteNews(@Param('newsId', ParseObjectIdPipe) newsId: string) {
     await this.newsService.deleteNews(newsId);
   }
 }

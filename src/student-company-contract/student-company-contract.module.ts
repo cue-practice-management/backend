@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { StudentCompanyContractService } from './student-company-contract.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { StudentCompanyContract, StudentCompanyContractSchema } from './schemas/student-company-contract.schema';
+import {
+  StudentCompanyContract,
+  StudentCompanyContractSchema,
+} from './schemas/student-company-contract.schema';
 import { StudentCompanyContractMapper } from './mappers/student-company-contract.mapper';
 import { StudentCompanyContractListener } from './listeners/student-company-contract.listener';
 import { StudentCompanyContractController } from './student-company-contract.controller';
@@ -16,17 +19,21 @@ import { EmailModule } from 'email/email.module';
     MongooseModule.forFeature([
       {
         name: StudentCompanyContract.name,
-        schema: StudentCompanyContractSchema
-      }
+        schema: StudentCompanyContractSchema,
+      },
     ]),
     StudentModule,
     CompanyModule,
     FileModule,
     AuthModule,
-    EmailModule
+    EmailModule,
   ],
-  providers: [StudentCompanyContractService, StudentCompanyContractMapper, StudentCompanyContractListener],
+  providers: [
+    StudentCompanyContractService,
+    StudentCompanyContractMapper,
+    StudentCompanyContractListener,
+  ],
   exports: [StudentCompanyContractService, StudentCompanyContractMapper],
-  controllers: [StudentCompanyContractController]
+  controllers: [StudentCompanyContractController],
 })
-export class StudentCompanyContractModule { }
+export class StudentCompanyContractModule {}

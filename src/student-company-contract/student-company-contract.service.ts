@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { StudentCompanyContract, StudentCompanyContractDocument } from './schemas/student-company-contract.schema';
+import {
+  StudentCompanyContract,
+  StudentCompanyContractDocument,
+} from './schemas/student-company-contract.schema';
 import { PaginateModel } from 'mongoose';
 import { CreateStudentCompanyContractFromLinkingProcessDto } from './dtos/create-student-company-contract-from-linking-process.dto';
 import { StudentCompanyContractResponseDto } from './dtos/student-company-contract-response.dto';
@@ -14,7 +17,12 @@ import { FILE_FOLDERS } from 'file/constants/file.constants';
 import { StudentCompanyContractFilter } from './dtos/student-company-contract-filter.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { getSort } from '@common/utils/pagination.util';
-import { STUDENT_COMPANY_CONTRACT_DEFAULT_SORT, STUDENT_COMPANY_CONTRACT_EVENTS, STUDENT_COMPANY_CONTRACT_POPULATE_OPTIONS, STUDENT_COMPANY_CONTRACT_SORT_OPTIONS } from './constants/student-company-contract.constants';
+import {
+  STUDENT_COMPANY_CONTRACT_DEFAULT_SORT,
+  STUDENT_COMPANY_CONTRACT_EVENTS,
+  STUDENT_COMPANY_CONTRACT_POPULATE_OPTIONS,
+  STUDENT_COMPANY_CONTRACT_SORT_OPTIONS,
+} from './constants/student-company-contract.constants';
 import { StudentCompanyContractNotFoundException } from './exceptions/student-company-contract-not-found.excepion';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { StudentService } from 'student/student.service';
@@ -33,12 +41,12 @@ export class StudentCompanyContractService {
     private readonly studentService: StudentService,
     private readonly companyService: CompanyService,
     private readonly fileService: FileService,
-    private readonly eventEmitter: EventEmitter2
-  ) { }
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async createStudentCompanyContract(
     dto: CreateStudentCompanyContractRequestDto,
-    contractFile?: Express.Multer.File
+    contractFile?: Express.Multer.File,
   ): Promise<StudentCompanyContractResponseDto> {
     await this.validateContractCreation(dto, contractFile);
 
@@ -54,14 +62,15 @@ export class StudentCompanyContractService {
       STUDENT_COMPANY_CONTRACT_POPULATE_OPTIONS.COMPANY,
     ]);
 
-    const responseDto = await this.contractMapper.toStudentCompanyContractResponseDto(saved);
+    const responseDto =
+      await this.contractMapper.toStudentCompanyContractResponseDto(saved);
 
     this.emitIfActivated(responseDto);
     return responseDto;
   }
 
   async createStudentCompanyContractFromLinkingProcess(
-    dto: CreateStudentCompanyContractFromLinkingProcessDto
+    dto: CreateStudentCompanyContractFromLinkingProcessDto,
   ): Promise<StudentCompanyContractResponseDto> {
     await this.validateStudentHasNoActiveOrPendingContract(dto.student);
 
@@ -76,7 +85,7 @@ export class StudentCompanyContractService {
   }
 
   async getStudentCompanyContractsByCriteria(
-    filter: StudentCompanyContractFilter
+    filter: StudentCompanyContractFilter,
   ): Promise<PaginatedResult<StudentCompanyContractResponseDto>> {
     const { limit, page, sortBy, sortOrder } = filter;
     const query = this.buildFilterQuery(filter);
@@ -84,20 +93,27 @@ export class StudentCompanyContractService {
     const contracts = await this.contractModel.paginate(query, {
       limit,
       page,
-      sort: getSort(STUDENT_COMPANY_CONTRACT_SORT_OPTIONS, STUDENT_COMPANY_CONTRACT_DEFAULT_SORT, sortBy, sortOrder),
+      sort: getSort(
+        STUDENT_COMPANY_CONTRACT_SORT_OPTIONS,
+        STUDENT_COMPANY_CONTRACT_DEFAULT_SORT,
+        sortBy,
+        sortOrder,
+      ),
       populate: [
         STUDENT_COMPANY_CONTRACT_POPULATE_OPTIONS.STUDENT,
         STUDENT_COMPANY_CONTRACT_POPULATE_OPTIONS.COMPANY,
       ],
     });
 
-    return await this.contractMapper.toStudentCompanyContractsPaginatedResponseDto(contracts);
+    return await this.contractMapper.toStudentCompanyContractsPaginatedResponseDto(
+      contracts,
+    );
   }
 
   async activateStudentCompanyContract(
     contractId: string,
     dto: ActivateStudentCompanyContractRequestDto,
-    file?: Express.Multer.File
+    file?: Express.Multer.File,
   ): Promise<StudentCompanyContractResponseDto> {
     const contract = await this.getContractOrThrow(contractId);
 
@@ -125,7 +141,10 @@ export class StudentCompanyContractService {
       STUDENT_COMPANY_CONTRACT_POPULATE_OPTIONS.COMPANY,
     ]);
 
-    const responseDto = await this.contractMapper.toStudentCompanyContractResponseDto(updatedContract);
+    const responseDto =
+      await this.contractMapper.toStudentCompanyContractResponseDto(
+        updatedContract,
+      );
     this.emitIfActivated(responseDto);
 
     return responseDto;
@@ -133,11 +152,12 @@ export class StudentCompanyContractService {
 
   async cancelStudentCompanyContract(
     contractId: string,
-    dto: CancelStudentCompanyContractRequestDto
+    dto: CancelStudentCompanyContractRequestDto,
   ): Promise<StudentCompanyContractResponseDto> {
     const contract = await this.getContractOrThrow(contractId);
 
-    if (contract.status === StudentCompanyContractStatus.CANCELLED) throw new StudentCompanyContractAlreadyCancelledException()
+    if (contract.status === StudentCompanyContractStatus.CANCELLED)
+      throw new StudentCompanyContractAlreadyCancelledException();
 
     contract.status = StudentCompanyContractStatus.CANCELLED;
     contract.cancellationReason = dto.cancellationReason;
@@ -159,17 +179,25 @@ export class StudentCompanyContractService {
     await contract.softDelete();
   }
 
-
-  private async getContractOrThrow(contractId: string): Promise<StudentCompanyContractDocument> {
+  private async getContractOrThrow(
+    contractId: string,
+  ): Promise<StudentCompanyContractDocument> {
     const contract = await this.contractModel.findById(contractId);
     if (!contract) throw new StudentCompanyContractNotFoundException();
     return contract;
   }
 
-  async validateStudentHasNoActiveOrPendingContract(studentId: string): Promise<void> {
+  async validateStudentHasNoActiveOrPendingContract(
+    studentId: string,
+  ): Promise<void> {
     const active = await this.contractModel.findOne({
       student: studentId,
-      status: { $in: [StudentCompanyContractStatus.ACTIVE, StudentCompanyContractStatus.PENDING_SIGNATURE] },
+      status: {
+        $in: [
+          StudentCompanyContractStatus.ACTIVE,
+          StudentCompanyContractStatus.PENDING_SIGNATURE,
+        ],
+      },
     });
     if (active) throw new StudentHasAlreadyActiveContractException();
   }
@@ -182,7 +210,9 @@ export class StudentCompanyContractService {
     if (active) throw new StudentHasAlreadyActiveContractException();
   }
 
-  private buildFilterQuery(filter: StudentCompanyContractFilter): Record<string, any> {
+  private buildFilterQuery(
+    filter: StudentCompanyContractFilter,
+  ): Record<string, any> {
     const query: Record<string, any> = {};
     if (filter.student) query.student = filter.student;
     if (filter.company) query.company = filter.company;
@@ -190,12 +220,18 @@ export class StudentCompanyContractService {
     return query;
   }
 
-  private async validateRelatedEntitiesExist(studentId: string, companyId: string): Promise<void> {
+  private async validateRelatedEntitiesExist(
+    studentId: string,
+    companyId: string,
+  ): Promise<void> {
     await this.studentService.validateStudentExists(studentId);
     await this.companyService.validateCompanyExists(companyId);
   }
 
-  private async validateContractCreation(dto: CreateStudentCompanyContractRequestDto, file?: Express.Multer.File): Promise<void> {
+  private async validateContractCreation(
+    dto: CreateStudentCompanyContractRequestDto,
+    file?: Express.Multer.File,
+  ): Promise<void> {
     if (dto.status === StudentCompanyContractStatus.ACTIVE && !file) {
       throw new StudentCompanyContractMissingException();
     }

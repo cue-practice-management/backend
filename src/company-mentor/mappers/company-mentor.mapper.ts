@@ -6,14 +6,11 @@ import { Company } from 'company/schemas/company.schema';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { CompanyMentor } from 'company-mentor/schemas/company-mentor.schema';
 
-
 @Injectable()
 export class CompanyMentorMapper {
   constructor(private readonly companyMapper: CompanyMapper) {}
 
-  toCompanyMentorResponseDto(
-    mentor: CompanyMentor,
-  ): CompanyMentorResponseDto {
+  toCompanyMentorResponseDto(mentor: CompanyMentor): CompanyMentorResponseDto {
     return {
       _id: mentor._id.toString(),
       firstName: mentor.firstName,

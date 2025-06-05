@@ -1,9 +1,4 @@
-import {
-  IsEnum,
-  IsOptional,
-  IsString,
-  IsDateString,
-} from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsDateString } from 'class-validator';
 import { CompanyContractStatus } from '../enums/company-contract-status.enum';
 import { CompanyContractType } from '../enums/company-contract-type.enum';
 

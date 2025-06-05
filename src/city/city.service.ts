@@ -26,7 +26,7 @@ export class CityService {
     private readonly cityModel: PaginateModel<CityDocument>,
     private readonly cityMapper: CityMapper,
     private readonly countryService: CountryService,
-  ) { }
+  ) {}
 
   async createCity(
     createCityDto: CreateCityRequestDto,
@@ -65,8 +65,14 @@ export class CityService {
     return this.cityMapper.toPaginatedCityResponseDto(paginatedResult);
   }
 
-  async getCityTypeahead(query: string, country?: string): Promise<TypeaheadItem[]> {
-    const filter: { name: { $regex: string; $options: string }, country?: mongoose.Types.ObjectId } = {
+  async getCityTypeahead(
+    query: string,
+    country?: string,
+  ): Promise<TypeaheadItem[]> {
+    const filter: {
+      name: { $regex: string; $options: string };
+      country?: mongoose.Types.ObjectId;
+    } = {
       name: { $regex: query, $options: 'i' },
     };
 
@@ -74,11 +80,7 @@ export class CityService {
       filter.country = new mongoose.Types.ObjectId(country);
     }
 
-    const cities = await this.cityModel
-      .find(
-        filter,
-      )
-      .limit(MAX_TYPEAHEAD_ITEMS);
+    const cities = await this.cityModel.find(filter).limit(MAX_TYPEAHEAD_ITEMS);
 
     return cities.map((city) => this.cityMapper.toTypeaheadItem(city));
   }

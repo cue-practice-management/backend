@@ -35,7 +35,7 @@ export class CompanyController {
   constructor(
     private readonly companyService: CompanyService,
     private readonly companyContractService: CompanyContractService,
-  ) { }
+  ) {}
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -51,7 +51,6 @@ export class CompanyController {
   async getTypeahead(@Query('query') query: string): Promise<TypeaheadItem[]> {
     return this.companyService.getCompanyTypeahead(query);
   }
-
 
   @Get(':companyId')
   async getCompanyById(
@@ -98,7 +97,6 @@ export class CompanyController {
   ): Promise<PaginatedResult<CompanyResponseDto>> {
     return this.companyService.getByCriteria(filter);
   }
-
 
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)

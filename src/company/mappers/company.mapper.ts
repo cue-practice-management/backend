@@ -86,9 +86,7 @@ export class CompanyMapper {
     };
   }
 
-  toCompanyBasicInfoResponseDto(
-    company: Company,
-  ): CompanyBasicInfoResponseDto {
+  toCompanyBasicInfoResponseDto(company: Company): CompanyBasicInfoResponseDto {
     return {
       _id: company._id.toString(),
       name: company.name,
@@ -101,7 +99,7 @@ export class CompanyMapper {
       size: company.size,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt,
-    }
+    };
   }
 
   toCompanyTypeaheadItem(company: Company): TypeaheadItem {

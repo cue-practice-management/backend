@@ -36,26 +36,36 @@ export class Company extends BaseSchema {
   openJobPositions: boolean;
 
   @Prop({
-    type: [mongoose.Types.ObjectId], ref: AcademicProgram.name, set: (v: any) => {
+    type: [mongoose.Types.ObjectId],
+    ref: AcademicProgram.name,
+    set: (v: any) => {
       if (Array.isArray(v)) {
-        return v.map((item: any) => (typeof item === 'string' ? new mongoose.Types.ObjectId(item) : item));
+        return v.map((item: any) =>
+          typeof item === 'string' ? new mongoose.Types.ObjectId(item) : item,
+        );
       }
       return v;
-    }
+    },
   })
   associatedAcademicPrograms: mongoose.Types.ObjectId[];
 
   @Prop({
-    type: mongoose.Types.ObjectId, ref: Country.name, required: true, set: (v: any) => {
+    type: mongoose.Types.ObjectId,
+    ref: Country.name,
+    required: true,
+    set: (v: any) => {
       return typeof v === 'string' ? new mongoose.Types.ObjectId(v) : v;
-    }
+    },
   })
   country: mongoose.Types.ObjectId;
 
   @Prop({
-    type: mongoose.Types.ObjectId, ref: City.name, required: true, set: (v: any) => {
+    type: mongoose.Types.ObjectId,
+    ref: City.name,
+    required: true,
+    set: (v: any) => {
       return typeof v === 'string' ? new mongoose.Types.ObjectId(v) : v;
-    }
+    },
   })
   city: mongoose.Types.ObjectId;
 

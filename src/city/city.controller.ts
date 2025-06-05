@@ -21,7 +21,7 @@ import { UpdateCityRequestDto } from './dtos/update-city-request.dto';
 
 @Controller('city')
 export class CityController {
-  constructor(private readonly cityService: CityService) { }
+  constructor(private readonly cityService: CityService) {}
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -42,7 +42,7 @@ export class CityController {
   @Roles(UserRole.ADMIN)
   async getCityTypeahead(
     @Query('query') query: string,
-    @Query('country') country?: string
+    @Query('country') country?: string,
   ) {
     return await this.cityService.getCityTypeahead(query, country);
   }

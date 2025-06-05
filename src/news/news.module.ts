@@ -12,13 +12,13 @@ import { FileModule } from 'file/file.module';
     MongooseModule.forFeature([
       {
         name: News.name,
-        schema: NewsSchema
-      }
+        schema: NewsSchema,
+      },
     ]),
     AuthModule,
-    FileModule
+    FileModule,
   ],
   providers: [NewsService, NewsMapper],
-  controllers: [NewsController]
+  controllers: [NewsController],
 })
 export class NewsModule {}

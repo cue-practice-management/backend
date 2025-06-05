@@ -23,9 +23,7 @@ export class NewsMapper {
     paginatedResult: PaginateResult<NewsDocument>,
   ): PaginatedResult<NewsResponseDto> {
     return {
-      docs: paginatedResult.docs.map((news) =>
-        this.toNewsResponseDto(news),
-      ),
+      docs: paginatedResult.docs.map((news) => this.toNewsResponseDto(news)),
       totalDocs: paginatedResult.totalDocs,
       totalPages: paginatedResult.totalPages,
       page: paginatedResult.page,

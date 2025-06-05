@@ -77,7 +77,7 @@ export class StudentService {
         sortOrder,
       ),
       populate: [
-        STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM, 
+        STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM,
         STUDENT_POPULATION_OPTIONS.COMPANY,
       ],
     });
@@ -109,7 +109,10 @@ export class StudentService {
           { documentNumber: { $regex: `^${query}`, $options: 'i' } },
         ],
       })
-      .populate([STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM, STUDENT_POPULATION_OPTIONS.COMPANY])
+      .populate([
+        STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM,
+        STUDENT_POPULATION_OPTIONS.COMPANY,
+      ])
       .limit(MAX_TYPEAHEAD_ITEMS);
 
     return students.map((student) =>
@@ -151,9 +154,7 @@ export class StudentService {
     await student.softDelete();
   }
 
-  async validateStudentExists(
-    studentId: string,
-  ): Promise<void> {
+  async validateStudentExists(studentId: string): Promise<void> {
     const student = await this.studentModel.findById(studentId);
     if (!student) {
       throw new StudentNotFoundException();
