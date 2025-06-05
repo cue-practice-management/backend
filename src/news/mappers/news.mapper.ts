@@ -8,7 +8,7 @@ import { PaginatedResult } from '@common/types/paginated-result';
 export class NewsMapper {
   toNewsResponseDto(news: News): NewsResponseDto {
     return {
-      id: news._id.toString(),
+      _id: news._id.toString(),
       title: news.title,
       summary: news.summary,
       content: news.content,
