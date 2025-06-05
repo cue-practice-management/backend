@@ -12,7 +12,10 @@ import { Student } from 'student/schemas/student.schema';
 
 @Injectable()
 export class StudentMapper {
-  constructor(private readonly academicProgramMapper: AcademicProgramMapper, private readonly companyMapper: CompanyMapper) { }
+  constructor(
+    private readonly academicProgramMapper: AcademicProgramMapper,
+    private readonly companyMapper: CompanyMapper,
+  ) {}
 
   toStudentResponseDto(student: Student): StudentResponseDto {
     return {
@@ -30,7 +33,11 @@ export class StudentMapper {
         student.academicProgram as unknown as AcademicProgram,
       ),
       currentSemester: student.currentSemester,
-      currentCompany: student.currentCompany ? this.companyMapper.toCompanyResponseDto(student.currentCompany as unknown as Company) : undefined,
+      currentCompany: student.currentCompany
+        ? this.companyMapper.toCompanyResponseDto(
+            student.currentCompany as unknown as Company,
+          )
+        : undefined,
       curriculumUrl: student.curriculumUrl,
       epsCertificationUrl: student.epsCertificationUrl,
       createdAt: student.createdAt,

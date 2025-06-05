@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UploadedFile, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseGuards,
+} from '@nestjs/common';
 import { StudentCompanyContractService } from './student-company-contract.service';
 import { CreateStudentCompanyContractRequestDto } from './dtos/create-student-company-contract-request.dto';
 import { AuthGuard } from '@auth/guards/auth.guard';
@@ -17,7 +29,7 @@ import { CancelStudentCompanyContractRequestDto } from './dtos/cancel-student-co
 export class StudentCompanyContractController {
   constructor(
     private readonly contractService: StudentCompanyContractService,
-  ) { }
+  ) {}
 
   @UseGuards(AuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
@@ -48,7 +60,11 @@ export class StudentCompanyContractController {
     @UploadedFile() file: Express.Multer.File,
     @Body() dto: ActivateStudentCompanyContractRequestDto,
   ): Promise<StudentCompanyContractResponseDto> {
-    return this.contractService.activateStudentCompanyContract(contractId, dto, file);
+    return this.contractService.activateStudentCompanyContract(
+      contractId,
+      dto,
+      file,
+    );
   }
 
   @Patch(':contractId/cancel')

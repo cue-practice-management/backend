@@ -19,7 +19,7 @@ import { CompanyMentorSchema } from 'company-mentor/schemas/company-mentor.schem
           schema.discriminator(UserRole.STUDENT, StudentSchema);
           schema.discriminator(UserRole.PROFESSOR, ProfessorSchema);
           schema.discriminator(UserRole.COMPANY_MENTOR, CompanyMentorSchema); // Assuming CompanyMentor uses User schema
-          schema
+          schema;
           return schema;
         },
       },

@@ -200,7 +200,8 @@ export class CompanyService {
     dto: UpdateCompanyRequestDto | CreateCompanyRequestDto,
   ): Promise<void> {
     if (dto.city) await this.cityService.validateCityExists(dto.city);
-    if (dto.country) await this.countryService.validateCountryExists(dto.country);
+    if (dto.country)
+      await this.countryService.validateCountryExists(dto.country);
     if (dto.associatedAcademicPrograms) {
       await this.academicProgramService.validateManyAcademicProgramsExist(
         dto.associatedAcademicPrograms,

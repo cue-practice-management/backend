@@ -1,5 +1,5 @@
 export enum StudentCompanyContractCancelledBy {
-    STUDENT = 'student',
-    COMPANY = 'company',
-    UNIVERSITY = 'university',
+  STUDENT = 'student',
+  COMPANY = 'company',
+  UNIVERSITY = 'university',
 }

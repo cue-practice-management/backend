@@ -24,7 +24,7 @@ export class CompanyContractService {
     private readonly companyService: CompanyService,
     private readonly fileService: FileService,
     private readonly companyContractMapper: CompanyContractMapper,
-  ) { }
+  ) {}
 
   async createCompanyContract(
     dto: CreateCompanyContractDto,
@@ -45,7 +45,10 @@ export class CompanyContractService {
     return this.companyContractMapper.toCompanyResponseDto(contract);
   }
 
-  async getCompanyContractsByCriteria(companyId: string, filter: CompanyContractFilterDto): Promise<PaginatedResult<CompanyContractResponseDto>> {
+  async getCompanyContractsByCriteria(
+    companyId: string,
+    filter: CompanyContractFilterDto,
+  ): Promise<PaginatedResult<CompanyContractResponseDto>> {
     await this.companyService.validateCompanyExists(companyId);
     const query = this.buildFilterQuery(filter);
 
@@ -55,7 +58,7 @@ export class CompanyContractService {
         page: filter.page,
         limit: filter.limit,
         sort: { createdAt: -1 },
-      }
+      },
     );
 
     return this.companyContractMapper.toPaginatedResponseDto(contracts);
@@ -113,7 +116,9 @@ export class CompanyContractService {
     return fileKey;
   }
 
-  private buildFilterQuery(filter: CompanyContractFilterDto): Record<string, any> {
+  private buildFilterQuery(
+    filter: CompanyContractFilterDto,
+  ): Record<string, any> {
     const query: Record<string, any> = {};
 
     if (filter.status) {

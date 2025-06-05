@@ -1,4 +1,4 @@
-import { COMPANY_POPULATION_OPTIONS } from "company/constants/company.constants";
+import { COMPANY_POPULATION_OPTIONS } from 'company/constants/company.constants';
 
 export const STUDENT_EXCEPTIONS = {
   STUDENT_NOT_FOUND: {

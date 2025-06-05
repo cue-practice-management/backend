@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { StudentCompanyLinkingProcess, StudentCompanyLinkingProcessSchema } from './schemas/student-company-linking-process.schema';
+import {
+  StudentCompanyLinkingProcess,
+  StudentCompanyLinkingProcessSchema,
+} from './schemas/student-company-linking-process.schema';
 import { StudentCompanyLinkingProcessService } from './student-company-linking-process.service';
 import { StudentCompanyLinkingProcessController } from './student-company-linking-process.controller';
 import { CompanyModule } from 'company/company.module';
@@ -12,19 +15,28 @@ import { EmailModule } from 'email/email.module';
 import { StudentCompanyContractModule } from 'student-company-contract/student-company-contract.module';
 
 @Module({
-    imports: [MongooseModule.forFeature([
-        {
-            name: StudentCompanyLinkingProcess.name,
-            schema: StudentCompanyLinkingProcessSchema
-        },]),
-        AuthModule,
-        CompanyModule,
-        StudentModule,
-        StudentCompanyContractModule,
-        EmailModule
-    ],
-    providers: [StudentCompanyLinkingProcessService, StudentCompanyLinkingProcessMapper, StudentCompanyLinkingProcessListener],
-    controllers: [StudentCompanyLinkingProcessController],
-    exports: [StudentCompanyLinkingProcessService, StudentCompanyLinkingProcessMapper]
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: StudentCompanyLinkingProcess.name,
+        schema: StudentCompanyLinkingProcessSchema,
+      },
+    ]),
+    AuthModule,
+    CompanyModule,
+    StudentModule,
+    StudentCompanyContractModule,
+    EmailModule,
+  ],
+  providers: [
+    StudentCompanyLinkingProcessService,
+    StudentCompanyLinkingProcessMapper,
+    StudentCompanyLinkingProcessListener,
+  ],
+  controllers: [StudentCompanyLinkingProcessController],
+  exports: [
+    StudentCompanyLinkingProcessService,
+    StudentCompanyLinkingProcessMapper,
+  ],
 })
-export class StudentCompanyLinkingProcessModule { }
+export class StudentCompanyLinkingProcessModule {}

@@ -25,7 +25,7 @@ import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Controller('students')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) { }
+  constructor(private readonly studentService: StudentService) {}
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -57,8 +57,6 @@ export class StudentController {
   ): Promise<StudentResponseDto> {
     return await this.studentService.getStudentById(studentId);
   }
-
-
 
   @Put('update/:studentId')
   @UseGuards(AuthGuard, RoleGuard)

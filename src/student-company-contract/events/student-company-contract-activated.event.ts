@@ -1,7 +1,7 @@
-import { StudentCompanyContractResponseDto } from "student-company-contract/dtos/student-company-contract-response.dto";
+import { StudentCompanyContractResponseDto } from 'student-company-contract/dtos/student-company-contract-response.dto';
 
 export class StudentCompanyContractActivatedEvent {
-    constructor(
-        public readonly studentCompanyContract: StudentCompanyContractResponseDto,
-    ) {}
+  constructor(
+    public readonly studentCompanyContract: StudentCompanyContractResponseDto,
+  ) {}
 }

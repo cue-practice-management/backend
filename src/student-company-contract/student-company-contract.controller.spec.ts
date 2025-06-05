@@ -9,7 +9,9 @@ describe('StudentCompanyContractController', () => {
       controllers: [StudentCompanyContractController],
     }).compile();
 
-    controller = module.get<StudentCompanyContractController>(StudentCompanyContractController);
+    controller = module.get<StudentCompanyContractController>(
+      StudentCompanyContractController,
+    );
   });
 
   it('should be defined', () => {

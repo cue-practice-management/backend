@@ -9,7 +9,9 @@ describe('StudentCompanyLinkingProcessController', () => {
       controllers: [StudentCompanyLinkingProcessController],
     }).compile();
 
-    controller = module.get<StudentCompanyLinkingProcessController>(StudentCompanyLinkingProcessController);
+    controller = module.get<StudentCompanyLinkingProcessController>(
+      StudentCompanyLinkingProcessController,
+    );
   });
 
   it('should be defined', () => {

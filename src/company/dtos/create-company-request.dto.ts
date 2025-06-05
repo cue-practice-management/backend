@@ -40,7 +40,7 @@ export class CreateCompanyRequestDto {
 
   @IsNotEmpty({ message: VALIDATION_MESSAGES.REQUIRED })
   @IsEnum(CompanySize)
-  size: CompanySize
+  size: CompanySize;
 
   @IsMongoId({ message: VALIDATION_MESSAGES.INVALID_MONGO_ID })
   @IsNotEmpty({ message: VALIDATION_MESSAGES.REQUIRED })
