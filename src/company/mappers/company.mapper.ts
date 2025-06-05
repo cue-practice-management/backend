@@ -13,6 +13,7 @@ import { City } from '@city/schemas/city.schema';
 import { CompanyDetailResponseDto } from 'company/dtos/company-detail-response.dto';
 import { CompanyContractMapper } from './company-contract.mapper';
 import { CompanyContract } from 'company/schemas/company-contract.schema';
+import { CompanyBasicInfoResponseDto } from 'company/dtos/company-basic-info-responde.dto';
 
 @Injectable()
 export class CompanyMapper {
@@ -83,6 +84,24 @@ export class CompanyMapper {
       page: paginated.page,
       limit: paginated.limit,
     };
+  }
+
+  toCompanyBasicInfoResponseDto(
+    company: Company,
+  ): CompanyBasicInfoResponseDto {
+    return {
+      _id: company._id.toString(),
+      name: company.name,
+      logoUrl: company.logoUrl,
+      corporateName: company.corporateName,
+      nit: company.nit,
+      phone: company.phone,
+      websiteUrl: company.websiteUrl,
+      address: company.address,
+      size: company.size,
+      createdAt: company.createdAt,
+      updatedAt: company.updatedAt,
+    }
   }
 
   toCompanyTypeaheadItem(company: Company): TypeaheadItem {
