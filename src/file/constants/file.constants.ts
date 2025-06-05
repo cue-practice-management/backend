@@ -18,4 +18,5 @@ export const FILE_FOLDERS = {
   COMPANY_LOGOS: 'company-logos',
   COMPANY_CONTRACTS: 'company-contracts',
   NEWS: 'news',
+  STUDENT_COMPANY_CONTRACTS: 'student-company-contracts',
 };
