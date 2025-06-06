@@ -22,7 +22,10 @@ export const STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS = {
   STUDENT: {
     path: 'student',
     model: UserRole.STUDENT,
-    populate: [STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM],
+    populate: [
+      STUDENT_POPULATION_OPTIONS.ACADEMIC_PROGRAM,
+      STUDENT_POPULATION_OPTIONS.COMPANY,
+    ],
   },
   COMPANY: {
     path: 'company',
