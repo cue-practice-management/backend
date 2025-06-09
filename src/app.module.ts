@@ -26,6 +26,7 @@ import { CompanyMentorModule } from './company-mentor/company-mentor.module';
 import { StudentCompanyLinkingProcessModule } from './student-company-linking-process/student-company-linking-process.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { StudentCompanyContractModule } from './student-company-contract/student-company-contract.module';
+import { PracticeTemplateModule } from './practice-template/practice-template.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { StudentCompanyContractModule } from './student-company-contract/student
     CompanyMentorModule,
     StudentCompanyLinkingProcessModule,
     StudentCompanyContractModule,
+    PracticeTemplateModule,
   ],
   providers: [
     AppLogger,

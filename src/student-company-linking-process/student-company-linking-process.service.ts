@@ -54,8 +54,6 @@ export class StudentCompanyLinkingProcessService {
       STUDENT_COMPANY_LINKING_PROCESS_POPULATE_OPTIONS.COMPANY,
     ]);
 
-    console.log('New process created:', newProcess);
-
     const response =
       this.studentCompanyLinkingProcessMapper.toResponseDto(newProcess);
 
