@@ -1,5 +1,5 @@
+import { PracticeTemplateDeliverableResponseDto } from './practice-deliverable-response.dto';
 import { PracticeTemplateFormatResponseDto } from './practice-format-response.dto';
-import { PracticeTemplateDeliverableResponseDto } from './practice-template-delliverable-response.dto';
 
 export class PracticeTemplateResponseDto {
     _id: string;

@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { PracticeTemplateService } from './practice-template.service';
 import { AuthGuard } from '@auth/guards/auth.guard';
 import { RoleGuard } from '@auth/guards/role.guard';
 import { UserRole } from '@common/enums/role.enum';
@@ -20,7 +21,6 @@ import { PracticeTemplateFilterDto } from './dtos/practice-template-filter.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { UpdatePracticeTemplateRequestDto } from './dtos/update-practice-template-request.dto';
-import { PracticeTemplateService } from './services/practice-template.service';
 
 @Controller('practice-templates')
 export class PracticeTemplateController {
