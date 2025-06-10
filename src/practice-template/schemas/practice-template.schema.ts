@@ -1,29 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {
-  PracticeTemplateDeliverable,
-  PracticeTemplateDeliverableSchema
-} from './practice-template-deliverable.schema';
-import {
-  PracticeTemplateFormat,
-  PracticeTemplateFormatSchema
-} from './practice-template-format.schema';
 import { SoftDeletableDocument } from '@common/types/soft-deletable-document';
 import { softDeletePlugin } from '@common/plugins/soft-delete.plugin';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
+import { BaseSchema } from '@common/types/base.schema';
+import { PracticeTemplateDeliverable } from './practice-template-deliverable.schema';
+import { PracticeTemplateFormat } from './practice-template-format.schema';
 
 @Schema({ timestamps: true })
-export class PracticeTemplate {
+export class PracticeTemplate extends BaseSchema {
   @Prop({ required: true })
   name: string;
 
   @Prop()
   description?: string;
-
-  @Prop({ type: [PracticeTemplateDeliverableSchema], default: [] })
-  deliverables: PracticeTemplateDeliverable[];
-
-  @Prop({ type: [PracticeTemplateFormatSchema], default: [] })
-  formats: PracticeTemplateFormat[];
 }
 
 export type PracticeTemplateDocument = SoftDeletableDocument<PracticeTemplate>;
@@ -31,3 +20,14 @@ export const PracticeTemplateSchema = SchemaFactory.createForClass(PracticeTempl
 
 PracticeTemplateSchema.plugin(mongoosePaginate);
 PracticeTemplateSchema.plugin(softDeletePlugin);
+PracticeTemplateSchema.virtual('deliverables', {
+  ref: PracticeTemplateDeliverable.name,
+  localField: '_id',
+  foreignField: 'template',
+});
+
+PracticeTemplateSchema.virtual('formats', {
+  ref: PracticeTemplateFormat.name,
+  localField: '_id',
+  foreignField: 'template',
+});
