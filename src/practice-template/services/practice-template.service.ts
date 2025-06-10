@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PaginateModel, PaginateResult } from 'mongoose';
-import { PracticeTemplate, PracticeTemplateDocument } from './schemas/practice-template.schema';
-import { PracticeTemplateNotFoundException } from './exceptions/practice-template-not-found.exception';
 import { getSort } from '@common/utils/pagination.util';
 import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { PracticeTemplateMapper } from './mappers/practice-template-mapper';
-import { CreatePracticeTemplateRequestDto } from './dtos/create-practice-template-request.dto';
-import { PracticeTemplateResponseDto } from './dtos/practice-template-response.dto';
-import { PracticeTemplateFilterDto } from './dtos/practice-template-filter.dto';
-import { DEFAULT_PRACTICE_TEMPLATE_SORT_OPTION, PRACTICE_TEMPLATE_POPULATE_OPTIONS, PRACTICE_TEMPLATE_SORT_OPTIONS } from './constants/practice-template.constants';
-import { UpdatePracticeTemplateRequestDto } from './dtos/update-practice-template-request.dto';
 import { MAX_TYPEAHEAD_ITEMS } from '@common/constants/constaint.constants';
 import { PaginatedResult } from '@common/types/paginated-result';
+import { CreatePracticeTemplateRequestDto } from 'practice-template/dtos/create-practice-template-request.dto';
+import { PracticeTemplateMapper } from 'practice-template/mappers/practice-template-mapper';
+import { PracticeTemplateResponseDto } from 'practice-template/dtos/practice-template-response.dto';
+import { DEFAULT_PRACTICE_TEMPLATE_SORT_OPTION, PRACTICE_TEMPLATE_POPULATE_OPTIONS, PRACTICE_TEMPLATE_SORT_OPTIONS } from 'practice-template/constants/practice-template.constants';
+import { PracticeTemplateFilterDto } from 'practice-template/dtos/practice-template-filter.dto';
+import { UpdatePracticeTemplateRequestDto } from 'practice-template/dtos/update-practice-template-request.dto';
+import { PracticeTemplateNotFoundException } from 'practice-template/exceptions/practice-template-not-found.exception';
+import { PracticeTemplate, PracticeTemplateDocument } from 'practice-template/schemas/practice-template.schema';
 
 @Injectable()
 export class PracticeTemplateService {

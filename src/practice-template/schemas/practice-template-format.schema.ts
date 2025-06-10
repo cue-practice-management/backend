@@ -1,6 +1,7 @@
 import { BaseSchema } from "@common/types/base.schema";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types } from "mongoose";
+import * as mongoosePaginate from "mongoose-paginate-v2";
 
 @Schema({ timestamps: true })
 export class PracticeTemplateFormat extends BaseSchema {
@@ -25,3 +26,6 @@ export class PracticeTemplateFormat extends BaseSchema {
 
 export type PracticeTemplateFormatDocument = PracticeTemplateFormat & Document;
 export const PracticeTemplateFormatSchema = SchemaFactory.createForClass(PracticeTemplateFormat);
+
+PracticeTemplateFormatSchema.index({ template: 1});
+PracticeTemplateFormatSchema.plugin(mongoosePaginate);
