@@ -19,4 +19,5 @@ export const FILE_FOLDERS = {
   COMPANY_CONTRACTS: 'company-contracts',
   NEWS: 'news',
   STUDENT_COMPANY_CONTRACTS: 'student-company-contracts',
+  PRACTICE_TEMPLATE_FORMATS: 'practice-template-formats',
 };

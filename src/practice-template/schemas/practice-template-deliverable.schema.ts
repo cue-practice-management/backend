@@ -1,8 +1,19 @@
+import { BaseSchema } from '@common/types/base.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ _id: false })
-export class PracticeTemplateDeliverable {
+export class PracticeTemplateDeliverable extends BaseSchema {
+
+    @Prop({
+        type: String,
+        required: true,
+        set: (v: any) => {
+            return typeof v === 'string' ? v : v.toString();
+        },
+    })
+    template: string;
+
     @Prop({ required: true })
     title: string;
 
