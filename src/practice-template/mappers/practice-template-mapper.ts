@@ -1,4 +1,6 @@
+import { PaginatedResult } from "@common/types/paginated-result";
 import { Injectable } from "@nestjs/common";
+import { PaginateResult } from "mongoose";
 import { PracticeTemplateResponseDto } from "practice-template/dtos/practice-template-response.dto";
 import { PracticeTemplate, PracticeTemplateDocument } from "practice-template/schemas/practice-template.schema";
 
@@ -31,6 +33,16 @@ export class PracticeTemplateMapper {
             })),
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt,
+        };
+    }
+
+    toPaginatedResponseDto(docs: PaginateResult<PracticeTemplateDocument>): PaginatedResult<PracticeTemplateResponseDto> {
+        return {
+            docs: docs.docs.map(doc => this.toResponseDto(doc)),
+            totalDocs: docs.totalDocs,
+            totalPages: docs.totalPages,
+            page: docs.page,
+            limit: docs.limit,
         };
     }
 }
