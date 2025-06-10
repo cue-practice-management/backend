@@ -12,6 +12,7 @@ import { PracticeTemplateFilterDto } from './dtos/practice-template-filter.dto';
 import { DEFAULT_PRACTICE_TEMPLATE_SORT_OPTION, PRACTICE_TEMPLATE_POPULATE_OPTIONS, PRACTICE_TEMPLATE_SORT_OPTIONS } from './constants/practice-template.constants';
 import { UpdatePracticeTemplateRequestDto } from './dtos/update-practice-template-request.dto';
 import { MAX_TYPEAHEAD_ITEMS } from '@common/constants/constaint.constants';
+import { PaginatedResult } from '@common/types/paginated-result';
 
 @Injectable()
 export class PracticeTemplateService {
@@ -46,7 +47,7 @@ export class PracticeTemplateService {
 
     async getByCriteria(
         filter: PracticeTemplateFilterDto,
-    ): Promise<PaginateResult<PracticeTemplateResponseDto>> {
+    ): Promise<PaginatedResult<PracticeTemplateResponseDto>> {
         const { page, limit, sortBy, sortOrder, name } = filter;
         const query: any = {};
         if (name) query.name = new RegExp(name, 'i');
@@ -65,10 +66,7 @@ export class PracticeTemplateService {
                 PRACTICE_TEMPLATE_POPULATE_OPTIONS.FORMATS],
         });
 
-        return {
-            ...result,
-            docs: result.docs.map(doc => this.mapper.toResponseDto(doc)),
-        };
+        return this.mapper.toPaginatedResponseDto(result);
     }
 
     async updateTemplate(
@@ -85,8 +83,10 @@ export class PracticeTemplateService {
     }
 
     async deleteTemplate(id: string): Promise<void> {
-        const res = await this.templateModel.findByIdAndDelete(id).exec();
-        if (!res) throw new PracticeTemplateNotFoundException();
+        const template = await this.templateModel.findById(id);
+        if (!template) throw new PracticeTemplateNotFoundException();
+
+        await template.softDelete();
     }
 
     async validateTemplateExists(id: string): Promise<void> {
