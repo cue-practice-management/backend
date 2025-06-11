@@ -1,17 +1,18 @@
 import { BaseSchema } from '@common/types/base.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
+import { PracticeTemplate } from './practice-template.schema';
 
 @Schema({ timestamps: true })
 export class PracticeTemplateDeliverable extends BaseSchema {
 
     @Prop({
-        type: String,
-        required: true,
-        set: (v: any) => {
-            return typeof v === 'string' ? v : v.toString();
-        },
+        type: Types.ObjectId,
+        ref: PracticeTemplate.name,
+        required: false,
+        set: (v: any) =>
+            typeof v === 'string' ? new Types.ObjectId(v) : v,
     })
     template: string;
 
