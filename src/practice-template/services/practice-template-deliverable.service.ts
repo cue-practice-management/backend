@@ -10,6 +10,8 @@ import { PracticeDeliverableTemplateFilterDto } from 'practice-template/dtos/pra
 import { PaginatedResult } from '@common/types/paginated-result';
 import { getSort } from '@common/utils/pagination.util';
 import { DEFAULT_PRACTICE_TEMPLATE_DELIVERABLE_SORT_OPTION, PRACTICE_TEMPLATE_DELIVERABLE_SORT_OPTIONS } from 'practice-template/constants/practice-template-deliverable.constants';
+import { PracticeDeliverableTemplateNotFoundException } from 'practice-template/exceptions/practice-deliverable-template-not-found.exception';
+import { UpdatePracticeTemplateDeliverableRequestDto } from 'practice-template/dtos/update-practice-template-deliverable-request.dto';
 
 @Injectable()
 export class PracticeTemplateDeliverableService {
@@ -32,13 +34,14 @@ export class PracticeTemplateDeliverableService {
         return this.practiceTemplateDeliverableMapper.toResponseDto(savedDeliverable);
     }
 
-    async getByCriteria(
+    async getPracticeTemplateDeliverablesByCriteria(
         filter: PracticeDeliverableTemplateFilterDto
     ): Promise<PaginatedResult<PracticeTemplateDeliverableResponseDto>> {
         const { page, limit, sortBy, sortOrder } = filter;
 
         const query: any = {};
         if (filter) query.template = filter.template;
+        if (filter.title) query.title = { $regex: filter.title, $options: 'i' };
         const sort = getSort(
             PRACTICE_TEMPLATE_DELIVERABLE_SORT_OPTIONS,
             DEFAULT_PRACTICE_TEMPLATE_DELIVERABLE_SORT_OPTION,
@@ -53,6 +56,29 @@ export class PracticeTemplateDeliverableService {
         });
 
         return this.practiceTemplateDeliverableMapper.toPaginatedResponseDto(result);
+    }
+
+    async updatePracticeTemplateDeliverable(
+        practiceTemplateDeliverableId: string,
+        dto: UpdatePracticeTemplateDeliverableRequestDto,
+    ): Promise<PracticeTemplateDeliverableResponseDto> {
+        const deliverable = await this.practiceTemplateDeliverableModel.findById(practiceTemplateDeliverableId);
+
+        if (!deliverable) throw new PracticeDeliverableTemplateNotFoundException();
+
+        Object.assign(deliverable, dto);
+        const updatedDeliverable = await deliverable.save();
+
+        return this.practiceTemplateDeliverableMapper.toResponseDto(updatedDeliverable);
+    }
+
+
+    async deletePracticeTemplateDeliverable(
+        practiceTemplateDeliverableId: string,
+    ): Promise<void> {
+        const deliverable = await this.practiceTemplateDeliverableModel.findByIdAndDelete(practiceTemplateDeliverableId);
+
+        if (!deliverable) throw new PracticeDeliverableTemplateNotFoundException();
     }
 
 
