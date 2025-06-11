@@ -11,6 +11,9 @@ import { PracticeTemplateDeliverableService } from './services/practice-template
 import { PracticeTemplateDeliverableMapper } from './mappers/practice-template-deliverable.mapper';
 import { PracticeTemplateController } from './controllers/practice-template.controller';
 import { PracticeTemplateDeliverablesController } from './controllers/practice-template-deliverables.controller';
+import { PracticeTemplateFormatMapper } from './mappers/practice-template-format.mapper';
+import { PracticeTemplateFormatService } from './services/practice-template-format.service';
+import { PracticeTemplateFormatController } from './controllers/practice-template-format.controller';
 
 @Module({
   imports: [MongooseModule.forFeature([
@@ -30,7 +33,7 @@ import { PracticeTemplateDeliverablesController } from './controllers/practice-t
     AuthModule,
     FileModule
   ],
-  providers: [PracticeTemplateService, PracticeTemplateMapper, PracticeTemplateDeliverableMapper ,PracticeTemplateDeliverableService],
-  controllers: [PracticeTemplateController, PracticeTemplateDeliverablesController],
+  providers: [PracticeTemplateService, PracticeTemplateMapper, PracticeTemplateDeliverableMapper, PracticeTemplateFormatMapper, PracticeTemplateDeliverableService, PracticeTemplateFormatService],
+  controllers: [PracticeTemplateController, PracticeTemplateDeliverablesController, PracticeTemplateFormatController],
 })
 export class PracticeTemplateModule { }
