@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PracticeTemplateController } from './practice-template.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PracticeTemplate, PracticeTemplateSchema } from './schemas/practice-template.schema';
 import { AuthModule } from '@auth/auth.module';
@@ -10,6 +9,8 @@ import { PracticeTemplateDeliverable, PracticeTemplateDeliverableSchema } from '
 import { PracticeTemplateFormat, PracticeTemplateFormatSchema } from './schemas/practice-template-format.schema';
 import { PracticeTemplateDeliverableService } from './services/practice-template-deliverable.service';
 import { PracticeTemplateDeliverableMapper } from './mappers/practice-template-deliverable.mapper';
+import { PracticeTemplateController } from './controllers/practice-template.controller';
+import { PracticeTemplateDeliverablesController } from './controllers/practice-template-deliverables.controller';
 
 @Module({
   imports: [MongooseModule.forFeature([
@@ -30,6 +31,6 @@ import { PracticeTemplateDeliverableMapper } from './mappers/practice-template-d
     FileModule
   ],
   providers: [PracticeTemplateService, PracticeTemplateMapper, PracticeTemplateDeliverableMapper ,PracticeTemplateDeliverableService],
-  controllers: [PracticeTemplateController],
+  controllers: [PracticeTemplateController, PracticeTemplateDeliverablesController],
 })
 export class PracticeTemplateModule { }

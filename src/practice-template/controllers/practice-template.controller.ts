@@ -13,14 +13,14 @@ import { AuthGuard } from '@auth/guards/auth.guard';
 import { RoleGuard } from '@auth/guards/role.guard';
 import { UserRole } from '@common/enums/role.enum';
 import { Roles } from '@common/decorators/role.decorator';
-import { CreatePracticeTemplateRequestDto } from './dtos/create-practice-template-request.dto';
-import { PracticeTemplateResponseDto } from './dtos/practice-template-response.dto';
 import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
-import { PracticeTemplateFilterDto } from './dtos/practice-template-filter.dto';
 import { PaginatedResult } from '@common/types/paginated-result';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
-import { UpdatePracticeTemplateRequestDto } from './dtos/update-practice-template-request.dto';
-import { PracticeTemplateService } from './services/practice-template.service';
+import { PracticeTemplateService } from 'practice-template/services/practice-template.service';
+import { CreatePracticeTemplateRequestDto } from 'practice-template/dtos/create-practice-template-request.dto';
+import { PracticeTemplateResponseDto } from 'practice-template/dtos/practice-template-response.dto';
+import { PracticeTemplateFilterDto } from 'practice-template/dtos/practice-template-filter.dto';
+import { UpdatePracticeTemplateRequestDto } from 'practice-template/dtos/update-practice-template-request.dto';
 
 @Controller('practice-templates')
 export class PracticeTemplateController {
@@ -67,7 +67,7 @@ export class PracticeTemplateController {
   @Roles(UserRole.ADMIN)
   async update(
     @Param('templateId', ParseObjectIdPipe) templateId: string,
-    @Body() dto: UpdatePracticeTemplateRequestDto,
+    @Body() dto: UpdatePracticeTemplateRequestDto
   ): Promise<PracticeTemplateResponseDto> {
     return this.service.updateTemplate(templateId, dto);
   }

@@ -73,13 +73,18 @@ export class PracticeTemplateService {
         id: string,
         dto: UpdatePracticeTemplateRequestDto,
     ): Promise<PracticeTemplateResponseDto> {
-        const doc = await this.templateModel.findByIdAndUpdate(id, dto, { new: true })
+
+        const template = await this.templateModel.findById(id);
+        if (!template) throw new PracticeTemplateNotFoundException();
+
+        Object.assign(template, dto);
+        const updatedTemplate = await template.save();
+        await updatedTemplate
             .populate([
                 PRACTICE_TEMPLATE_POPULATE_OPTIONS.DELIVERABLES,
-                PRACTICE_TEMPLATE_POPULATE_OPTIONS.FORMATS])
-            .exec();
-        if (!doc) throw new PracticeTemplateNotFoundException();
-        return this.mapper.toResponseDto(doc);
+                PRACTICE_TEMPLATE_POPULATE_OPTIONS.FORMATS]);
+
+        return this.mapper.toResponseDto(updatedTemplate);
     }
 
     async deleteTemplate(id: string): Promise<void> {
