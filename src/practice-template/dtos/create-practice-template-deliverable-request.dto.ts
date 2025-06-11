@@ -1,12 +1,12 @@
-import { IsMongoId, IsNotEmpty, IsNumber } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 export class CreatePracticeTemplateDeliverableRequestDto {
-    @IsMongoId()
     template: string;
 
     @IsNotEmpty()
     title: string;
 
+    @IsOptional()
     description?: string;
 
     @IsNotEmpty()
