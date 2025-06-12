@@ -1,6 +1,8 @@
 import { AcademicProgramMapper } from "@academic-program/mappers/academic-program.mapper";
 import { AcademicProgram } from "@academic-program/schemas/academic-program.schema";
+import { PaginatedResult } from "@common/types/paginated-result";
 import { Injectable } from "@nestjs/common";
+import { PaginateResult } from "mongoose";
 import { PracticeDefinitionReponseDto } from "practice-definition/dtos/practice-defintion-response.dto";
 import { PracticeDefinition } from "practice-definition/schemas/practice-definition.schema";
 import { PracticeTemplateMapper } from "practice-template/mappers/practice-template-mapper";
@@ -23,5 +25,17 @@ export class PracticeDefinitionMapper {
             createdAt: practiceDefinition.createdAt,
             updatedAt: practiceDefinition.updatedAt,
         }
+    }
+
+    toPaginatedResponseDto(practiceDefinitions: PaginateResult<PracticeDefinition>): PaginatedResult<PracticeDefinitionReponseDto> {
+
+        return {
+            docs: practiceDefinitions.docs.map(this.toResponseDto.bind(this)),
+            totalDocs: practiceDefinitions.totalDocs,
+            limit: practiceDefinitions.limit,
+            totalPages: practiceDefinitions.totalPages,
+            page: practiceDefinitions.page,
+        }
+
     }
 }
