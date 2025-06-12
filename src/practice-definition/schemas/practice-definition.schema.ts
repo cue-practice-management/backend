@@ -5,6 +5,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types } from "mongoose";
 import { PracticeTemplate } from "practice-template/schemas/practice-template.schema";
 import * as mongoosePaginate from "mongoose-paginate-v2";
+import { softDeletePlugin } from "@common/plugins/soft-delete.plugin";
 
 @Schema({ timestamps: true })
 export class PracticeDefinition extends BaseSchema {
@@ -43,4 +44,5 @@ PracticeDefinitionSchema.index({ academicProgram: 1, semester: 1 });
 PracticeDefinitionSchema.index({ practiceTemplate: 1 });
 
 PracticeDefinitionSchema.plugin(mongoosePaginate);
+PracticeDefinitionSchema.plugin(softDeletePlugin);
 
