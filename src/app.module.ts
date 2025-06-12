@@ -27,6 +27,7 @@ import { StudentCompanyLinkingProcessModule } from './student-company-linking-pr
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { StudentCompanyContractModule } from './student-company-contract/student-company-contract.module';
 import { PracticeTemplateModule } from './practice-template/practice-template.module';
+import { PracticeDefinitionModule } from './practice-definition/practice-definition.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { PracticeTemplateModule } from './practice-template/practice-template.mo
     StudentCompanyLinkingProcessModule,
     StudentCompanyContractModule,
     PracticeTemplateModule,
+    PracticeDefinitionModule,
   ],
   providers: [
     AppLogger,
