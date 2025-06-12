@@ -18,7 +18,7 @@ export const ACADEMIC_PROGRAM_EXCEPTION_CODES = {
 };
 
 export const ACADEMIC_PROGRAM_POPULATE_OPTIONS = {
-  FACULTY: 'faculty',
+  FACULTY: { path: 'faculty' },
 };
 
 export const ACADEMIC_PROGRAM_SORT_OPTIONS = [
