@@ -33,3 +33,7 @@ export const PRACTICE_DEFINITION_POPULATE_OPTIONS = {
     }
 
 }
+
+export const PRACTICE_DEFINITION_SORT_OPTIONS = ['name', 'semester', 'academicProgram'];
+
+export const PRACTICE_DEFINITION_DEFAULT_SORT = 'name';
