@@ -35,5 +35,6 @@ import { PracticeTemplateFormatController } from './controllers/practice-templat
   ],
   providers: [PracticeTemplateService, PracticeTemplateMapper, PracticeTemplateDeliverableMapper, PracticeTemplateFormatMapper, PracticeTemplateDeliverableService, PracticeTemplateFormatService],
   controllers: [PracticeTemplateController, PracticeTemplateDeliverablesController, PracticeTemplateFormatController],
+  exports: [PracticeTemplateService, PracticeTemplateDeliverableService, PracticeTemplateFormatService, PracticeTemplateMapper, PracticeTemplateDeliverableMapper, PracticeTemplateFormatMapper]
 })
 export class PracticeTemplateModule { }
