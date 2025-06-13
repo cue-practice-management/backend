@@ -25,8 +25,8 @@ export class PracticeProcessService {
 
         const practiceProcess = new this.practiceProcessModel(createPracticeProcessDto);
         practiceProcess.practiceDefinition = new Types.ObjectId(createPracticeProcessDto.practiceDefinition);
-        practiceProcess.company = new Types.ObjectId(student.currentCompany._id);
-        
+        practiceProcess.student = new Types.ObjectId(createPracticeProcessDto.student);
+    
 
         return await practiceProcess.save();
     }
