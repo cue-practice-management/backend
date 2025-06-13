@@ -20,8 +20,11 @@ export class PracticeProcess {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Student.name, required: true })
     student: mongoose.Types.ObjectId;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
-    company?: mongoose.Types.ObjectId;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name, required: true })
+    company: mongoose.Types.ObjectId;
+
+    @Prop({ enum: PracticeProcessStatus, default: PracticeProcessStatus.PENDING, required: true })
+    status: string;
 
     @Prop()
     startDate?: Date;
@@ -29,8 +32,8 @@ export class PracticeProcess {
     @Prop()
     endDate?: Date;
 
-    @Prop({ enum: PracticeProcessStatus, default: PracticeProcessStatus.PENDING, required: true })
-    status: string;
+    @Prop()
+    finalGrade?: number;
 
     @Prop({ required: false, enum: PracticeProcessCancelledBy })
     cancelledBy?: PracticeProcessCancelledBy;
