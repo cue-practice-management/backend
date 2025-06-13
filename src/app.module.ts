@@ -28,6 +28,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { StudentCompanyContractModule } from './student-company-contract/student-company-contract.module';
 import { PracticeTemplateModule } from './practice-template/practice-template.module';
 import { PracticeDefinitionModule } from './practice-definition/practice-definition.module';
+import { PracticeProcessModule } from 'practice-process/practice-process.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { PracticeDefinitionModule } from './practice-definition/practice-definit
     StudentCompanyContractModule,
     PracticeTemplateModule,
     PracticeDefinitionModule,
+    PracticeProcessModule,
   ],
   providers: [
     AppLogger,
