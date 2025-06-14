@@ -1,6 +1,8 @@
+import { PaginatedResult } from "@common/types/paginated-result";
 import { Injectable } from "@nestjs/common";
 import { CompanyMapper } from "company/mappers/company.mapper";
 import { Company } from "company/schemas/company.schema";
+import { PaginateResult } from "mongoose";
 import { PracticeDefinitionMapper } from "practice-definition/mappers/practice-definition.mapper";
 import { PracticeDefinition } from "practice-definition/schemas/practice-definition.schema";
 import { PracticeProcessResponseDto } from "practice-process/dtos/practice-process-response.dto";
@@ -37,6 +39,16 @@ export class PracticeProcessMapper {
             createdAt: practiceProcess.createdAt,
             updatedAt: practiceProcess.updatedAt,
             //TODO Deliverables and FollowUps should be added here when implemented
+        };
+    }
+
+    toPaginatedResponseDto(practiceProcesses: PaginateResult<PracticeProcess>): PaginatedResult<PracticeProcessResponseDto> {
+        return {
+            docs: practiceProcesses.docs.map((process) => this.toResponseDto(process)),
+            totalDocs: practiceProcesses.totalDocs,
+            limit: practiceProcesses.limit,
+            totalPages: practiceProcesses.totalPages,
+            page: practiceProcesses.page,
         };
 
     }

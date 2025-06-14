@@ -19,6 +19,11 @@ export const PRACTICE_PROCESS_EXCEPTIONS = {
         message: 'Student already has a practice process assigned.',
         status: 400,
     },
+    STUDENT_HAS_ALREADY_DONE_PRACTICE_DEFINITION: {
+        code: 'STUDENT_HAS_ALREADY_DONE_PRACTICE_PROCESS',
+        message: 'Student has already done this practice process.',
+        status: 400,
+    }
 }
 
 export const PRACTICE_PROCESS_CONSTRAINTS = {
@@ -55,3 +60,12 @@ export const PRACTICE_PROCESS_POPULATE_OPTIONS = {
         path: 'company',
     }
 }
+
+export const PRACTICE_PROCESS_SORT_OPTIONS = [
+    "student",
+    "professor",
+    "company",
+    "status"
+]
+
+export const PRACTICE_PROCESS_SORT_DEFAULT_OPTION = "student";
