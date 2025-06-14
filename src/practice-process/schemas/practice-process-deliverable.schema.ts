@@ -1,13 +1,14 @@
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types } from "mongoose";
 import { PracticeProcess } from "./practice-process.schema";
 import { PracticeTemplateDeliverable } from "practice-template/schemas/practice-template-deliverable.schema";
 import { PracticeProcessDeliverableStatus } from "practice-process/enums/practice-process-deliverable.enums";
 import { PRACTICE_PROCESS_DELIVERABLE_CONSTRAINTS } from "practice-process/constants/practice-process-deliverable.constants";
 import { Professor } from "professor/schemas/professor.schema";
+import * as mongoosePaginate from "mongoose-paginate-v2";
 
 @Schema({ timestamps: true })
-export class PracticeProccessDeliverable {
+export class PracticeProcessDeliverable {
   @Prop({ type: Types.ObjectId, ref: PracticeProcess.name, required: true })
   process: Types.ObjectId;
 
@@ -32,9 +33,11 @@ export class PracticeProccessDeliverable {
   @Prop({ required: false })
   gradeObservations?: string;
 
-  @Prop({ type: Types.ObjectId, ref: Professor.name })
-  gradedBy?: Types.ObjectId;
-
   @Prop()
   gradedAt?: Date;
 }
+
+export type PracticeProcessDeliverableDocument = PracticeProcessDeliverable & Document;
+export const PracticeProcessDeliverableSchema = SchemaFactory.createForClass(PracticeProcessDeliverable);
+
+PracticeProcessDeliverableSchema.plugin(mongoosePaginate);
