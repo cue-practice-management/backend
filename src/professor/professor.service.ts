@@ -20,6 +20,7 @@ import { PaginatedResult } from '@common/types/paginated-result';
 import { getSort } from '@common/utils/pagination.util';
 import { UpdateProfessorRequestDto } from './dtos/update-professor-request.dto';
 import * as bcrypt from 'bcryptjs';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Injectable()
 export class ProfessorService {
@@ -69,6 +70,24 @@ export class ProfessorService {
     }
 
     return this.professorMapper.toProfessorResponseDto(professor);
+  }
+
+  async getProfessorsTypeahead(query: string): Promise<TypeaheadItem[]> {
+    const regex = new RegExp(query, 'i');
+    const professors = await this.professorModel
+      .find({
+        $or: [
+          { firstName: regex },
+          { lastName: regex },
+          { documentNumber: regex },
+        ],
+      })
+      .select('_id firstName lastName')
+      .limit(10);
+
+    return professors.map((professor) =>
+      this.professorMapper.toTypeaheadItem(professor),
+    );
   }
 
   private generateProfessorPassword(documentNumber: string): string {

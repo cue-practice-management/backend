@@ -13,6 +13,7 @@ import { PaginatedResult } from '@common/types/paginated-result';
 import { getSort } from '@common/utils/pagination.util';
 import { UpdatePracticeDefinitionRequestDto } from './dtos/update-practice-definition-request.dto';
 import { PracticeDefinitionNotFoundException } from './exceptions/practice-definition-not-found.exception';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Injectable()
 export class PracticeDefinitionService {
@@ -82,6 +83,16 @@ export class PracticeDefinitionService {
         return this.practiceDefinitionMapper.toResponseDto(practiceDefinition);
     }
 
+    async getPracticeDefinitionsTypeahead(query: string): Promise<TypeaheadItem[]> {
+        const practiceDefinitions = await this.practiceDefinitionModel.find({
+            name: { $regex: query, $options: 'i' }
+        });
+
+        return practiceDefinitions.map(practiceDefinition =>
+            this.practiceDefinitionMapper.toTypeaheadItem(practiceDefinition)
+        );
+    }
+
     async updatePracticeDefinition(id: string, updateData: UpdatePracticeDefinitionRequestDto): Promise<PracticeDefinitionReponseDto> {
         const practiceDefinition = await this.practiceDefinitionModel.findById(id);
 
@@ -106,7 +117,7 @@ export class PracticeDefinitionService {
         const practiceDefinition = await this.practiceDefinitionModel.findById(id);
 
         if (!practiceDefinition) throw new PracticeDefinitionNotFoundException();
-        
+
         await practiceDefinition.softDelete();
     }
 }

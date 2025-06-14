@@ -43,4 +43,11 @@ export class ProfessorMapper {
       ),
     };
   }
+
+  toTypeaheadItem(professor: Professor): { value: string; label: string } {
+    return {
+      value: professor._id.toString(),
+      label: `${professor.firstName} ${professor.lastName}`,
+    };
+  }
 }

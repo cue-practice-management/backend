@@ -10,6 +10,7 @@ import { PaginatedResult } from '@common/types/paginated-result';
 import { PracticeDefinitionFilterDto } from './dtos/practice-definition-filter.dto';
 import { UpdatePracticeDefinitionRequestDto } from './dtos/update-practice-definition-request.dto';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Controller('practice-definitions')
 export class PracticeDefinitionController {
@@ -33,6 +34,15 @@ export class PracticeDefinitionController {
         @Query() filter: PracticeDefinitionFilterDto
     ): Promise<PaginatedResult<PracticeDefinitionReponseDto>> {
         return this.practiceDefinitionService.getPracticeDefinitionsByCriteria(filter);
+    }
+
+    @Get('/typeahead')
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    async getPracticeDefinitionsTypeahead(
+        @Query('query') query: string
+    ): Promise<TypeaheadItem[]> {
+        return this.practiceDefinitionService.getPracticeDefinitionsTypeahead(query);
     }
 
     @Put('update/:practiceDefinitionId')
