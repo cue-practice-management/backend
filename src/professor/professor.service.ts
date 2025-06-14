@@ -59,7 +59,7 @@ export class ProfessorService {
     return this.professorMapper.toProfessorResponseDto(professor);
   }
 
-  async findProfessorById(professorId: string): Promise<ProfessorResponseDto> {
+  async getProfessorById(professorId: string): Promise<ProfessorResponseDto> {
     const professor = await this.professorModel
       .findById(professorId)
       .populate(PROFESSOR_POPULATE_OPTIONS.ACADEMIC_PROGRAM);
