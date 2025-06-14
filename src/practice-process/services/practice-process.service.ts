@@ -1,12 +1,18 @@
+import { PaginatedResult } from '@common/types/paginated-result';
+import { getSort } from '@common/utils/pagination.util';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel, Types } from 'mongoose';
 import { PracticeDefinitionReponseDto } from 'practice-definition/dtos/practice-defintion-response.dto';
 import { PracticeDefinitionService } from 'practice-definition/practice-definition.service';
-import { PRACTICE_PROCESS_POPULATE_OPTIONS } from 'practice-process/constants/practice-process.constants';
+import { PRACTICE_PROCESS_POPULATE_OPTIONS, PRACTICE_PROCESS_SORT_DEFAULT_OPTION, PRACTICE_PROCESS_SORT_OPTIONS } from 'practice-process/constants/practice-process.constants';
+import { CancelPracticeProcessRequestDto } from 'practice-process/dtos/cancel-practice-process.request.dto';
+import { PracticeProcessFilterDto } from 'practice-process/dtos/practice-process-filter.dto';
 import { PracticeProcessResponseDto } from 'practice-process/dtos/practice-process-response.dto';
 import { StartPracticeProcessRequestDto } from 'practice-process/dtos/start-practice-process-request.dto';
 import { PracticeProcessStatus } from 'practice-process/enums/practice-process.enums';
+import { PracticeProcessNotFoundException } from 'practice-process/exceptions/practice-process-not-found.exception';
+import { StudentHasAlreadyDonePracticeDefinitionException } from 'practice-process/exceptions/student-has-already-done-practice-definition.exception';
 import { StudentHasAlreadyPracticeProcessException } from 'practice-process/exceptions/student-has-already-practice-process.exception';
 import { StudentHasNotCompanyException } from 'practice-process/exceptions/student-has-not-company.exception';
 import { PracticeProcessMapper } from 'practice-process/mappers/practice-process.mapper';
@@ -26,7 +32,7 @@ export class PracticeProcessService {
         private readonly studentService: StudentService,
         private readonly professorService: ProfessorService,
         private readonly practiceProcessMapper: PracticeProcessMapper,
-    ) {}
+    ) { }
 
     async startPracticeProcess(practiceProcessDto: StartPracticeProcessRequestDto): Promise<PracticeProcessResponseDto> {
         const practiceDefinition = await this.practiceDefinitionService.getPracticeDefinitionById(practiceProcessDto.practiceDefinition);
@@ -37,6 +43,7 @@ export class PracticeProcessService {
         if (!student.currentCompany) throw new StudentHasNotCompanyException();
 
         await this.ensureStudentHasNoActiveProcess(student._id);
+        await this.ensureHasNotAlreadyDonePracticeDefinition(student._id, practiceDefinition._id);
 
         const status = this.calculateInitialStatus(practiceProcessDto.startDate);
 
@@ -59,12 +66,92 @@ export class PracticeProcessService {
         return this.practiceProcessMapper.toResponseDto(savedPracticeProcess);
     }
 
+    async cancelPracticeProcess(
+        processId: string,
+        cancelDto: CancelPracticeProcessRequestDto
+    ): Promise<PracticeProcessResponseDto> {
+        const practiceProcess = await this.practiceProcessModel.findById(processId);
+        if (!practiceProcess) throw new PracticeProcessNotFoundException();
+
+        practiceProcess.status = PracticeProcessStatus.CANCELLED;
+        practiceProcess.cancelledBy = cancelDto.cancelledBy;
+        practiceProcess.cancellationReason = cancelDto.cancellationReason;
+        practiceProcess.cancellationDate = new Date();
+
+        const updatedPracticeProcess = await practiceProcess.save();
+        await updatedPracticeProcess.populate([
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PRACTICE_DEFINITION,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.STUDENT,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PROFESSOR,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.COMPANY
+        ]);
+
+        return this.practiceProcessMapper.toResponseDto(updatedPracticeProcess);
+    }
+
+    async getPracticeProcessesByCriteria(
+        filter: PracticeProcessFilterDto
+    ): Promise<PaginatedResult<PracticeProcessResponseDto>> {
+        const { page, limit, sortBy, sortOrder } = filter;
+        const query: any = {};
+
+        if (filter.student) {
+            query.student = new Types.ObjectId(filter.student);
+        }
+        if (filter.professor) {
+            query.professor = new Types.ObjectId(filter.professor);
+        }
+        if (filter.practiceDefinition) {
+            query.practiceDefinition = new Types.ObjectId(filter.practiceDefinition);
+        }
+        if (filter.company) {
+            query.company = new Types.ObjectId(filter.company);
+        }
+        if (filter.status) {
+            query.status = filter.status;
+        }
+
+        const options = {
+            page: filter.page,
+            limit: filter.limit,
+            sort: getSort(
+                PRACTICE_PROCESS_SORT_OPTIONS,
+                PRACTICE_PROCESS_SORT_DEFAULT_OPTION,
+                sortBy,
+                sortOrder
+            ),
+            populate: [
+                PRACTICE_PROCESS_POPULATE_OPTIONS.PRACTICE_DEFINITION,
+                PRACTICE_PROCESS_POPULATE_OPTIONS.STUDENT,
+                PRACTICE_PROCESS_POPULATE_OPTIONS.PROFESSOR,
+                PRACTICE_PROCESS_POPULATE_OPTIONS.COMPANY
+            ]
+        };
+
+        const paginatedProcesses = await this.practiceProcessModel.paginate(query, options);
+        return this.practiceProcessMapper.toPaginatedResponseDto(paginatedProcesses);
+    }
+
     private async ensureStudentHasNoActiveProcess(studentId: string | Types.ObjectId): Promise<void> {
         const currentPracticeProcess = await this.practiceProcessModel.findOne({
             student: new Types.ObjectId(studentId),
             status: { $nin: [PracticeProcessStatus.CANCELLED, PracticeProcessStatus.COMPLETED] }
         });
         if (currentPracticeProcess) throw new StudentHasAlreadyPracticeProcessException();
+    }
+
+    private async ensureHasNotAlreadyDonePracticeDefinition(
+        studentId: string | Types.ObjectId,
+        practiceDefinitionId: string | Types.ObjectId
+    ): Promise<void> {
+
+        const practiceProcess = await this.practiceProcessModel.findOne({
+            student: new Types.ObjectId(studentId),
+            practiceDefinition: new Types.ObjectId(practiceDefinitionId),
+            status: { $ne: PracticeProcessStatus.CANCELLED }
+        });
+
+        if (practiceProcess) throw new StudentHasAlreadyDonePracticeDefinitionException();
     }
 
     private calculateInitialStatus(startDate: Date | string): PracticeProcessStatus {
