@@ -17,7 +17,7 @@ import { StudentHasAlreadyPracticeProcessException } from 'practice-process/exce
 import { StudentHasNotCompanyException } from 'practice-process/exceptions/student-has-not-company.exception';
 import { PracticeProcessMapper } from 'practice-process/mappers/practice-process.mapper';
 import { PracticeProcessDeliverable } from 'practice-process/schemas/practice-process-deliverable.schema';
-import { PracticeProcess } from 'practice-process/schemas/practice-process.schema';
+import { PracticeProcess, PracticeProcessDocument } from 'practice-process/schemas/practice-process.schema';
 import { ProfessorService } from 'professor/professor.service';
 import { StudentService } from 'student/student.service';
 
@@ -25,7 +25,7 @@ import { StudentService } from 'student/student.service';
 export class PracticeProcessService {
     constructor(
         @InjectModel(PracticeProcess.name)
-        private readonly practiceProcessModel: PaginateModel<PracticeProcess>,
+        private readonly practiceProcessModel: PaginateModel<PracticeProcessDocument>,
         @InjectModel(PracticeProcessDeliverable.name)
         private readonly practiceProcessDeliverableModel: PaginateModel<PracticeProcessDeliverable>,
         private readonly practiceDefinitionService: PracticeDefinitionService,
@@ -131,6 +131,16 @@ export class PracticeProcessService {
         const paginatedProcesses = await this.practiceProcessModel.paginate(query, options);
         return this.practiceProcessMapper.toPaginatedResponseDto(paginatedProcesses);
     }
+
+    async deletePracticeProcess(
+        processId: string | Types.ObjectId
+    ): Promise<void> {
+        const practiceProcess = await this.practiceProcessModel.findById(processId);
+        if (!practiceProcess) throw new PracticeProcessNotFoundException();
+
+        practiceProcess.softDelete();
+    }
+
 
     private async ensureStudentHasNoActiveProcess(studentId: string | Types.ObjectId): Promise<void> {
         const currentPracticeProcess = await this.practiceProcessModel.findOne({

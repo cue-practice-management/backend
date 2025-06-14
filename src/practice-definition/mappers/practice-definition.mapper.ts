@@ -1,5 +1,6 @@
 import { AcademicProgramMapper } from "@academic-program/mappers/academic-program.mapper";
 import { AcademicProgram } from "@academic-program/schemas/academic-program.schema";
+import { TypeaheadItem } from "@common/dtos/typeahead-item.dto";
 import { PaginatedResult } from "@common/types/paginated-result";
 import { Injectable } from "@nestjs/common";
 import { PaginateResult } from "mongoose";
@@ -12,8 +13,8 @@ import { PracticeTemplateDocument } from "practice-template/schemas/practice-tem
 export class PracticeDefinitionMapper {
     constructor(
         private readonly academicProgramMapper: AcademicProgramMapper,
-        private readonly practiceTemplateMapper: PracticeTemplateMapper, 
-    ) {}
+        private readonly practiceTemplateMapper: PracticeTemplateMapper,
+    ) { }
     toResponseDto(practiceDefinition: PracticeDefinition): PracticeDefinitionReponseDto {
         return {
             _id: practiceDefinition._id.toString(),
@@ -37,5 +38,12 @@ export class PracticeDefinitionMapper {
             page: practiceDefinitions.page,
         }
 
+    }
+
+    toTypeaheadItem(practiceDefinition: PracticeDefinition): TypeaheadItem {
+        return {
+            value: practiceDefinition._id.toString(),
+            label: practiceDefinition.name,
+        }
     }
 }

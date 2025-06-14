@@ -21,6 +21,7 @@ import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { UpdateProfessorRequestDto } from './dtos/update-professor-request.dto';
 import { ProfessorFilterDto } from './dtos/professor-filter.dto';
 import { CreateProfessorRequestDto } from './dtos/create-professor-request.dto';
+import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
 
 @Controller('professors')
 export class ProfessorController {
@@ -40,6 +41,15 @@ export class ProfessorController {
   @Roles(UserRole.ADMIN)
   async getprofessorsByCriteria(@Query() filter: ProfessorFilterDto) {
     return await this.professorService.getProfessorsByCriteria(filter);
+  }
+
+  @Get('/typeahead')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRole.ADMIN)
+  async getprofessorsTypeahead(
+    @Query('query') query: string,
+  ): Promise<TypeaheadItem[]> {
+    return await this.professorService.getProfessorsTypeahead(query);
   }
 
   @Put('update/:professorId')
