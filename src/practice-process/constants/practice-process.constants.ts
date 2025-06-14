@@ -65,7 +65,9 @@ export const PRACTICE_PROCESS_SORT_OPTIONS = [
     "student",
     "professor",
     "company",
-    "status"
+    "status",
+    "startDate",
+    "endDate",
 ]
 
 export const PRACTICE_PROCESS_SORT_DEFAULT_OPTION = "student";
