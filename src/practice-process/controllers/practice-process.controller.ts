@@ -2,7 +2,7 @@ import { AuthGuard } from '@auth/guards/auth.guard';
 import { RoleGuard } from '@auth/guards/role.guard';
 import { Roles } from '@common/decorators/role.decorator';
 import { UserRole } from '@common/enums/role.enum';
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { CancelPracticeProcessRequestDto } from 'practice-process/dtos/cancel-practice-process.request.dto';
 import { PracticeProcessFilterDto } from 'practice-process/dtos/practice-process-filter.dto';
 import { StartPracticeProcessRequestDto } from 'practice-process/dtos/start-practice-process-request.dto';
@@ -42,5 +42,14 @@ export class PracticeProcessController {
         @Query() filter: PracticeProcessFilterDto
     ) {
         return this.practiceProcessService.getPracticeProcessesByCriteria(filter);
+    }
+
+    @Delete('delete/:processId')
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    async deletePracticeProcess(
+        @Param('processId') processId: string
+    ) {
+        return this.practiceProcessService.deletePracticeProcess(processId);
     }
 }
