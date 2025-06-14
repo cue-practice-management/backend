@@ -70,6 +70,18 @@ export class PracticeDefinitionService {
         return this.practiceDefinitionMapper.toPaginatedResponseDto(paginatedResult);
     }
 
+    async getPracticeDefinitionById(id: string): Promise<PracticeDefinitionReponseDto> {
+        const practiceDefinition = await this.practiceDefinitionModel.findById(id)
+            .populate([
+                PRACTICE_DEFINITION_POPULATE_OPTIONS.ACADEMIC_PROGRAM,
+                PRACTICE_DEFINITION_POPULATE_OPTIONS.PRACTICE_TEMPLATE
+            ]);
+
+        if (!practiceDefinition) throw new PracticeDefinitionNotFoundException();
+
+        return this.practiceDefinitionMapper.toResponseDto(practiceDefinition);
+    }
+
     async updatePracticeDefinition(id: string, updateData: UpdatePracticeDefinitionRequestDto): Promise<PracticeDefinitionReponseDto> {
         const practiceDefinition = await this.practiceDefinitionModel.findById(id);
 

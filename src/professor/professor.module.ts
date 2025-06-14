@@ -19,5 +19,6 @@ import { ProfessorMapper } from './mappers/professor.mapper';
   ],
   providers: [ProfessorService, ProfessorMapper],
   controllers: [ProfessorController],
+  exports: [ProfessorService, ProfessorMapper],
 })
 export class ProfessorModule {}

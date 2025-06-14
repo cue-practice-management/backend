@@ -21,6 +21,7 @@ import { PracticeDefinitionMapper } from './mappers/practice-definition.mapper';
     PracticeTemplateModule
   ],
   providers: [PracticeDefinitionService, PracticeDefinitionMapper],
-  controllers: [PracticeDefinitionController]
+  controllers: [PracticeDefinitionController],
+  exports: [PracticeDefinitionService, PracticeDefinitionMapper]
 })
 export class PracticeDefinitionModule {}
