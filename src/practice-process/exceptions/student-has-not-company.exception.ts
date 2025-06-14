@@ -1,5 +1,5 @@
 import { BaseHttpException } from "@common/exceptions/base-http.exception";
-import { PRACTICE_PROCESS_EXCEPTIONS } from "practice-process/constants/practice-process-deliverable.constants";
+import { PRACTICE_PROCESS_EXCEPTIONS } from "practice-process/constants/practice-process.constants";
 
 export class StudentHasNotCompanyException extends BaseHttpException {
   constructor() {
