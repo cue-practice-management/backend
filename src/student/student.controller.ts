@@ -22,10 +22,11 @@ import { StudentFilterDto } from './dtos/student-filter.dto';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { UpdateStudentRequestDto } from './dtos/update-student-request.dto';
 import { TypeaheadItem } from '@common/dtos/typeahead-item.dto';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 
 @Controller('students')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) {}
+  constructor(private readonly studentService: StudentService) { }
 
   @Post('create')
   @UseGuards(AuthGuard, RoleGuard)
@@ -41,6 +42,15 @@ export class StudentController {
   @Roles(UserRole.ADMIN)
   async getStudentsByCriteria(@Query() filter: StudentFilterDto) {
     return await this.studentService.getStudentsByCriteria(filter);
+  }
+
+  @Get('/me')
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(UserRole.STUDENT)
+  async getMyProfile(
+    @CurrentUser() studentId: string,
+  ): Promise<StudentResponseDto> {
+    return await this.studentService.getStudentById(studentId);
   }
 
   @Get('/typeahead')

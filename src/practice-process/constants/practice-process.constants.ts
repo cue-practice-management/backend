@@ -58,6 +58,12 @@ export const PRACTICE_PROCESS_POPULATE_OPTIONS = {
     },
     COMPANY: {
         path: 'company',
+    },
+    DELIVERABLES: {
+        path: 'deliverables',
+    },
+    FOLLOW_UPS: {
+        path: 'followUps',
     }
 }
 

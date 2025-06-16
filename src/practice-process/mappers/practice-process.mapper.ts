@@ -5,7 +5,10 @@ import { Company } from "company/schemas/company.schema";
 import { PaginateResult } from "mongoose";
 import { PracticeDefinitionMapper } from "practice-definition/mappers/practice-definition.mapper";
 import { PracticeDefinition } from "practice-definition/schemas/practice-definition.schema";
+import { PracticeProcessDetailResponseDto } from "practice-process/dtos/practice-process-detail-response.dto";
 import { PracticeProcessResponseDto } from "practice-process/dtos/practice-process-response.dto";
+import { PracticeProcessDeliverable } from "practice-process/schemas/practice-process-deliverable.schema";
+import { PracticeProcessFollowUp } from "practice-process/schemas/practice-process-follow-up.schema";
 import { PracticeProcess } from "practice-process/schemas/practice-process.schema";
 import { ProfessorMapper } from "professor/mappers/professor.mapper";
 import { Professor } from "professor/schemas/professor.schema";
@@ -38,7 +41,33 @@ export class PracticeProcessMapper {
             cancellationReason: practiceProcess.cancellationReason,
             createdAt: practiceProcess.createdAt,
             updatedAt: practiceProcess.updatedAt,
-            //TODO Deliverables and FollowUps should be added here when implemented
+        };
+    }
+
+    toDetailedResponseDto(practiceProcess: PracticeProcess & { deliverables: PracticeProcessDeliverable[], followUps: PracticeProcessFollowUp[] }): PracticeProcessDetailResponseDto {
+        return {
+            ...this.toResponseDto(practiceProcess),
+            deliverables: practiceProcess.deliverables.map(deliverable => ({
+                _id: deliverable._id.toString(),
+                dueDate: deliverable.dueDate,
+                submittedAt: deliverable.submittedAt,
+                submissionUrl: deliverable.submissionUrl,
+                status: deliverable.status,
+                grade: deliverable.grade,
+                gradeObservations: deliverable.gradeObservations,
+                gradedAt: deliverable.gradedAt,
+            })),
+            followUps: practiceProcess.followUps.map(followUp => ({
+                _id: followUp._id.toString(),
+                status: followUp.status,
+                date: followUp.date,
+                outcomeNotes: followUp.outcomeNotes,
+                completedAt: followUp.completedAt,
+                cancelledAt: followUp.cancelledAt,
+                cancellationReason: followUp.cancellationReason,
+                missedNotes: followUp.missedNotes,
+            })),
+
         };
     }
 
