@@ -12,6 +12,12 @@ export class PracticeProcessDeliverable extends BaseSchema {
   @Prop({ type: Types.ObjectId, ref: PracticeProcess.name, required: true })
   process: Types.ObjectId;
 
+  @Prop({ required: true })
+  title: string;
+
+  @Prop()
+  description?: string;
+  
   @Prop({ type: Types.ObjectId, ref: PracticeTemplateDeliverable.name, required: true })
   templateDeliverable: Types.ObjectId;
 

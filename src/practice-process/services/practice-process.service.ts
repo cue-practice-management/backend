@@ -226,6 +226,8 @@ export class PracticeProcessService {
 
             return new this.practiceProcessDeliverableModel({
                 process: processId,
+                title: deliverable.title,
+                description: deliverable.description,
                 templateDeliverable: deliverable._id,
                 dueDate,
                 status: PracticeProcessStatus.PENDING
