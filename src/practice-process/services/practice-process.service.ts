@@ -7,6 +7,7 @@ import { PracticeDefinitionReponseDto } from 'practice-definition/dtos/practice-
 import { PracticeDefinitionService } from 'practice-definition/practice-definition.service';
 import { PRACTICE_PROCESS_POPULATE_OPTIONS, PRACTICE_PROCESS_SORT_DEFAULT_OPTION, PRACTICE_PROCESS_SORT_OPTIONS } from 'practice-process/constants/practice-process.constants';
 import { CancelPracticeProcessRequestDto } from 'practice-process/dtos/cancel-practice-process.request.dto';
+import { PracticeProcessDetailResponseDto } from 'practice-process/dtos/practice-process-detail-response.dto';
 import { PracticeProcessFilterDto } from 'practice-process/dtos/practice-process-filter.dto';
 import { PracticeProcessResponseDto } from 'practice-process/dtos/practice-process-response.dto';
 import { StartPracticeProcessRequestDto } from 'practice-process/dtos/start-practice-process-request.dto';
@@ -17,6 +18,7 @@ import { StudentHasAlreadyPracticeProcessException } from 'practice-process/exce
 import { StudentHasNotCompanyException } from 'practice-process/exceptions/student-has-not-company.exception';
 import { PracticeProcessMapper } from 'practice-process/mappers/practice-process.mapper';
 import { PracticeProcessDeliverable } from 'practice-process/schemas/practice-process-deliverable.schema';
+import { PracticeProcessFollowUp } from 'practice-process/schemas/practice-process-follow-up.schema';
 import { PracticeProcess, PracticeProcessDocument } from 'practice-process/schemas/practice-process.schema';
 import { ProfessorService } from 'professor/professor.service';
 import { StudentService } from 'student/student.service';
@@ -130,6 +132,49 @@ export class PracticeProcessService {
 
         const paginatedProcesses = await this.practiceProcessModel.paginate(query, options);
         return this.practiceProcessMapper.toPaginatedResponseDto(paginatedProcesses);
+    }
+
+    async getPracticeProcessById(
+        userId: string,
+        processId: string | Types.ObjectId
+    ): Promise<PracticeProcessDetailResponseDto> {
+        const practiceProcess = await this.practiceProcessModel.findById(processId).populate([
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PRACTICE_DEFINITION,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.STUDENT,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PROFESSOR,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.COMPANY,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.DELIVERABLES,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.FOLLOW_UPS
+        ]);
+
+        if (!practiceProcess) throw new PracticeProcessNotFoundException();
+
+        if (practiceProcess.student._id.toString() !== userId && practiceProcess.professor._id.toString() !== userId) {
+            throw new PracticeProcessNotFoundException();
+        }
+
+        return this.practiceProcessMapper.toDetailedResponseDto(
+            practiceProcess as unknown as PracticeProcess & { deliverables: PracticeProcessDeliverable[]; followUps: PracticeProcessFollowUp[] }
+        );
+    }
+
+
+    async getCurrentPracticeProcessForStudent(
+        studentId: string | Types.ObjectId
+    ): Promise<PracticeProcessResponseDto | null> {
+        const currentPracticeProcess = await this.practiceProcessModel.findOne({
+            student: new Types.ObjectId(studentId),
+            status: PracticeProcessStatus.IN_PROGRESS
+        }).populate([
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PRACTICE_DEFINITION,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.STUDENT,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PROFESSOR,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.COMPANY
+        ]);
+
+        if (!currentPracticeProcess) return null;
+
+        return this.practiceProcessMapper.toResponseDto(currentPracticeProcess);
     }
 
     async deletePracticeProcess(

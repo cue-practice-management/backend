@@ -4,11 +4,11 @@ import { PracticeProcess } from "./practice-process.schema";
 import { PracticeTemplateDeliverable } from "practice-template/schemas/practice-template-deliverable.schema";
 import { PracticeProcessDeliverableStatus } from "practice-process/enums/practice-process-deliverable.enums";
 import { PRACTICE_PROCESS_DELIVERABLE_CONSTRAINTS } from "practice-process/constants/practice-process-deliverable.constants";
-import { Professor } from "professor/schemas/professor.schema";
 import * as mongoosePaginate from "mongoose-paginate-v2";
+import { BaseSchema } from "@common/types/base.schema";
 
 @Schema({ timestamps: true })
-export class PracticeProcessDeliverable {
+export class PracticeProcessDeliverable extends BaseSchema {
   @Prop({ type: Types.ObjectId, ref: PracticeProcess.name, required: true })
   process: Types.ObjectId;
 

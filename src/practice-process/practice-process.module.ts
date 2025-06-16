@@ -10,6 +10,7 @@ import { StudentModule } from 'student/student.module';
 import { CompanyModule } from 'company/company.module';
 import { PracticeProcessMapper } from './mappers/practice-process.mapper';
 import { AuthModule } from '@auth/auth.module';
+import { PracticeProcessFollowUp, PracticeProcessFollowUpSchema } from './schemas/practice-process-follow-up.schema';
 
 @Module({
   imports: [
@@ -21,6 +22,10 @@ import { AuthModule } from '@auth/auth.module';
       {
         name: PracticeProcessDeliverable.name,
         schema: PracticeProcessDeliverableSchema,
+      },
+      {
+        name: PracticeProcessFollowUp.name,
+        schema: PracticeProcessFollowUpSchema
       }
     ]),
     PracticeDefinitionModule,
