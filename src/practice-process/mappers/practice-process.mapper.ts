@@ -49,6 +49,8 @@ export class PracticeProcessMapper {
             ...this.toResponseDto(practiceProcess),
             deliverables: practiceProcess.deliverables.map(deliverable => ({
                 _id: deliverable._id.toString(),
+                title: deliverable.title,
+                description: deliverable.description,
                 dueDate: deliverable.dueDate,
                 submittedAt: deliverable.submittedAt,
                 submissionUrl: deliverable.submissionUrl,
