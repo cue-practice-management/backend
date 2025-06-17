@@ -47,9 +47,10 @@ export class PracticeProcessDeliverableService {
             isPublic: false,
             folder: FILE_FOLDERS.PRACTICE_PROCESS_DELIVERABLES,
         });
+        const wasSubmittedLate = deliverable.dueDate < new Date();
 
         deliverable.submissionUrl = fileUrl.fileKey;
-        deliverable.status = PracticeProcessDeliverableStatus.SUBMITTED;
+        deliverable.status = wasSubmittedLate ? PracticeProcessDeliverableStatus.SUBMITTED_LATE : PracticeProcessDeliverableStatus.SUBMITTED;
         deliverable.submittedAt = new Date();
 
         await deliverable.save();
