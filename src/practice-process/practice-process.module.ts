@@ -11,6 +11,10 @@ import { CompanyModule } from 'company/company.module';
 import { PracticeProcessMapper } from './mappers/practice-process.mapper';
 import { AuthModule } from '@auth/auth.module';
 import { PracticeProcessFollowUp, PracticeProcessFollowUpSchema } from './schemas/practice-process-follow-up.schema';
+import { PracticeProcessDeliverableController } from './controllers/practice-process-deliverable.controller';
+import { PracticeProcessDeliverableService } from './services/practice-process-deliverable.service';
+import { FileModule } from 'file/file.module';
+import { PracticeProcessDeliverableMapper } from './mappers/practice-process-deliverable.mapper';
 
 @Module({
   imports: [
@@ -32,9 +36,10 @@ import { PracticeProcessFollowUp, PracticeProcessFollowUpSchema } from './schema
     ProfessorModule,
     StudentModule,
     CompanyModule,
-    AuthModule
+    AuthModule,
+    FileModule
   ],
-  providers: [PracticeProcessService, PracticeProcessMapper],
-  controllers: [PracticeProcessController]
+  providers: [PracticeProcessService, PracticeProcessMapper, PracticeProcessDeliverableService, PracticeProcessDeliverableMapper],
+  controllers: [PracticeProcessController, PracticeProcessDeliverableController]
 })
 export class PracticeProcessModule { }

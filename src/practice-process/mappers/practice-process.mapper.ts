@@ -14,12 +14,14 @@ import { ProfessorMapper } from "professor/mappers/professor.mapper";
 import { Professor } from "professor/schemas/professor.schema";
 import { StudentMapper } from "student/mapper/student.mapper";
 import { Student } from "student/schemas/student.schema";
+import { PracticeProcessDeliverableMapper } from "./practice-process-deliverable.mapper";
 
 @Injectable()
 export class PracticeProcessMapper {
 
     constructor(
         private readonly practiceDefinitionMapper: PracticeDefinitionMapper,
+        private readonly practiceProcessDeliverableMapper: PracticeProcessDeliverableMapper,
         private readonly studentMapper: StudentMapper,
         private readonly professorMapper: ProfessorMapper,
         private readonly companyMapper: CompanyMapper,
@@ -44,21 +46,10 @@ export class PracticeProcessMapper {
         };
     }
 
-    toDetailedResponseDto(practiceProcess: PracticeProcess & { deliverables: PracticeProcessDeliverable[], followUps: PracticeProcessFollowUp[] }): PracticeProcessDetailResponseDto {
+    async toDetailedResponseDto(practiceProcess: PracticeProcess & { deliverables: PracticeProcessDeliverable[], followUps: PracticeProcessFollowUp[] }): Promise<PracticeProcessDetailResponseDto> {
         return {
             ...this.toResponseDto(practiceProcess),
-            deliverables: practiceProcess.deliverables.map(deliverable => ({
-                _id: deliverable._id.toString(),
-                title: deliverable.title,
-                description: deliverable.description,
-                dueDate: deliverable.dueDate,
-                submittedAt: deliverable.submittedAt,
-                submissionUrl: deliverable.submissionUrl,
-                status: deliverable.status,
-                grade: deliverable.grade,
-                gradeObservations: deliverable.gradeObservations,
-                gradedAt: deliverable.gradedAt,
-            })),
+            deliverables: await Promise.all(practiceProcess.deliverables.map(deliverable => this.practiceProcessDeliverableMapper.toResponseDto(deliverable))),
             followUps: practiceProcess.followUps.map(followUp => ({
                 _id: followUp._id.toString(),
                 status: followUp.status,
