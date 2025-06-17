@@ -153,7 +153,7 @@ export class PracticeProcessService {
             throw new PracticeProcessNotFoundException();
         }
 
-        return this.practiceProcessMapper.toDetailedResponseDto(
+        return await this.practiceProcessMapper.toDetailedResponseDto(
             practiceProcess as unknown as PracticeProcess & { deliverables: PracticeProcessDeliverable[]; followUps: PracticeProcessFollowUp[] }
         );
     }
