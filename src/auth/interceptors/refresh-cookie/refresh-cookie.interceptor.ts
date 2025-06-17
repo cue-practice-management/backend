@@ -1,4 +1,3 @@
-// src/auth/interceptors/set-refresh-cookie.interceptor.ts
 import {
   Injectable,
   NestInterceptor,
@@ -17,19 +16,27 @@ export class RefreshCookieInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const ctx = context.switchToHttp();
+    const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
+
+    const userAgent = request.headers['user-agent'] || '';
+    const isMobile = /android|iphone|ipad|mobile|okhttp/i.test(userAgent); 
 
     return next.handle().pipe(
       tap((data) => {
         if (data?.refreshToken) {
-          CookieUtil.setCookie(response, {
-            name: this.env.jwtRefreshCookieName,
-            value: data.refreshToken,
-            maxAgeInDays: this.env.jwtRefreshExpirationDays,
-            httpOnly: true,
-            secure: false, // Set to true in production
-            sameSite: 'lax',
-          });
+          if (isMobile) {
+            data.mobileRefreshToken = data.refreshToken; 
+          } else {
+            CookieUtil.setCookie(response, {
+              name: this.env.jwtRefreshCookieName,
+              value: data.refreshToken,
+              maxAgeInDays: this.env.jwtRefreshExpirationDays,
+              httpOnly: true,
+              secure: false, 
+              sameSite: 'lax',
+            });
+          }
 
           delete data.refreshToken;
         }
