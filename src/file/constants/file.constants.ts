@@ -20,4 +20,5 @@ export const FILE_FOLDERS = {
   NEWS: 'news',
   STUDENT_COMPANY_CONTRACTS: 'student-company-contracts',
   PRACTICE_TEMPLATE_FORMATS: 'practice-template-formats',
+  PRACTICE_PROCESS_DELIVERABLES: 'practice-process-deliverables',
 };
