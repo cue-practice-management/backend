@@ -15,6 +15,7 @@ import { Professor } from "professor/schemas/professor.schema";
 import { StudentMapper } from "student/mapper/student.mapper";
 import { Student } from "student/schemas/student.schema";
 import { PracticeProcessDeliverableMapper } from "./practice-process-deliverable.mapper";
+import { PracticeProcessFollowUpMapper } from "./practice-process-follow-up.mapper";
 
 @Injectable()
 export class PracticeProcessMapper {
@@ -22,6 +23,7 @@ export class PracticeProcessMapper {
     constructor(
         private readonly practiceDefinitionMapper: PracticeDefinitionMapper,
         private readonly practiceProcessDeliverableMapper: PracticeProcessDeliverableMapper,
+        private readonly practiceProcessFollowUpMapper: PracticeProcessFollowUpMapper,
         private readonly studentMapper: StudentMapper,
         private readonly professorMapper: ProfessorMapper,
         private readonly companyMapper: CompanyMapper,
@@ -50,17 +52,7 @@ export class PracticeProcessMapper {
         return {
             ...this.toResponseDto(practiceProcess),
             deliverables: await Promise.all(practiceProcess.deliverables.map(deliverable => this.practiceProcessDeliverableMapper.toResponseDto(deliverable))),
-            followUps: practiceProcess.followUps.map(followUp => ({
-                _id: followUp._id.toString(),
-                status: followUp.status,
-                date: followUp.date,
-                outcomeNotes: followUp.outcomeNotes,
-                completedAt: followUp.completedAt,
-                cancelledAt: followUp.cancelledAt,
-                cancellationReason: followUp.cancellationReason,
-                missedNotes: followUp.missedNotes,
-            })),
-
+            followUps: practiceProcess.followUps.map(followUp => this.practiceProcessFollowUpMapper.toResponseDto(followUp)),
         };
     }
 

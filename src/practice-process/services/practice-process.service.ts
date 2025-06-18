@@ -177,6 +177,22 @@ export class PracticeProcessService {
         return this.practiceProcessMapper.toResponseDto(currentPracticeProcess);
     }
 
+    async getCurrentPracticeProcessesForProfessor(
+        professorId: string | Types.ObjectId
+    ): Promise<PracticeProcessResponseDto[]> {
+        const currentPracticeProcesses = await this.practiceProcessModel.find({
+            professor: new Types.ObjectId(professorId),
+            status: PracticeProcessStatus.IN_PROGRESS
+        }).populate([
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PRACTICE_DEFINITION,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.STUDENT,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.PROFESSOR,
+            PRACTICE_PROCESS_POPULATE_OPTIONS.COMPANY
+        ]);
+
+        return currentPracticeProcesses.map(process => this.practiceProcessMapper.toResponseDto(process));
+    }
+
     async deletePracticeProcess(
         processId: string | Types.ObjectId
     ): Promise<void> {

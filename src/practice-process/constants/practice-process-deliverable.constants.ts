@@ -10,7 +10,12 @@ export const PRACTICE_PROCESS_DELIVERABLE_EXCEPTIONS = {
         code: 'PRACTICE_PROCESS_DELIVERABLE_INVALID_STATUS_TO_SUBMIT',
         message: 'Deliverable cannot be submitted in its current status.',
         status: HttpStatus.BAD_REQUEST,
-    }
+    },
+    INVALID_STATUS_TO_GRADE: {
+        code: 'PRACTICE_PROCESS_DELIVERABLE_INVALID_STATUS_TO_GRADE',
+        message: 'Deliverable cannot be graded in its current status.',
+        status: HttpStatus.BAD_REQUEST,
+    },
 }
 
 export const PRACTICE_PROCESS_DELIVERABLE_CONSTRAINTS = {

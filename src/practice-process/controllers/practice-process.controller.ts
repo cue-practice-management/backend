@@ -64,6 +64,15 @@ export class PracticeProcessController {
         return this.practiceProcessService.getCurrentPracticeProcessForStudent(studentId);
     }
 
+    @Get('professor/me/current')
+    @UseGuards(AuthGuard, RoleGuard)
+    @Roles(UserRole.PROFESSOR)
+    async getCurrentPracticeProcessForProfessor(
+        @CurrentUser() professorId: string
+    ) {
+        return this.practiceProcessService.getCurrentPracticeProcessesForProfessor(professorId);
+    }
+
 
     @Delete('delete/:processId')
     @UseGuards(AuthGuard, RoleGuard)
