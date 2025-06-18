@@ -15,6 +15,9 @@ import { PracticeProcessDeliverableController } from './controllers/practice-pro
 import { PracticeProcessDeliverableService } from './services/practice-process-deliverable.service';
 import { FileModule } from 'file/file.module';
 import { PracticeProcessDeliverableMapper } from './mappers/practice-process-deliverable.mapper';
+import { PracticeProcessFollowUpService } from './services/practice-process-follow-up.service';
+import { PracticeProcessFollowUpController } from './controllers/practice-process-follow-up.controller';
+import { PracticeProcessFollowUpMapper } from './mappers/practice-process-follow-up.mapper';
 
 @Module({
   imports: [
@@ -39,7 +42,14 @@ import { PracticeProcessDeliverableMapper } from './mappers/practice-process-del
     AuthModule,
     FileModule
   ],
-  providers: [PracticeProcessService, PracticeProcessMapper, PracticeProcessDeliverableService, PracticeProcessDeliverableMapper],
-  controllers: [PracticeProcessController, PracticeProcessDeliverableController]
+  providers: [
+    PracticeProcessService, 
+    PracticeProcessMapper, 
+    PracticeProcessDeliverableService, 
+    PracticeProcessDeliverableMapper, 
+    PracticeProcessFollowUpService,
+    PracticeProcessFollowUpMapper
+  ],
+  controllers: [PracticeProcessController, PracticeProcessDeliverableController, PracticeProcessFollowUpController]
 })
 export class PracticeProcessModule { }
