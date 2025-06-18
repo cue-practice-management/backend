@@ -2,6 +2,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FILE_FOLDERS } from 'file/constants/file.constants';
 import { FileService } from 'file/file.service';
 import { PaginateModel } from 'mongoose';
+import { GradePracticeProcessDeliverableRequestDto } from 'practice-process/dtos/grade-practice-process-deliverable-request.dto';
 import { PracticeProcessDeliverableResponseDto } from 'practice-process/dtos/practice-process-deliverable-response.dto';
 import { PracticeProcessDeliverableStatus } from 'practice-process/enums/practice-process-deliverable.enums';
 import { PracticeProcessDeliverableInvalidStatusToSubmitException } from 'practice-process/exceptions/practice-process-deliverable-invalid-status-to-submit.exception';
@@ -57,5 +58,34 @@ export class PracticeProcessDeliverableService {
 
         return await this.practiceProcessDeliverableMapper.toResponseDto(deliverable);
 
+    }
+
+    async gradeDeliverable(
+        practiceProcessId: string,
+        deliverableId: string,
+        userId: string,
+        gradePracticeProcessDeliverableRequestDto: GradePracticeProcessDeliverableRequestDto,
+    ): Promise<PracticeProcessDeliverableResponseDto> {
+        const practiceProcess = await this.practiceProcessModel.findById(practiceProcessId);
+        if (!practiceProcess) throw new PracticeProcessNotFoundException();
+
+        const deliverable = await this.practiceProcessDeliverableModel.findOne({
+            _id: deliverableId,
+            process: practiceProcessId,
+        });
+
+        if (!deliverable) throw new PracticeProcessDeliverableNotFoundException();
+        if (deliverable.status !== PracticeProcessDeliverableStatus.SUBMITTED && deliverable.status !== PracticeProcessDeliverableStatus.SUBMITTED_LATE) {
+            throw new PracticeProcessDeliverableInvalidStatusToSubmitException();
+        }
+
+        deliverable.grade = gradePracticeProcessDeliverableRequestDto.grade;
+        deliverable.gradeObservations = gradePracticeProcessDeliverableRequestDto.gradeObservations;
+        deliverable.status = PracticeProcessDeliverableStatus.GRADED;
+        deliverable.gradedAt = new Date();
+
+        await deliverable.save();
+
+        return await this.practiceProcessDeliverableMapper.toResponseDto(deliverable);
     }
 }
