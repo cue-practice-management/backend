@@ -18,8 +18,7 @@ import { CompanyMentorSchema } from 'company-mentor/schemas/company-mentor.schem
           const schema = UserSchema;
           schema.discriminator(UserRole.STUDENT, StudentSchema);
           schema.discriminator(UserRole.PROFESSOR, ProfessorSchema);
-          schema.discriminator(UserRole.COMPANY_MENTOR, CompanyMentorSchema); // Assuming CompanyMentor uses User schema
-          schema;
+          schema.discriminator(UserRole.COMPANY_MENTOR, CompanyMentorSchema);
           return schema;
         },
       },

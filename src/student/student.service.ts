@@ -129,7 +129,7 @@ export class StudentService {
       throw new StudentNotFoundException();
     }
 
-    await this.userService.validateUniqueFields(updateStudentDto);
+    await this.userService.validateUniqueFieldsForUpdate(student._id.toString(), updateStudentDto);
     if (updateStudentDto.academicProgram) {
       await this.academicProgramService.validateAcademicProgramExists(
         updateStudentDto.academicProgram,
