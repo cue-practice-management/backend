@@ -29,6 +29,7 @@ import { StudentCompanyContractModule } from './student-company-contract/student
 import { PracticeTemplateModule } from './practice-template/practice-template.module';
 import { PracticeDefinitionModule } from './practice-definition/practice-definition.module';
 import { PracticeProcessModule } from 'practice-process/practice-process.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { PracticeProcessModule } from 'practice-process/practice-process.module'
     PracticeTemplateModule,
     PracticeDefinitionModule,
     PracticeProcessModule,
+    DashboardModule,
   ],
   providers: [
     AppLogger,
