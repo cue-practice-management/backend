@@ -36,12 +36,3 @@ git clone [https://github.com/tu-org/practicas-backend.git]
 
 # 2. Instalar dependencias
 npm i
-
-# 3. Levantar servicios necesarios
-docker compose up -d mongo mailhog
-
-# 4. Copiar el ejemplo de variables
-cp .env.example .env  # <--- y completar tus valores
-
-# 5. Ejecutar en modo watch
-npm run start:dev
