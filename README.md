@@ -32,8 +32,7 @@ API que centraliza la gestión de prácticas empresariales: registra usuarios, c
 
 ```bash
 # 1. Clonar y entrar
-git clone https://github.com/tu-org/practicas-backend.git
-cd practicas-backend
+git clone [https://github.com/tu-org/practicas-backend.git]
 
 # 2. Instalar dependencias
 npm i
