@@ -10,7 +10,6 @@ import { CompanyModule } from 'company/company.module';
 import { StudentModule } from 'student/student.module';
 import { StudentCompanyLinkingProcessMapper } from './mappers/student-company-linking-process.mapper';
 import { AuthModule } from '@auth/auth.module';
-import { StudentCompanyLinkingProcessListener } from './listeners/student-company-linking-process.listener';
 import { EmailModule } from 'email/email.module';
 import { StudentCompanyContractModule } from 'student-company-contract/student-company-contract.module';
 
@@ -31,7 +30,6 @@ import { StudentCompanyContractModule } from 'student-company-contract/student-c
   providers: [
     StudentCompanyLinkingProcessService,
     StudentCompanyLinkingProcessMapper,
-    StudentCompanyLinkingProcessListener,
   ],
   controllers: [StudentCompanyLinkingProcessController],
   exports: [
