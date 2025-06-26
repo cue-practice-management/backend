@@ -30,6 +30,7 @@ import { PracticeTemplateModule } from './practice-template/practice-template.mo
 import { PracticeDefinitionModule } from './practice-definition/practice-definition.module';
 import { PracticeProcessModule } from 'practice-process/practice-process.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     PracticeDefinitionModule,
     PracticeProcessModule,
     DashboardModule,
+    NotificationModule,
   ],
   providers: [
     AppLogger,
