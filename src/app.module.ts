@@ -31,6 +31,7 @@ import { PracticeDefinitionModule } from './practice-definition/practice-definit
 import { PracticeProcessModule } from 'practice-process/practice-process.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationModule } from './notification/notification.module';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { NotificationModule } from './notification/notification.module';
     PracticeProcessModule,
     DashboardModule,
     NotificationModule,
+    WebsocketModule,
   ],
   providers: [
     AppLogger,
@@ -86,4 +88,4 @@ import { NotificationModule } from './notification/notification.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
