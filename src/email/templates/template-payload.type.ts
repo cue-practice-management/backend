@@ -13,6 +13,7 @@ export type TemplatePayloadMap = {
     companyName: string;
   };
   [SesTemplates.STUDENT_COMPANY_CONTRACT_ACTIVATED]: {
+    contractId: string;
     studentName: string;
     companyName: string;
     startDate: string;
